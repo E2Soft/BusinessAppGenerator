@@ -5,7 +5,7 @@ Created on Mar 3, 2015
 '''
 from django import template
 from django.core.urlresolvers import reverse
-
+from django.contrib.auth.models import User
 from states.models import Store, City, State
 from builtins import str
 
@@ -39,4 +39,4 @@ def filterurl(obj):
     
 @register.filter
 def isstring(obj):
-    return isinstance(obj, str)
+    return isinstance(obj, str) or isinstance(obj, User)
