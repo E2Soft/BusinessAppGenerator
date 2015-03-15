@@ -360,7 +360,6 @@ class UserUpdate(UpdateView):
     def get_success_url(self):
         return reverse('udetail',args=(self.get_object().id,))    
     
-    
 class UserCreate(CreateView):
     model = User
     template_name = 'states/register.html'
