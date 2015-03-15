@@ -116,3 +116,104 @@ class StateDelete(DeleteView):
     
     def get_success_url(self):
         return reverse('states')
+
+#City
+
+class SearchCityForm(forms.Form):
+    name = forms.CharField(max_length=50, required=False)
+    shortname = forms.CharField(max_length=3, required=False)
+    
+    def __init__(self, *args, **kwargs):
+        super(SearchCityForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class']='form-control'
+
+class CityForm(forms.ModelForm):
+    class Meta:
+        model = City
+        fields = ["name", "shortname"]
+    
+    def __init__(self, *args, **kwargs):
+        super(CityForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class']='form-control'
+        
+class CityList(ListView):
+    model = City
+    template_name = 'states/list.html'
+    context_object_name = 'states'
+    
+    def get_queryset(self):
+        return City.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super(CityList, self).get_context_data(**kwargs)
+        context["data"] = "city"
+        
+        return context
+
+class CityCreate(CreateView):
+    model = City
+    template_name = 'states/add.html'
+    form_class = CityForm
+    
+    def get_success_url(self):
+        return reverse('cities')
+    
+    def get_context_data(self, **kwargs):
+        context = super(CityCreate, self).get_context_data(**kwargs)
+        context["data"] = "city"
+        
+        return context
+
+class CityUpdate(UpdateView):
+    model = City
+    template_name = 'states/update.html'
+    form_class = CityForm
+    
+    def get_success_url(self):
+        return reverse('deletecity',args=(self.get_object().id,))
+    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        
+        response = super(CityUpdate, self).form_valid(form)
+        
+        return response
+    
+    def get_context_data(self, **kwargs):
+        context = super(CityUpdate, self).get_context_data(**kwargs)
+        context["data"] = "city"
+        
+        return context
+
+class CityDetail(DetailView):
+    model = City
+    template_name = 'states/detail.html'
+    context_object_name='object'
+    
+    def get_context_data(self, **kwargs):
+        context = super(CityDetail, self).get_context_data(**kwargs)
+        context["data"] = "city"
+        
+        mapa = {}
+        for name in self.object._meta.get_all_field_names():
+            if "id" not in name:
+                try:
+                    mapa[name] = self.object.__getattribute__(name).all()
+                except AttributeError:
+                    try:
+                        mapa[name] = self.object.__getattribute__(name)
+                    except AttributeError:
+                        mapa[name] = self.object.__getattribute__(''.join([name,"_set"])).all()
+
+        context["mapa"] = mapa
+        
+        return context
+
+class CityDelete(DeleteView):
+    model = City
+    template_name = 'states/delete.html'
+    
+    def get_success_url(self):
+        return reverse('states')
