@@ -217,3 +217,120 @@ class CityDelete(DeleteView):
     
     def get_success_url(self):
         return reverse('states')
+
+#Store
+
+class SearchStoreForm(forms.Form):
+    name = forms.CharField(max_length=50, required=False)
+    adress = forms.CharField(max_length=20, required=False)
+    phone = forms.CharField(max_length=50, required=False)
+    owner = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in User.objects.all()],
+                                       required=False)
+    state = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in State.objects.all()],
+                                       required=False)
+    city = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in City.objects.all()],
+                                       required=False)
+    
+    def __init__(self, *args, **kwargs):
+        super(SearchStoreForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class']='form-control'
+
+class StoreForm(forms.ModelForm):
+    class Meta:
+        model = Store
+        fields = ["name", "adress", "phone", "owner", "state", "city"]
+    
+    def __init__(self, *args, **kwargs):
+        super(StoreForm, self).__init__(*args, **kwargs)
+        """
+        self.fields["name"].widget.attrs['class']='form-control'
+        self.fields["adress"].widget.attrs['class']='form-control'
+        self.fields["owner"].widget.attrs['class']='form-control'
+        self.fields["state"].widget.attrs['class']='form-control'
+        self.fields["city"].widget.attrs['class']='form-control'
+        self.fields["phone"].widget.attrs['class']='form-control'
+        """
+        for field in self.fields.values():
+            field.widget.attrs['class']='form-control'
+        
+class StoreList(ListView):
+    model = Store
+    template_name = 'states/list.html'
+    context_object_name = 'states'
+    
+    def get_queryset(self):
+        return Store.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super(StoreList, self).get_context_data(**kwargs)
+        context["data"] = "store"
+        
+        return context
+
+class StoreCreate(CreateView):
+    model = Store
+    template_name = 'states/add.html'
+    form_class = StoreForm
+    
+    def get_success_url(self):
+        return reverse('stores')
+    
+    def get_context_data(self, **kwargs):
+        context = super(StoreCreate, self).get_context_data(**kwargs)
+        context["data"] = "store"
+        
+        return context
+    
+class StoreUpdate(UpdateView):
+    model = Store
+    template_name = 'states/update.html'
+    form_class = StoreForm
+    
+    def get_success_url(self):
+        return reverse('detailstore',args=(self.get_object().id,))
+    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        
+        response = super(StoreUpdate, self).form_valid(form)
+        
+        return response
+    
+    def get_context_data(self, **kwargs):
+        context = super(StoreUpdate, self).get_context_data(**kwargs)
+        context["data"] = "store"
+        
+        return context
+    
+class StoreDetail(DetailView):
+    model = Store
+    template_name = 'states/detail.html'
+    context_object_name='object'
+    
+    def get_context_data(self, **kwargs):
+        context = super(StoreDetail, self).get_context_data(**kwargs)
+        context["data"] = "store"
+        
+        mapa = {}
+        for name in self.object._meta.get_all_field_names():
+            if 'id' not in name:
+                try:
+                    mapa[name] = self.object.__getattribute__(name).all()
+                except AttributeError:
+                    try:
+                        mapa[name] = self.object.__getattribute__(name)
+                    except AttributeError:
+                        mapa[name] = self.object.__getattribute__(''.join([name,"_set"])).all()
+
+        context["mapa"] = mapa
+        
+        return context    
+    
+class StoreDelete(DeleteView):
+    model = Store
+    template_name = 'states/delete.html'
+    
+    def get_success_url(self):
+        return reverse('states')    
+    
