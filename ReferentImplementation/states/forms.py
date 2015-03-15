@@ -333,4 +333,41 @@ class StoreDelete(DeleteView):
     
     def get_success_url(self):
         return reverse('states')    
+
+
+#User
+    
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name','last_name', 'username', 'email']
+    
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class']='form-control'
+    
+class DetailUser(DetailView):
+    model = User
+    template_name = 'states/udetail.html'
+    context_object_name='user' 
+    
+class UserUpdate(UpdateView):
+    model = User
+    template_name = 'states/uupdate.html'
+    form_class = UserForm
+    
+    def get_success_url(self):
+        return reverse('udetail',args=(self.get_object().id,))    
+    
+    
+class UserCreate(CreateView):
+    model = User
+    template_name = 'states/register.html'
+    form_class = UserForm
+    
+    def get_success_url(self):
+        return reverse('index')    
+    
+    
     

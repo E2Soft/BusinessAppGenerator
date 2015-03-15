@@ -9,7 +9,8 @@ from states import views
 from states.forms import StatesList, CityList, StoreList, StateCreate, \
     CityCreate, StoreCreate, StateUpdate, CityUpdate, StoreUpdate, StateDetail,\
     CityDetail, StoreDetail, StateDelete, CityDelete, StoreDelete
-
+    
+from states.forms import DetailUser,UserUpdate,UserCreate
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
@@ -35,5 +36,9 @@ urlpatterns = patterns('',
     url(r'^detailstore/(?P<pk>\d+)/$', StoreDetail.as_view(), name='detailstore'),
     url(r'^deletestore/(?P<pk>\d+)/$', StoreDelete.as_view(), name='deletestore'),
     url(r'^searchstore/$', views.searchstore, name='searchstore'),
+    
+    url(r'^udetail/(?P<pk>\d+)/$', DetailUser.as_view(), name='udetail'),
+    url(r'uedit/(?P<pk>\d+)/$', UserUpdate.as_view(), name='uedit'),
+    url(r'register/', UserCreate.as_view(), name='register'),
     
 )
