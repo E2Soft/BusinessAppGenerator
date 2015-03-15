@@ -35,8 +35,8 @@ def filterurl(obj):
     elif isinstance(obj, State):
         return reverse('detailstate',args=(obj.id,))
     else:
-        return
+        return reverse('udetail',args=(obj.id,))
     
 @register.filter
 def isstring(obj):
-    return isinstance(obj, str) or isinstance(obj, User)
+    return isinstance(obj, str) #or isinstance(obj, User)
