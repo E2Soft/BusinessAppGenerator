@@ -97,7 +97,7 @@ class StateDetail(DetailView):
         
         mapa = {}
         for name in self.object._meta.get_all_field_names():
-            if "id" not in name:
+            if 'id' != name and not name.endswith("_id"):
                 try:
                     mapa[name] = self.object.__getattribute__(name).all()
                 except AttributeError:
@@ -198,7 +198,7 @@ class CityDetail(DetailView):
         
         mapa = {}
         for name in self.object._meta.get_all_field_names():
-            if "id" not in name:
+            if 'id' != name and not name.endswith("_id"):
                 try:
                     mapa[name] = self.object.__getattribute__(name).all()
                 except AttributeError:
@@ -243,14 +243,6 @@ class StoreForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(StoreForm, self).__init__(*args, **kwargs)
-        """
-        self.fields["name"].widget.attrs['class']='form-control'
-        self.fields["adress"].widget.attrs['class']='form-control'
-        self.fields["owner"].widget.attrs['class']='form-control'
-        self.fields["state"].widget.attrs['class']='form-control'
-        self.fields["city"].widget.attrs['class']='form-control'
-        self.fields["phone"].widget.attrs['class']='form-control'
-        """
         for field in self.fields.values():
             field.widget.attrs['class']='form-control'
         
@@ -314,7 +306,7 @@ class StoreDetail(DetailView):
         
         mapa = {}
         for name in self.object._meta.get_all_field_names():
-            if 'id' not in name:
+            if 'id' != name and not name.endswith("_id"):
                 try:
                     mapa[name] = self.object.__getattribute__(name).all()
                 except AttributeError:
