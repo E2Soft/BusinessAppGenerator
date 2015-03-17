@@ -14,8 +14,8 @@ from django.views.generic.list import ListView
 
 from states.models import State, City, Store
 
-#States
 
+#States
 class SearchStatesForm(forms.Form):
     name = forms.CharField(max_length=50,required=False)
     shortname = forms.CharField(max_length=3,required=False)
