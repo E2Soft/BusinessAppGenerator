@@ -3,15 +3,31 @@
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.shortcuts import render
-
-from states.forms import  SearchStatesForm, SearchCityForm,\
+from django.contrib import auth
+from states.forms import  SearchStatesForm, SearchCityForm, \
     SearchStoreForm
 from states.models import State, City, Store
 
 
 # Create your views here.
 def index(request):
-    return render(request,'states/main.html')
+    if request.user.is_authenticated():
+        context = {"isadmin":request.user.is_superuser,"user":request.user}
+        return render(request,'states/main.html',context)
+     
+    username = request.POST.get("username","")
+    password = request.POST.get("password","")
+    
+    user = auth.authenticate(username=username, password=password)
+    context = {"isadmin":request.user.is_superuser,"user":request.user}
+    
+    if user is not None:
+        auth.login(request, user)
+
+        return render(request,'states/main.html',context) 
+     
+    else:
+        return render(request,'states/login.html')
 
 def searchstate(request):
     
