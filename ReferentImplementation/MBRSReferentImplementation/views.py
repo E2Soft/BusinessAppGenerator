@@ -19,8 +19,8 @@ def home(request):
     
     if user is not None:
         auth.login(request, user)
-
-        return render(request,'states/main.html',context) 
+        contextt = {"isadmin":request.user.is_superuser,"user":user}
+        return render(request,'states/main.html',contextt) 
      
     else:
         return render(request,'states/login.html')

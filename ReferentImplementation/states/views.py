@@ -1,9 +1,10 @@
 
 
+from django.contrib import auth
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.shortcuts import render
-from django.contrib import auth
+
 from states.forms import  SearchStatesForm, SearchCityForm, \
     SearchStoreForm
 from states.models import State, City, Store
@@ -23,8 +24,8 @@ def index(request):
     
     if user is not None:
         auth.login(request, user)
-
-        return render(request,'states/main.html',context) 
+        contextt = {"isadmin":request.user.is_superuser,"user":user}
+        return render(request,'states/main.html',contextt) 
      
     else:
         return render(request,'states/login.html')
