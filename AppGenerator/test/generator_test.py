@@ -13,7 +13,7 @@ class Test(unittest.TestCase):
 
     def setUp(self):
         self.app_model = AppModel(app_name='My test app', 
-                                  froms=[Form(title='First form', 
+                                  forms=[Form(title='First form', 
                                               fields=[Field(name='field1', label='My Field 1', field_type='String'),
                                                       Field(name='field2', label='My Field 2', field_type='String'),
                                                      ])
