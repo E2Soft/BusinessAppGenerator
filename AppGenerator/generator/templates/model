@@ -1,0 +1,6 @@
+{% extends "base" %}
+{% block content %}
+{% for form in model.forms -%}
+from {{app_name}}.models import {{form.title}}
+{% endfor %}
+{% endblock %}
