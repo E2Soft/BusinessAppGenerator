@@ -24,10 +24,9 @@ class Link:
         self.link_type = link_type
 
 class Field:
-    def __init__(self, name=None, label=None, field_type=None, mandatory = True, max_length=0,link=None):
+    def __init__(self, name=None, label=None, field_type=None, mandatory = True, max_length=0):
         self.name=name
         self.label=label
         self.field_type=field_type
         self.mandatory = mandatory
         self.max_length = max_length
-        self.link = link
