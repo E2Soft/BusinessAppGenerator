@@ -14,9 +14,9 @@ def generate_app_from_xml(path, xml_model_path):
     Generise aplikaciju na zadatoj lokaciji sa zadatim xml modelom aplikacije.
     '''
     app_model = specification.from_xml_file(xml_model_path)
-    generate_app(path, app_model)
+    generate(path, app_model)
     
-def generate_app(path, app_model):
+def generate(path, app_model):
     '''
     Generise aplikaciju na zadatoj lokaciji sa zadatim modelom aplikacije.
     '''
@@ -37,4 +37,3 @@ def copy_static_files(project_path, app_name):
     shutil.copytree(static_files_path, project_path)
     # rename app directory
     os.rename(os.path.join(project_path, '__app__'), os.path.join(project_path, app_name))
-    
