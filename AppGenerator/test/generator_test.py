@@ -12,7 +12,7 @@ from test.model import AppModel, Form, Field
 class Test(unittest.TestCase):
 
     def setUp(self):
-        self.app_model = AppModel(app_name='My test app', 
+        self.app_model = AppModel(app_name='My test app',
                                   forms=[Form(title='First form', 
                                               fields=[Field(name='field1', label='My Field 1', field_type='String'),
                                                       Field(name='field2', label='My Field 2', field_type='String'),

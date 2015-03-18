@@ -1,0 +1,85 @@
+{% extends "states/menu.html" %}
+{% block title %}{{data|title}} detail page{% endblock %}
+{% load classname from state_extras %}
+{% load filterlists from state_extras %}
+{% load filternormal from state_extras %}
+{% load filterurl from state_extras %}
+{% load isstring from state_extras %}
+
+{% block content %}
+<div class="jumbotron">
+	<h2>{{data|title}} detail</h2>
+	<div class="bs-callout bs-callout-default">
+		<ul class="list-group">
+			{% for name, value in mapa|filternormal %}
+				<li class="list-group-item"> <b>{{name|title}}:</b>
+					{% if value|isstring %}
+						{{value}}
+					{% else %}
+						 <a href="{{value|filterurl}}">{{value}}</a>
+					{% endif%}
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+	
+	{% if mapa|filterlists|length > 0%}
+		<div class="bs-callout bs-callout-default">
+			<ul class="list-group">
+				{% for name, value in mapa|filterlists %}
+					<li class="list-group-item"> <b>{{name|title}}:</b>
+						<ul>
+							{% for val in value %}
+								<li><a href="{{val|filterurl}}">{{val}}</a></li>
+							{% endfor %}
+						</ul>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block sidebar_content %}
+	<li>
+		<b>
+			{% if data|stringformat:"s" == 'state' %}
+				<a href="{% url 'updatestate' object.pk %}">
+					<span class="glyphicon glyphicon-pencil"></span>
+					Update {{ data|title }}
+				</a>
+			{% elif data|stringformat:"s" == 'city' %}
+				<a href="{% url 'updatecity' object.pk %}">
+					<span class="glyphicon glyphicon-pencil"></span>
+					Update {{ data|title }}
+				</a>
+			{% else%}
+				<a href="{% url 'updatestore' object.pk %}">
+					<span class="glyphicon glyphicon-pencil"></span>
+					Update {{ data|title }}
+				</a>
+			{% endif %}
+		</b>
+	</li>
+		<li>
+		<b>
+			{% if data|stringformat:"s" == 'state' %}
+				<a href="{% url 'deletestate' object.id %}" >
+					<span class="glyphicon glyphicon-remove"></span>
+					Delete {{ data|title }}
+				</a>
+			{% elif data|stringformat:"s" == 'city' %}
+				<a href="{% url 'deletecity' object.id %}" >
+					<span class="glyphicon glyphicon-remove"></span>
+					Delete {{ data|title }}
+				</a>
+			{% else%}
+				<a href="{% url 'deletestore' object.id %}" >
+					<span class="glyphicon glyphicon-remove"></span>
+					Delete {{ data|title }}
+				</a>
+			{% endif %}
+		</b>
+	</li>
+{% endblock %}
