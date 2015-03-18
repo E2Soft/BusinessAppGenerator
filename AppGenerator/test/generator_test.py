@@ -5,7 +5,7 @@ Created on Mar 17, 2015
 '''
 import unittest
 
-from generator import generator
+from generator import app_generator
 from test.model import AppModel, Form, Field
 
 
@@ -20,7 +20,7 @@ class Test(unittest.TestCase):
                                         ])
 
     def test_generator(self):
-        generator.generate_app("test_gen", self.app_model)
+        app_generator.generate("test_gen", self.app_model)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
