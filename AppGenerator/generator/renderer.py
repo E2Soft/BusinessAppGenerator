@@ -21,7 +21,6 @@ def render(project_path, app_model):
     render_admin(project_path, app_model)
     render_urls(project_path, app_model)
     render_forms(project_path, app_model)
-    print("JOB DONE")
 
 def render_models(project_path, app_model):
     renderedmodel = env.get_template('models').render(model = app_model,datetime=datetime.datetime.now(),
@@ -30,17 +29,25 @@ def render_models(project_path, app_model):
         file.write(renderedmodel)
 
 def render_views(project_path, app_model):
-    #env.get_template('views.py.html').render(the='variables', go='here')
-    pass
+    renderedviews = env.get_template('views').render(model = app_model,datetime=datetime.datetime.now(),
+                                                             guest=getpass.getuser(),app_name="myapp")
+    with open(project_path+"/views.py", "w") as file:
+        file.write(renderedviews)
 
 def render_admin(project_path, app_model):
-    #env.get_template('models.py.html').render(the='variables', go='here')
-    pass
+    rendereadmin = env.get_template('admin').render(model = app_model,datetime=datetime.datetime.now(),
+                                                    guest=getpass.getuser())
+    with open(project_path+"/admin.py", "w") as file:
+        file.write(rendereadmin)
 
 def render_urls(project_path, app_model):
-    #env.get_template('models.py.html').render(the='variables', go='here')
-    pass
+    renderedurls = env.get_template('urls').render(model = app_model,datetime=datetime.datetime.now(),
+                                                     guest=getpass.getuser(),app_name="myapp")
+    with open(project_path+"/urls.py", "w") as file:
+        file.write(renderedurls)
 
 def render_forms(project_path, app_model):
-    #env.get_template('models.py.html').render(the='variables', go='here')
-    pass
+    renderedforms = env.get_template('forms').render(model = app_model,datetime=datetime.datetime.now(),
+                                                     guest=getpass.getuser(),app_name="myapp")
+    with open(project_path+"/forms.py", "w") as file:
+        file.write(renderedforms)
