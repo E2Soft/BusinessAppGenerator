@@ -95,8 +95,10 @@ class {{form.title}}Delete(DeleteView):
 	
 	def get_success_url(self):
 		return reverse('list')
-
-def search{{form.title}}(request):
+		
+{% for operation in form.operations %}
+{% if operation.field_type == "Search" %}
+def {{operation.name}}(request):
 	if request.method == 'POST':
 		form = Search{{form.title}}Form(request.POST)
 		
@@ -119,7 +121,8 @@ def search{{form.title}}(request):
 		form = Search{{form.title}}Form()
 		
 	return render(request, '{{app_name}}/search.html', {'form': form,'title':"{{form.title}}"})
-
+{% endif %}
+{% endfor %}
 {% endfor -%}
 
 #User
