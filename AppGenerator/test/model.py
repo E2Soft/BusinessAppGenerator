@@ -10,10 +10,11 @@ class AppModel():
         self.forms=forms
     
 class Form:
-    def __init__(self, title=None, fields=[], operations=[]):
+    def __init__(self, title=None, fields=[], operations=[], main_attribute=None):
         self.title = title
         self.fields = fields
         self.operations = operations
+        self.main_attribute = main_attribute
 
 class Link:
     def __init__(self, name=None,label=None, field_type=None,mandatory=False,form=None,link_type=None):
