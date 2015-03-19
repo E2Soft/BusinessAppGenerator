@@ -60,13 +60,22 @@ def render_forms(project_path, app_model):
     
     with open(path+"/forms.py", "w") as file:
         file.write(renderedforms)
+        
+def render_custom(project_path, app_model):
+    renderedcustom = env.get_template('custom').render(model = app_model,datetime=datetime.datetime.now(),
+                                                       guest=getpass.getuser())
+    path = project_path+"/"+DJANGO_APP_NAME
+    
+    with open(path+"/custom.py", "w") as file:
+        file.write(renderedcustom)
      
 def render_files(project_path, app_model):
     render_models(project_path, app_model)
     render_views(project_path, app_model)
     render_admin(project_path, app_model)
     render_urls(project_path, app_model)
-    render_forms(project_path, app_model)     
+    render_forms(project_path, app_model)  
+    render_custom(project_path, app_model)   
         
 def generate_django_app(project_path, app_model):
     if not os.path.exists(project_path+"/"+DJANGO_APP_NAME): 
