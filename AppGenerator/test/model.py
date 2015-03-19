@@ -10,9 +10,10 @@ class AppModel():
         self.forms=forms
     
 class Form:
-    def __init__(self, title=None, fields=[]):
-        self.title=title
-        self.fields=fields
+    def __init__(self, title=None, fields=[], operations=[]):
+        self.title = title
+        self.fields = fields
+        self.operations = operations
 
 class Link:
     def __init__(self, name=None,label=None, field_type=None,mandatory=False,form=None,link_type=None):
@@ -23,10 +24,17 @@ class Link:
         self.name = name
         self.link_type = link_type
 
+class Operation:
+    def __init__(self, name=None, label=None, field_type=None,param=None):
+        self.name=name
+        self.label=label
+        self.field_type=field_type
+        self.param = param
+
 class Field:
     def __init__(self, name=None, label=None, field_type=None, mandatory = True, max_length=0):
         self.name=name
         self.label=label
-        self.field_type=field_type
+        self.field_type=field_type #Custom->generise se samo poziv funkcije koju ce korisnik dodati, Search -> generise se search
         self.mandatory = mandatory
         self.max_length = max_length

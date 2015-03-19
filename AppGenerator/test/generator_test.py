@@ -5,8 +5,8 @@ Created on Mar 17, 2015
 '''
 import unittest
 
-from generator import generator
-from test.model import AppModel, Form, Field, Link
+from generator import app_generator
+from test.model import AppModel, Form, Field, Link, Operation
 
 
 class Test(unittest.TestCase):
@@ -20,7 +20,10 @@ class Test(unittest.TestCase):
                                                             mandatory=False, max_length=10),
                                                       Field(name='field3', label='My Field 2', field_type='Integer',
                                                             mandatory=False),
-                                                     ]),
+                                                     ],
+                                              operations=[Operation(name="searchFirstForm",field_type="Search",label="Search"),
+                                                          Operation(name="customshit",label="Custom shit",field_type="Custom",param=1)]
+                                              ),
                                          Form(title='Secondform', 
                                               fields=[Field(name='field3', label='My Field 3', field_type='String',
                                                             mandatory=True,max_length=4),
@@ -28,7 +31,9 @@ class Test(unittest.TestCase):
                                                             mandatory=False, max_length=10),
                                                       Link(name="vezica",label='Veza', field_type="Link",mandatory=False,
                                                            form="Firstform",link_type="1-*")
-                                                     ]),
+                                                     ],
+                                              operations=[Operation(name="searchSecondForm",field_type="Search",label="Search")]
+                                              ),
                                          Form(title='Thirdform', 
                                               fields=[Field(name='field1', label='My Field 3', field_type='String',
                                                             mandatory=True,max_length=4),
@@ -42,11 +47,14 @@ class Test(unittest.TestCase):
                                                             mandatory=True),
                                                       Field(name='field5', label='My Field 4', field_type='DateTime',
                                                             mandatory=False),
-                                                     ]),
+                                                     ],
+                                              operations=[Operation(name="searchThirdForm",field_type="Search",label="Search"),
+                                                          Operation(name="custommethod",label="Custom shit",field_type="Custom")]
+                                              ),
                                         ])
 
     def test_generator(self):
-        generator.generate_app("test_gen", self.app_model)
+        app_generator.generate("test_gen", self.app_model)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

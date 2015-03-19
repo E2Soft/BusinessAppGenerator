@@ -30,7 +30,7 @@ def render_models(project_path, app_model):
 
 def render_views(project_path, app_model):
     renderedviews = env.get_template('views').render(model = app_model,datetime=datetime.datetime.now(),
-                                                             guest=getpass.getuser(),app_name="myapp")
+                                                             guest=getpass.getuser(),app_name="business_app")
     with open(project_path+"/views.py", "w") as file:
         file.write(renderedviews)
 
@@ -42,12 +42,12 @@ def render_admin(project_path, app_model):
 
 def render_urls(project_path, app_model):
     renderedurls = env.get_template('urls').render(model = app_model,datetime=datetime.datetime.now(),
-                                                     guest=getpass.getuser(),app_name="myapp")
+                                                     guest=getpass.getuser(),app_name="business_app")
     with open(project_path+"/urls.py", "w") as file:
         file.write(renderedurls)
 
 def render_forms(project_path, app_model):
     renderedforms = env.get_template('forms').render(model = app_model,datetime=datetime.datetime.now(),
-                                                     guest=getpass.getuser(),app_name="myapp")
+                                                     guest=getpass.getuser(),app_name="business_app")
     with open(project_path+"/forms.py", "w") as file:
         file.write(renderedforms)
