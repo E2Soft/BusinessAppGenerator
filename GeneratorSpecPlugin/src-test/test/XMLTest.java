@@ -1,20 +1,50 @@
 package test;
 
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import plugin.XMLUtil;
-import plugin.model.TestClass;
-import plugin.model.TestClassSecond;
-import plugin.model.TestClassThird;
+import plugin.model.AppModel;
+import plugin.model.Field;
+import plugin.model.Form;
+import plugin.model.FormField;
+import plugin.model.LinkField;
 
 public class XMLTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		TestClassThird third = new TestClassThird("1", 1, 2, 3);
-		TestClass t = new TestClass("3", 1,2,34,"dfg", new TestClassSecond("2", 4, 4, 5, "fgh", third), third);
+		List<Form> forms = new ArrayList<>();
+		List<Field> fields;
 		
-		XMLUtil.toXmlStream(t, new OutputStreamWriter(System.out));
+		fields = new ArrayList<>();
+		fields.add(new FormField("polje1", "Polje 1", "int", true, 5));
+		fields.add(new FormField("polje2", "Polje 2", "string", false, 5));
+		
+		Form form1 = new Form("Form 1", fields);
+		
+		fields = new ArrayList<>();
+		fields.add(new FormField("polje3", "Polje 3", "int", true, 5));
+		fields.add(new FormField("polje4", "Polje 4", "string", false, 5));
+		fields.add(new LinkField("forma1link", "Forma 1", "Link", true, form1, "1-1"));
+		
+		Form form2 = new Form("Form 2", fields);
+		
+		fields = new ArrayList<>();
+		fields.add(new FormField("polje3", "Polje 3", "int", true, 5));
+		fields.add(new FormField("polje4", "Polje 4", "string", false, 5));
+		fields.add(new LinkField("forma2link", "Forma 2", "Link", true, form2, "1-1"));
+		
+		Form form3 = new Form("Form 2", fields);
+		
+		forms.add(form1);
+		forms.add(form2);
+		forms.add(form3);
+		
+		AppModel a = new AppModel("MyApp", forms);
+		
+		XMLUtil.toXmlStream(a, new OutputStreamWriter(System.out));
 	}
 	
 	/*

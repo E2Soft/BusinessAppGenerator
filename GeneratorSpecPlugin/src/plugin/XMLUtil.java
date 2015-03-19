@@ -10,6 +10,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.naming.NoNameCoder;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class XMLUtil
 {
@@ -37,9 +39,9 @@ public class XMLUtil
 	
 	public static void toXmlStream(Object object, Writer out)
 	{
-		XStream xstream = new XStream();
-		xstream.alias( camelToUnderScore(object.getClass().getSimpleName()), object.getClass() );
-		xstream.toXML(object, System.out);
+		XStream xstream = new XStream(new DomDriver("UTF-8", new NoNameCoder()));
+		xstream.autodetectAnnotations(true);
+		xstream.toXML(object, out);
 	}
 
 	public static String camelToUnderScore(String camel)

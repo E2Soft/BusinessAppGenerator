@@ -1,14 +1,12 @@
 package plugin.analyzer;
 
-import plugin.model.TestClass;
-import plugin.model.TestClassSecond;
-import plugin.model.TestClassThird;
+import plugin.model.AppModel;
 
 import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper;
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Class;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Enumeration;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package;
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Class;
 
 
 /** Model Analyzer takes necessary metadata from the MagicDraw model and puts it in 
@@ -16,7 +14,7 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Class;
  */ 
 public class ModelAnalyzer
 {
-	public static TestClass processPackage(Package pack) throws AnalyzeException
+	public static AppModel processPackage(Package pack) throws AnalyzeException
 	{
 		//Recursive procedure that extracts data from package elements and stores it in the intermediate data structure
 
@@ -52,10 +50,7 @@ public class ModelAnalyzer
 			}
 		}
 		
-		TestClassThird third = new TestClassThird("1", 1, 2, 3);
-		TestClass t = new TestClass("3", 1,2,34,"dfg", new TestClassSecond("2", 4, 4, 5, "fgh", third), third);
-		
-		return t;
+		return null;
 	}
 /*
 	private FMClass getClassData(Class cl, String packageName) throws AnalyzeException {
