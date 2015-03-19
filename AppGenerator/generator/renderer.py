@@ -68,6 +68,12 @@ def render_custom(project_path, app_model):
     
     with open(path+"/custom.py", "w") as file:
         file.write(renderedcustom)
+        
+def render_manage(project_path, app_model):
+    renderedmanage = env.get_template('manage').render(name = app_model.app_name.replace(" ","_"),
+                                                       datetime=datetime.datetime.now(),guest=getpass.getuser())
+    with open(project_path+"/manage.py", "w") as file:
+        file.write(renderedmanage)
      
 def render_files(project_path, app_model):
     render_models(project_path, app_model)
@@ -75,7 +81,8 @@ def render_files(project_path, app_model):
     render_admin(project_path, app_model)
     render_urls(project_path, app_model)
     render_forms(project_path, app_model)  
-    render_custom(project_path, app_model)   
+    render_custom(project_path, app_model) 
+    render_manage(project_path, app_model)  
         
 def generate_django_app(project_path, app_model):
     if not os.path.exists(project_path+"/"+DJANGO_APP_NAME): 
