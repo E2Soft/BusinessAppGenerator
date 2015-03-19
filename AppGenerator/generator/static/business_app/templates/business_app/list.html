@@ -12,7 +12,7 @@
 					<ul class="list-group">
 						{% for obj in object_list %}
 							<div class="bs-callout bs-callout-primary">
-								<a href="{% url detail_url obj.pk %}">{{obj.__getattribute__(name_attribute)}}</a>
+								<a href="{% url detail_url obj.pk %}">{{obj.__getattribute__(main_attribute)}}</a>
 							</div>
 						{% endfor %}
 					</ul>
