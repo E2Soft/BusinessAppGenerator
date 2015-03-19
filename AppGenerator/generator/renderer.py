@@ -19,7 +19,12 @@ def render(project_path, app_model):
     '''
     Generise fajlove na osnovu templejta i modela aplikacije.
     '''
-    generate_django_app(project_path, app_model)
+    render_models(project_path, app_model)
+    render_views(project_path, app_model)
+    render_admin(project_path, app_model)
+    render_urls(project_path, app_model)
+    render_forms(project_path, app_model)
+    render_custom_code_file(project_path)
 
 def render_models(project_path, app_model):
     renderedmodel = env.get_template('models').render(model = app_model,datetime=datetime.datetime.now(),
@@ -60,24 +65,9 @@ def render_forms(project_path, app_model):
     
     with open(path+"/forms.py", "w") as file:
         file.write(renderedforms)
-     
-def render_files(project_path, app_model):
-    render_models(project_path, app_model)
-    render_views(project_path, app_model)
-    render_admin(project_path, app_model)
-    render_urls(project_path, app_model)
-    render_forms(project_path, app_model)     
         
-def generate_django_app(project_path, app_model):
-    if not os.path.exists(project_path+"/"+DJANGO_APP_NAME): 
-        os.makedirs(project_path+"/"+DJANGO_APP_NAME)
-        
-        path = project_path+"/"+DJANGO_APP_NAME
-        
-        with open(path+"/__init__.py", "w") as file:
-            file.write("")
-        
-        with open(path+"/custom.py", "w") as file:
+def render_custom_code_file(project_path):
+    custom_code_path = os.path.join(project_path, DJANGO_APP_NAME, 'custom.py')
+    if not os.path.exists(custom_code_path):
+        with open(custom_code_path, "w") as file:
             file.write("#Add custom functions here...See urls.py for more info!")
-            
-    render_files(project_path, app_model)
