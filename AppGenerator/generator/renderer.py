@@ -89,7 +89,10 @@ def render_custom(project_path, app_model):
 def render_tests(project_path, app_model):
     renderedtests = env.get_template('tests').render(model = app_model,datetime=datetime.datetime.now(),
                                                      guest=getpass.getuser())
-    with open(os.path.join(project_path, app_model.app_name, 'tests.py'), "w") as file:
+    
+    path = project_path+"/"+DJANGO_APP_NAME
+
+    with open(path+'/tests.py', "w") as file:
         file.write(renderedtests)
 
 def render_settings(project_path, app_model):
