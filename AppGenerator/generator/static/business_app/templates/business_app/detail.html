@@ -58,4 +58,14 @@
 			</a>
 		</b>
 	</li>
+	{% for custom_method in custom_methods %}
+	<li>
+		<b>
+			<a href="{% url custom_method.url object.pk %}">
+				<span class="glyphicon glyphicon-list-alt"></span>
+					{{custom_method.name}}
+			</a>
+		</b>
+	</li>
+	{% endfor %}
 {% endblock %}
