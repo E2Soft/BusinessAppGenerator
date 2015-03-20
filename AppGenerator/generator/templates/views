@@ -185,27 +185,7 @@ class UserCreate(CreateView):
 	form_class = UserForm
 	
 	def get_success_url(self):
-		return reverse('index')
-		
-#index used for as login page
-
-def index(request):
-	if request.user.is_authenticated():
-		context = {"isadmin":request.user.is_superuser,"user":request.user}
-		return render(request,'{{app_name}}/main.html',context)
-		
-	username = request.POST.get("username","")
-	password = request.POST.get("password","")
-	
-	user = auth.authenticate(username=username, password=password)
-	context = {"isadmin":request.user.is_superuser,"user":request.user}
-	
-	if user is not None:
-		auth.login(request, user)
-		contextt = {"isadmin":request.user.is_superuser,"user":user}
-		return render(request,'{{app_name}}/main.html',contextt)
-	else:
-		return render(request,'{{app_name}}/login.html')
+		return reverse('home')
 		
 class MenuItem:
 	def __init__(self, name, url):
