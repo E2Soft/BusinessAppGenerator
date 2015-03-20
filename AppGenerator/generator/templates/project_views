@@ -7,7 +7,7 @@ def home(request):
 	if request.user.is_authenticated():
 		toolbar_items = [
 		{% for form in model.forms -%}
-		MenuItem(form.title, "detail{{form.title}}"),
+		MenuItem("{{form.title}}", "list{{form.title}}"),
 		{% endfor %}
 		]
 		context = {"isadmin":request.user.is_superuser,"user":request.user, "toolbar_items":toolbar_items}

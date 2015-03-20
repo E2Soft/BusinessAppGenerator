@@ -34,12 +34,13 @@ class {{form.title}}List(ListView):
 		context["detail_url"] = "detail{{form.title}}"
 		context["add_url"] = "add{{form.title}}"
 		context["search_url"] = "search{{form.title}}"
-		context["main_attribute"] = "search{{form.main_attribute}}"
+		context["main_attributes"] = {obj.pk : obj.__getattribute__('{{form.main_attribute}}') for obj in self.get_queryset()}
 		context["custom_methods"] = [
 		{% for operation in form.operations %}
-		MenuItem(operation.label, operation.name),
+		MenuItem("{{operation.label}}", "{{operation.name}}"),
 		{% endfor %}
 		]
+		
 		
 		return context
 	
@@ -189,9 +190,12 @@ def index(request):
 		return render(request,'{{app_name}}/main.html',contextt)
 	else:
 		return render(request,'{{app_name}}/login.html')
-{% endblock %}
-
+		
 class MenuItem:
 	def __init__(self, name, url):
 		self.name = name
 		self.url = url
+		
+{% endblock %}
+
+

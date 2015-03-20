@@ -12,7 +12,7 @@
 					<ul class="list-group">
 						{% for obj in object_list %}
 							<div class="bs-callout bs-callout-primary">
-								<a href="{% url detail_url obj.pk %}">{{obj.__getattribute__(main_attribute)}}</a>
+								<a href="{% url detail_url obj.pk %}">{{main_attributes.obj.pk}}</a>
 							</div>
 						{% endfor %}
 					</ul>
@@ -32,22 +32,4 @@
 			</a>
 		</b>
 	</li>
-	<li>
-		<b>
-			<a href="{% url search_url %}">
-				<span class="glyphicon glyphicon-search"></span>
-				Search {{ title|title }}
-			</a>
-		</b>
-	</li>
-	{% for custom_method in custom_methods %}
-	<li>
-		<b>
-			<a href="{% url custom_method.url %}">
-				<span class="glyphicon glyphicon-list-alt"></span>
-					{{custom_method.name}}
-			</a>
-		</b>
-	</li>
-	{% endfor %}
 {% endblock %}
