@@ -24,6 +24,22 @@ def filterlists(obj):
 	return filtered
 
 @register.filter
+def is_entity(obj):
+{% for form in model.forms -%}
+{% if loop.first %}
+	if isinstance(obj, {{form.title}}):
+		return True
+{% else %}
+	elif isinstance(obj, {{form.title}}):
+		return True
+{% endif %}
+{% endfor %}
+	elif isinstance(obj, User):
+		return True
+	else:
+		return False
+
+@register.filter
 def filterurl(obj):
 {% for form in model.forms -%}
 {% if loop.first %}

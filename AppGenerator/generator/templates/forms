@@ -12,13 +12,13 @@ from django.contrib.auth.models import User
 class Search{{form.title}}Form(forms.Form):
 {% for field in form.fields %}
 	{% if field.field_type == "String" -%} 
-		{{field.name}} = forms.CharField(required={{field.mandatory}})
+		{{field.name}} = forms.CharField(required=False)
 	{% elif field.field_type == "Float" -%}
-		{{field.name}} = forms.FloatField(required={{field.mandatory}})
+		{{field.name}} = forms.FloatField(required=False)
 	{% elif field.field_type == "DateTime" -%}
-		{{field.name}} = forms.DateTimeField(required={{field.mandatory}})
+		{{field.name}} = forms.DateTimeField(required=False)
 	{% elif field.field_type == "Integer" -%}
-		{{field.name}} = forms.IntegerField(required={{field.mandatory}})
+		{{field.name}} = forms.IntegerField(required=False)
 	{% else -%}
 		{{field.name}} = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required={{field.mandatory}})
 	{% endif -%}
