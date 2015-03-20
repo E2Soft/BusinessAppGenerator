@@ -97,7 +97,7 @@ class {{form.title}}Detail(DetailView):
 class {{form.title}}Update(UpdateView):
 	model = {{form.title}}
 	template_name = '{{app_name}}/update.html'
-	form_class = '{{form.title}}'
+	form_class = {{form.title}}Form
 	
 	def get_success_url(self):
 		return reverse('detail{{form.title}}',args=(self.get_object().id,))
