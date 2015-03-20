@@ -1,0 +1,20 @@
+{% extends 'base' %}
+
+{% block content %}
+
+{% for form in model.forms -%}
+{% for operation in form.operations %}
+{% if operation.field_type != "Search" -%}
+{% if operation.param == None -%}
+def {{operation.name}}(request):
+	#TODO:Implement this view
+	pass
+{% else -%}
+def {{operation.name}}(request,pk):
+	#TODO:Implement this view
+	pass
+{% endif -%}
+{% endif -%}
+{% endfor %}
+{% endfor %}
+{% endblock %}

@@ -24,7 +24,8 @@ def render(project_path, app_model):
     render_admin(project_path, app_model)
     render_urls(project_path, app_model)
     render_forms(project_path, app_model)
-    render_custom_code_file(project_path)
+    render_custom(project_path, app_model)
+    render_manage(project_path, app_model)
 
 def render_models(project_path, app_model):
     renderedmodel = env.get_template('models').render(model = app_model,datetime=datetime.datetime.now(),
@@ -66,8 +67,16 @@ def render_forms(project_path, app_model):
     with open(path+"/forms.py", "w") as file:
         file.write(renderedforms)
         
-def render_custom_code_file(project_path):
+def render_manage(project_path, app_model):
+    renderedmanage = env.get_template('manage').render(name = app_model.app_name.replace(" ","_"),
+                                                       datetime=datetime.datetime.now(),guest=getpass.getuser())
+    with open(project_path+"/manage.py", "w") as file:
+        file.write(renderedmanage)
+        
+def render_custom(project_path, app_model):
     custom_code_path = os.path.join(project_path, DJANGO_APP_NAME, 'custom.py')
     if not os.path.exists(custom_code_path):
+        renderedcustom = env.get_template('custom').render(model = app_model,datetime=datetime.datetime.now(), guest=getpass.getuser())
         with open(custom_code_path, "w") as file:
-            file.write("#Add custom functions here...See urls.py for more info!")
+            file.write(renderedcustom)
+
