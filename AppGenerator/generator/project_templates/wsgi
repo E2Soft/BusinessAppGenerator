@@ -1,0 +1,8 @@
+{% extends 'base' %}
+{% block content %}
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "{{app_name}}.settings")
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+{% endblock %}
