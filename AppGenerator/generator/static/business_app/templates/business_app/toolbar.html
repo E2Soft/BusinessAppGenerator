@@ -1,4 +1,4 @@
-{% extends "states/base.html" %}
+{% extends "business_app/base.html" %}
 {% block toolbar %}
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 	  <div class="container-fluid">
@@ -8,9 +8,9 @@
 		<div>
 			<ul class="nav navbar-nav">
 				<li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-			    <li><a href="{% url 'states' %}"><span class="glyphicon glyphicon-flag"></span> States</a></li>
-			    <li><a href="{% url 'cities' %}"><span class="glyphicon glyphicon-list-alt"></span> Cities</a></li>
-			    <li><a href="{% url 'stores' %}"><span class="glyphicon glyphicon-tasks"></span> Stores</a></li>
+				{% for toolbar_item in toolbar_items %}
+			    	<li><a href="{% url toolbar_item.url %}"><span class="glyphicon glyphicon-tasks"></span> {{toolbar_item.name}}</a></li>
+			    {% endfor %}
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 		      	<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">

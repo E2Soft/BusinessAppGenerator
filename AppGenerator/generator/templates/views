@@ -31,6 +31,16 @@ class {{form.title}}List(ListView):
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}List, self).get_context_data(**kwargs)
 		context["title"] = "{{form.title}}"
+		context["detail_url"] = "detail{{form.title}}"
+		context["add_url"] = "add{{form.title}}"
+		context["search_url"] = "search{{form.title}}"
+		context["main_attributes"] = {obj.pk : obj.__getattribute__('{{form.main_attribute}}') for obj in self.get_queryset()}
+		context["custom_methods"] = [
+		{% for operation in form.operations %}
+		MenuItem("{{operation.label}}", "{{operation.name}}"),
+		{% endfor %}
+		]
+		
 		
 		return context
 	
@@ -65,6 +75,9 @@ class {{form.title}}Detail(DetailView):
 			mapa['{{field.name}}'] = self.object.__getattribute__('{{field.name}}').all()
 		{% endif -%} 
 	{% endfor %}
+	
+		context["update_url"] = "update{{form.title}}"
+		context["delete_url"] = "delete{{form.title}}"
 		
 		context["mapa"] = mapa
 		return context
@@ -177,4 +190,12 @@ def index(request):
 		return render(request,'{{app_name}}/main.html',contextt)
 	else:
 		return render(request,'{{app_name}}/login.html')
+		
+class MenuItem:
+	def __init__(self, name, url):
+		self.name = name
+		self.url = url
+		
 {% endblock %}
+
+

@@ -5,7 +5,7 @@ Created on Mar 19, 2015
 '''
 from test.model import AppModel, Form, Field, Operation, Link
 
-test_app_model = AppModel(app_name='My test app', 
+test_app_model = AppModel(app_name='My_test_app', 
                                   forms=[Form(title='Firstform', 
                                               fields=[Field(name='field1', label='My Field 1', field_type='String',
                                                             mandatory=True,max_length=4),
@@ -15,7 +15,8 @@ test_app_model = AppModel(app_name='My test app',
                                                             mandatory=False),
                                                      ],
                                               operations=[Operation(name="searchFirstForm",field_type="Search",label="Search"),
-                                                          Operation(name="customshit",label="Custom shit",field_type="Custom",param=1)]
+                                                          Operation(name="customshit",label="Custom shit",field_type="Custom",param=1)],
+                                              main_attribute='field1'
                                               ),
                                          Form(title='Secondform', 
                                               fields=[Field(name='field3', label='My Field 3', field_type='String',
@@ -25,7 +26,8 @@ test_app_model = AppModel(app_name='My test app',
                                                       Link(name="vezica",label='Veza', field_type="Link",mandatory=False,
                                                            form="Firstform",link_type="1-*")
                                                      ],
-                                              operations=[Operation(name="searchSecondForm",field_type="Search",label="Search")]
+                                              operations=[Operation(name="searchSecondForm",field_type="Search",label="Search")],
+                                              main_attribute='field3'
                                               ),
                                          Form(title='Thirdform', 
                                               fields=[Field(name='field1', label='My Field 3', field_type='String',
@@ -42,6 +44,7 @@ test_app_model = AppModel(app_name='My test app',
                                                             mandatory=False),
                                                      ],
                                               operations=[Operation(name="searchThirdForm",field_type="Search",label="Search"),
-                                                          Operation(name="custommethod",label="Custom shit",field_type="Custom")]
+                                                          Operation(name="custommethod",label="Custom shit",field_type="Custom")],
+                                              main_attribute='field1'
                                               ),
                                         ])
