@@ -33,4 +33,5 @@ class Manager():
     
     def run_server(self):
         # create database
-        call_command('runserver')
+        os.environ['RUN_MAIN'] = "true"
+        call_command('runserver', noreload=True)

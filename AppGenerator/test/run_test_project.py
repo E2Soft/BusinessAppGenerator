@@ -15,9 +15,9 @@ if __name__ == "__main__":
     app_name=app_model.app_name.replace(' ', '_')
     project_path = os.path.join('test_gen', app_name)
     
-    manager = Manager(project_path, app_name)
-    
     app_generator.generate("test_gen", app_model)
+    
+    manager = Manager(project_path, app_name)
     manager.migrate_database()
-    manager.create_super_user(username='asd', password='asd')
+    manager.create_super_user(username='a', password='a')
     manager.run_server()

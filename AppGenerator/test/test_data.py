@@ -15,7 +15,7 @@ test_app_model = AppModel(app_name='My_test_app',
                                                             mandatory=False),
                                                      ],
                                               operations=[Operation(name="searchFirstForm",field_type="Search",label="Search"),
-                                                          Operation(name="customshit",label="Custom shit",field_type="Custom",param=1)],
+                                                          Operation(name="customshit",label="Custom shit",field_type="Custom",param=True)],
                                               main_attribute='field1'
                                               ),
                                          Form(title='Secondform', 
