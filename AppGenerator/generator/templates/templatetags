@@ -1,0 +1,39 @@
+{% extends 'model' %}
+{% block content%}
+from django import template
+from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
+from builtins import str
+
+register = template.Library()
+
+{{ super() }}
+
+@register.filter
+def classname(obj):
+	return obj.__class__.__name__ != "QuerySet"
+
+@register.filter
+def filternormal(obj):
+	filtered = [ (key,value) for key,value in obj.items() if value.__class__.__name__ != "QuerySet"]
+	return filtered
+
+@register.filter
+def filterlists(obj):
+	filtered = [ (key,value) for key,value in obj.items() if value.__class__.__name__ == "QuerySet"]
+	return filtered
+
+@register.filter
+def filterurl(obj):
+{% for form in model.forms -%}
+{% if loop.first %}
+	if isinstance(obj, {{form.title}}):
+		return reverse('detail{{form.title}}',args=(obj.id,))
+{% else %}
+	elif isinstance(obj, {{form.title}}):
+		return reverse('detail{{form.title}}',args=(obj.id,))
+{% endif %}
+{% endfor %}
+	else:
+		return reverse('udetail',args=(obj.id,))
+{% endblock %}

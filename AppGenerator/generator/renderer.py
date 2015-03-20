@@ -31,6 +31,7 @@ def render(project_path, app_model):
     render_wsgi(project_path, app_model)
     render_project_views(project_path, app_model)
     render_project_urls(project_path, app_model)
+    render_templatetags(project_path, app_model)
 
 def render_models(project_path, app_model):
     renderedmodel = env.get_template('models').render(model = app_model,datetime=datetime.datetime.now(),
@@ -115,3 +116,10 @@ def render_wsgi(project_path, app_model):
     with open(os.path.join(project_path, app_model.app_name, 'wsgi.py'), "w") as file:
         file.write(renderedwsgi)
 
+def render_templatetags(project_path, app_model):
+    renderedtemplatetags = env.get_template('templatetags').render(model = app_model,datetime=datetime.datetime.now(),
+                                                                   guest=getpass.getuser(),app_name=DJANGO_APP_NAME)
+    path = project_path+"/"+DJANGO_APP_NAME
+    
+    with open(path+"/templatetags/business_app_extras.py", "w") as file:
+        file.write(renderedtemplatetags)
