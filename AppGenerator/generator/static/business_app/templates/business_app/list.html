@@ -1,0 +1,45 @@
+{% extends "business_app/menu.html" %}
+{% block title %}{{ title|title }}{% endblock %}
+
+{% block content %}
+	<div id="page-content-wrapper">
+    	<div class="container-fluid">
+        	<div class="row">
+            	<div class="col-lg-12">	
+            		<div class="page-header">
+       					<h2><span class="glyphicon glyphicon-flag"></span> {{ title|title }}</h2>
+    				</div>
+					<ul class="list-group">
+						{% for obj in object_list %}
+							<div class="bs-callout bs-callout-primary">
+								<a href="{% url detail_url obj.pk %}">{{main_attributes.obj.pk}}</a>
+							</div>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+{% endblock %}
+
+{% block sidebar_content %}
+	<li>
+		<b>
+			<a href="{% url add_url %}">
+				<span class="glyphicon glyphicon-file"></span>
+				Add new {{ title|title }}
+			</a>
+		</b>
+	</li>
+	{% for custom_method in custom_methods %}
+	<li>
+		<b>
+			<a href="{% url custom_method.url %}">
+				<span class="glyphicon glyphicon-list-alt"></span>
+					{{custom_method.name}}
+			</a>
+		</b>
+	</li>
+	{% endfor %}
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "business_app/menu.html" %}
+{% block title %}{{title|title}} detail page{% endblock %}
+{% load classname from business_app_extras %}
+{% load filterlists from business_app_extras %}
+{% load filternormal from business_app_extras %}
+{% load filterurl from business_app_extras %}
+{% load isstring from business_app_extras %}
+
+{% block content %}
+<div class="jumbotron">
+	<h2>{{title|title}} detail</h2>
+	<div class="bs-callout bs-callout-default">
+		<ul class="list-group">
+			{% for name, value in mapa|filternormal %}
+				<li class="list-group-item"> <b>{{name|title}}:</b>
+					{% if value|isstring %}
+						{{value}}
+					{% else %}
+						 <a href="{{value|filterurl}}">{{value}}</a>
+					{% endif%}
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+	
+	{% if mapa|filterlists|length > 0%}
+		<div class="bs-callout bs-callout-default">
+			<ul class="list-group">
+				{% for name, value in mapa|filterlists %}
+					<li class="list-group-item"> <b>{{name|title}}:</b>
+						<ul>
+							{% for val in value %}
+								<li><a href="{{val|filterurl}}">{{val}}</a></li>
+							{% endfor %}
+						</ul>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block sidebar_content %}
+	<li>
+		<b>
+			<a href="{% url update_url object.pk %}">
+				<span class="glyphicon glyphicon-pencil"></span>
+				Update {{ title|title }}
+			</a>
+		</b>
+	</li>
+		<li>
+		<b>
+			<a href="{% url delete_url object.id %}" >
+				<span class="glyphicon glyphicon-remove"></span>
+				Delete {{ title|title }}
+			</a>
+		</b>
+	</li>
+	{% for custom_method in custom_methods %}
+	<li>
+		<b>
+			<a href="{% url custom_method.url object.pk %}">
+				<span class="glyphicon glyphicon-list-alt"></span>
+					{{custom_method.name}}
+			</a>
+		</b>
+	</li>
+	{% endfor %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "business_app/base.html" %}
+{% block toolbar %}
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	 		<a class="navbar-brand" href="#"><span class="glyphicon glyphicon-road"></span> StarTrac</a>
+		</div>
+		<div>
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+				{% for toolbar_item in toolbar_items %}
+			    	<li><a href="{% url toolbar_item.url %}"><span class="glyphicon glyphicon-tasks"></span> {{toolbar_item.name}}</a></li>
+			    {% endfor %}
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+		      	<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
+		      	<span class="glyphicon glyphicon-user"></span>
+		        {{user}} 
+		        <span class="caret"></span></a>
+		          <ul class="dropdown-menu">
+		          	<li><a href="{% url 'udetail' user.pk %}"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+		            {% if isadmin %}
+		            	<li><a href="/admin"><span class="glyphicon glyphicon-tower"></span> Admin panel</a></li>
+		            {% endif %}
+		            <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+		          </ul>
+		        </li>
+	      </ul>
+		</div>
+	  </div>
+	</nav>
+{% endblock %}

@@ -25,7 +25,7 @@ class Search{{form.title}}Form(forms.Form):
 {% endfor %}
 
 	def __init__(self, *args, **kwargs):
-		super(Search{{form.title}}Form, self).__init___(*args, **kwargs)
+		super(Search{{form.title}}Form, self).__init__(*args, **kwargs)
 		for field in self.fields.values():
 			field.widget.attrs['class']='form-control'
 
@@ -36,7 +36,7 @@ class {{form.title}}Form(forms.Form):
 		fields = [{% for field in form.fields %}'{{field.name}}',{% endfor %}]
 		
 	def __init__(self, *args, **kwargs):
-		super({{form.title}}Form, self).__init___(*args, **kwargs)
+		super({{form.title}}Form, self).__init__(*args, **kwargs)
 		for field in self.fields.values():
 			field.widget.attrs['class']='form-control'
 
