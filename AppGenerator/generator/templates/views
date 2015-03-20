@@ -69,14 +69,16 @@ class {{form.title}}Detail(DetailView):
 		context["title"] = "{{form.title}}"
 		
 		mapa = {}
-	{% for field in form.fields %}
-		{% if field.field_type != "Link" -%}
-			mapa['{{field.name}}'] = self.object.__getattribute__('{{field.name}}')
-		{% else -%}
-			mapa['{{field.name}}'] = self.object.__getattribute__('{{field.name}}').all()
-		{% endif -%} 
-	{% endfor %}
-		
+		for name in self.object._meta.get_all_field_names():
+			if 'id' != name and not name.endswith("_id"):
+				try:
+					mapa[name] = self.object.__getattribute__(name).all()
+				except AttributeError:
+					try:
+						mapa[name] = self.object.__getattribute__(name)
+					except AttributeError:
+						mapa[name] = self.object.__getattribute__(''.join([name,"_set"])).all()
+
 		context["mapa"] = mapa
 		
 		context["update_url"] = "update{{form.title}}"

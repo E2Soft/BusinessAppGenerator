@@ -3,6 +3,7 @@
 {% block content %}
 from django import forms
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 {{ super() }}
 
@@ -14,13 +15,13 @@ class Search{{form.title}}Form(forms.Form):
 	{% if field.field_type == "String" -%} 
 		{{field.name}} = forms.CharField(required=False)
 	{% elif field.field_type == "Float" -%}
-		{{field.name}} = forms.FloatField(required=False)
+		{{field.name}} = forms.FloatField(required=False, initial=0)
 	{% elif field.field_type == "DateTime" -%}
-		{{field.name}} = forms.DateTimeField(required=False)
+		{{field.name}} = forms.DateTimeField(required=False, initial=timezone.now())
 	{% elif field.field_type == "Integer" -%}
-		{{field.name}} = forms.IntegerField(required=False)
+		{{field.name}} = forms.IntegerField(required=False, initial=0)
 	{% else -%}
-		{{field.name}} = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required={{field.mandatory}})
+		{{field.name}} = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required=False)
 	{% endif -%}
 {% endfor %}
 
