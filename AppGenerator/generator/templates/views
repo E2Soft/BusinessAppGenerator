@@ -70,10 +70,10 @@ class {{form.title}}Detail(DetailView):
 		
 		mapa = {}
 	{% for field in form.fields %}
-		{% if field.field_type != "Link" -%}
-			mapa['{{field.name}}'] = self.object.__getattribute__('{{field.name}}')
-		{% else -%}
+		{% if field.field_type == "Link" and field.link_type == '*-*' -%}
 			mapa['{{field.name}}'] = self.object.__getattribute__('{{field.name}}').all()
+		{% else -%}
+			mapa['{{field.name}}'] = self.object.__getattribute__('{{field.name}}')
 		{% endif -%} 
 	{% endfor %}
 		
