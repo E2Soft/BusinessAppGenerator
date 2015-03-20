@@ -2,7 +2,7 @@ package plugin.model;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias("LinkField")
+@XStreamAlias("Link")
 public class LinkField extends Field
 {
 	Form form;

@@ -9,10 +9,12 @@ public class Form
 {
 	String title;
 	List<Field> fields;
-	public Form(String title, List<Field> fields)
+	List<Operation> operations;
+	public Form(String title, List<Field> fields, List<Operation> operations)
 	{
 		super();
 		this.title = title;
 		this.fields = fields;
+		this.operations = operations;
 	}
 }

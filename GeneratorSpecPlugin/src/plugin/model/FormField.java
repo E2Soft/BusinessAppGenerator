@@ -2,7 +2,7 @@ package plugin.model;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias("FormField")
+@XStreamAlias("Field")
 public class FormField extends Field
 {
 	int max_length;

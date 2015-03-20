@@ -10,6 +10,7 @@ import plugin.model.Field;
 import plugin.model.Form;
 import plugin.model.FormField;
 import plugin.model.LinkField;
+import plugin.model.Operation;
 
 public class XMLTest
 {
@@ -17,26 +18,31 @@ public class XMLTest
 	{
 		List<Form> forms = new ArrayList<>();
 		List<Field> fields;
+		List<Operation> operations;
 		
 		fields = new ArrayList<>();
 		fields.add(new FormField("polje1", "Polje 1", "int", true, 5));
 		fields.add(new FormField("polje2", "Polje 2", "string", false, 5));
 		
-		Form form1 = new Form("Form 1", fields);
+		operations = new ArrayList<>();
+		operations.add(new Operation("Operation1", "Operation1", "nesto", true));
+		operations.add(new Operation("Operation2", "Operation2", "nesto2", false));
+		
+		Form form1 = new Form("Form 1", fields, operations);
 		
 		fields = new ArrayList<>();
 		fields.add(new FormField("polje3", "Polje 3", "int", true, 5));
 		fields.add(new FormField("polje4", "Polje 4", "string", false, 5));
 		fields.add(new LinkField("forma1link", "Forma 1", "Link", true, form1, "1-1"));
 		
-		Form form2 = new Form("Form 2", fields);
+		Form form2 = new Form("Form 2", fields, new ArrayList<Operation>());
 		
 		fields = new ArrayList<>();
 		fields.add(new FormField("polje3", "Polje 3", "int", true, 5));
 		fields.add(new FormField("polje4", "Polje 4", "string", false, 5));
 		fields.add(new LinkField("forma2link", "Forma 2", "Link", true, form2, "1-1"));
 		
-		Form form3 = new Form("Form 2", fields);
+		Form form3 = new Form("Form 2", fields, new ArrayList<Operation>());
 		
 		forms.add(form1);
 		forms.add(form2);
