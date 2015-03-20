@@ -36,11 +36,11 @@ class {{form.title}}List(ListView):
 		context["search_url"] = "search{{form.title}}"
 		context["main_attribute"] = "{{form.main_attribute}}"
 		context["custom_methods"] = [
-		{% for operation in form.operations %}
-		{% if not operation.param %}
+		{% for operation in form.operations -%}
+		{% if not operation.param -%}
 		MenuItem("{{operation.label}}", "{{operation.name}}"),
-		{% endif %}
-		{% endfor %}
+		{% endif -%}
+		{% endfor -%}
 		]
 		
 		return context
@@ -85,11 +85,11 @@ class {{form.title}}Detail(DetailView):
 		context["delete_url"] = "delete{{form.title}}"
 		
 		context["custom_methods"] = [
-		{% for operation in form.operations %}
-		{% if operation.param %}
+		{% for operation in form.operations -%}
+		{% if operation.param -%}
 		MenuItem("{{operation.label}}", "{{operation.name}}"),
-		{% endif %}
-		{% endfor %}
+		{% endif -%}
+		{% endfor -%}
 		]
 		
 		return context
@@ -128,15 +128,17 @@ def {{operation.name}}(request):
 		form = Search{{form.title}}Form(request.POST)
 		
 		if form.is_valid():
-			objects = {{form.title}}.objects.filter(
-			{% for field in form.fields -%}
-				{% if field.field_type != "Link" %}
-				Q({{field.name}}__icontains=form.cleaned_data['{{field.name}}']){% if not loop.last %}|{% endif %}
-				{% else %}
-				Q({{field.name}}__in=form.cleaned_data['{{field.name}}']){% if not loop.last %}|{% endif %}
-				{% endif %}
-			{% endfor -%}
-			)
+			
+			filter_map = {}
+			{% for field in form.fields %}
+			if form.cleaned_data['{{field.name}}'] or form.cleaned_data['{{field.name}}']==0:
+			{% if field.field_type == "Link" %}
+				filter_map['{{field.form}}'.lower()] = form.cleaned_data['{{field.name}}']
+			{% else %}
+				filter_map['{{field.name}}'] = form.cleaned_data['{{field.name}}']
+			{% endif %}
+			{% endfor %}
+			objects = {{form.title}}.objects.filter(**filter_map)
 			
 			result = {}
 			for val in objects.all():
