@@ -1,0 +1,44 @@
+{% extends 'model' %}
+
+{% block content %}
+from django import forms
+from django.contrib.auth.models import User
+
+{{ super() }}
+
+{% for form in model.forms -%}
+#{{form.title}}
+
+class Search{{form.title}}Form(forms.Form):
+{% for field in form.fields %}
+	{% if field.field_type == "String" -%} 
+		{{field.name}} = forms.CharField(required={{field.mandatory}})
+	{% elif field.field_type == "Float" -%}
+		{{field.name}} = forms.FloatField(required={{field.mandatory}})
+	{% elif field.field_type == "DateTime" -%}
+		{{field.name}} = forms.DateTimeField(required={{field.mandatory}})
+	{% elif field.field_type == "Integer" -%}
+		{{field.name}} = forms.IntegerField(required={{field.mandatory}})
+	{% else -%}
+		{{field.name}} = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required={{field.mandatory}})
+	{% endif -%}
+{% endfor %}
+
+	def __init__(self, *args, **kwargs):
+		super(Search{{form.title}}Form, self).__init__(*args, **kwargs)
+		for field in self.fields.values():
+			field.widget.attrs['class']='form-control'
+
+
+class {{form.title}}Form(forms.Form):
+	class Meta:
+		model = {{form.title}}
+		fields = [{% for field in form.fields %}'{{field.name}}',{% endfor %}]
+		
+	def __init__(self, *args, **kwargs):
+		super({{form.title}}Form, self).__init__(*args, **kwargs)
+		for field in self.fields.values():
+			field.widget.attrs['class']='form-control'
+
+{% endfor -%}
+{% endblock%}

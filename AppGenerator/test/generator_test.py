@@ -3,24 +3,19 @@ Created on Mar 17, 2015
 
 @author: PCX
 '''
+from test import test_data
 import unittest
 
 from generator import app_generator
-from test.model import AppModel, Form, Field
-
 
 class Test(unittest.TestCase):
 
     def setUp(self):
-        self.app_model = AppModel(app_name='My test app',
-                                  forms=[Form(title='First form', 
-                                              fields=[Field(name='field1', label='My Field 1', field_type='String'),
-                                                      Field(name='field2', label='My Field 2', field_type='String'),
-                                                     ])
-                                        ])
+        self.app_model = test_data.test_app_model
+        app_generator.generate("test_gen", self.app_model)
 
     def test_generator(self):
-        app_generator.generate("test_gen", self.app_model)
+        pass
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
