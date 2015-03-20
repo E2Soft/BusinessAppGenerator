@@ -35,6 +35,11 @@ def _process_form(form):
     
     form.fields = form_fields + link_fields
     
+    if hasattr(form.operations, 'Operation'):
+        form.operations = [o for o in form.operations.Operation]
+    else:
+        form.operations = []
+    
     return form
 
 def _resolve_links(app_model):
