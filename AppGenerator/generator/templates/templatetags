@@ -36,4 +36,10 @@ def filterurl(obj):
 {% endfor %}
 	else:
 		return reverse('udetail',args=(obj.id,))
+
+@register.filter
+def get_attribute(o, key):
+    return o.__getattribute__(key)
+
 {% endblock %}
+

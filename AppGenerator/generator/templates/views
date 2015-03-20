@@ -34,7 +34,7 @@ class {{form.title}}List(ListView):
 		context["detail_url"] = "detail{{form.title}}"
 		context["add_url"] = "add{{form.title}}"
 		context["search_url"] = "search{{form.title}}"
-		context["main_attributes"] = {obj.pk : obj.__getattribute__('{{form.main_attribute}}') for obj in self.get_queryset()}
+		context["main_attribute"] = "{{form.main_attribute}}"
 		context["custom_methods"] = [
 		{% for operation in form.operations %}
 		{% if not operation.param %}
@@ -51,7 +51,7 @@ class {{form.title}}Create(CreateView):
 	form_class = {{form.title}}Form
 	
 	def get_success_url(self):
-		return reverse('list')
+		return reverse('list{{form.title}}')
 		
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Create, self).get_context_data(**kwargs)
@@ -98,7 +98,7 @@ class {{form.title}}Update(UpdateView):
 	form_class = '{{form.title}}'
 	
 	def get_success_url(self):
-		return reverse('detail',args=(self.get_object().id,))
+		return reverse('detail{{form.title}}',args=(self.get_object().id,))
 		
 	def form_valid(self, form):
 		self.object = form.save(commit=False)
@@ -117,7 +117,7 @@ class {{form.title}}Delete(DeleteView):
 	template_name = '{{app_name}}/delete.html'
 	
 	def get_success_url(self):
-		return reverse('list')
+		return reverse('list{{form.title}}')
 		
 {% for operation in form.operations %}
 {% if operation.field_type == "Search" %}
