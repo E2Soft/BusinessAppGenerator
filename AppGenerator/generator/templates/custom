@@ -2,18 +2,18 @@
 
 {% block content %}
 
+from django.http import HttpResponse
+
 {% for form in model.forms -%}
 {% for operation in form.operations %}
 {% if operation.field_type != "Search" -%}
-{% if operation.param == None -%}
-def {{operation.name}}(request):
-	#TODO:Implement this view
-	pass
-{% else -%}
+{% if operation.param -%}
 def {{operation.name}}(request,pk):
-	#TODO:Implement this view
-	pass
+{% else -%}
+def {{operation.name}}(request):
 {% endif -%}
+	#TODO:Implement this view
+	return HttpResponse('Unimplemented custom method [{{operation.name}}], see business_app/custom.py.')
 {% endif -%}
 {% endfor %}
 {% endfor %}
