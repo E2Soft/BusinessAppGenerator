@@ -22,13 +22,13 @@ def generate(path, app_model):
     '''
     Generise aplikaciju na zadatoj lokaciji sa zadatim modelom aplikacije.
     '''
-    app_name = app_model.app_name.replace(' ', '_')
-    project_path = os.path.join(path, app_name) # root folder na osnovu imena aplikacije (razmak zamenjen sa _)
+    project_app_name = app_model.app_name.replace(' ', '_')
+    project_path = os.path.join(path, project_app_name) # root folder na osnovu imena aplikacije (razmak zamenjen sa _)
     
-    copy_static_files(project_path, app_name)
-    renderer.render(project_path, app_model)
+    copy_static_files(project_path, project_app_name)
+    renderer.render(project_path, app_model, project_app_name)
 
-def copy_static_files(project_path, app_name):
+def copy_static_files(project_path, project_app_name):
     '''
     Kopira strukturu direktorijuma projekta i staticke (negenerisane) fajlove.
     '''
@@ -51,5 +51,5 @@ def copy_static_files(project_path, app_name):
         shutil.move(temp_custom_code_path, custom_code_path)
     
     # rename app directory
-    os.rename(os.path.join(project_path, '__app__'), os.path.join(project_path, app_name))
+    os.rename(os.path.join(project_path, '__app__'), os.path.join(project_path, project_app_name))
     

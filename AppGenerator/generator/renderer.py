@@ -15,7 +15,7 @@ env=Environment(loader=PackageLoader('generator', 'templates'))
 
 DJANGO_APP_NAME = "business_app"
 
-def render(project_path, app_model):
+def render(project_path, app_model, project_app_name):
     '''
     Generise fajlove na osnovu templejta i modela aplikacije.
     '''
@@ -25,12 +25,12 @@ def render(project_path, app_model):
     render_urls(project_path, app_model)
     render_forms(project_path, app_model)
     render_custom(project_path, app_model)
-    render_manage(project_path, app_model)
+    render_manage(project_path, app_model, project_app_name)
     render_tests(project_path, app_model)
-    render_settings(project_path, app_model)
-    render_wsgi(project_path, app_model)
-    render_project_views(project_path, app_model)
-    render_project_urls(project_path, app_model)
+    render_settings(project_path, app_model, project_app_name)
+    render_wsgi(project_path, app_model, project_app_name)
+    render_project_views(project_path, app_model, project_app_name)
+    render_project_urls(project_path, app_model, project_app_name)
     render_templatetags(project_path, app_model)
 
 def render_models(project_path, app_model):
@@ -73,8 +73,8 @@ def render_forms(project_path, app_model):
     with open(path+"/forms.py", "w") as file:
         file.write(renderedforms)
         
-def render_manage(project_path, app_model):
-    renderedmanage = env.get_template('manage').render(name = app_model.app_name.replace(" ","_"),
+def render_manage(project_path, app_model, project_app_name):
+    renderedmanage = env.get_template('manage').render(name = project_app_name,
                                                        datetime=datetime.datetime.now(),guest=getpass.getuser())
     with open(project_path+"/manage.py", "w") as file:
         file.write(renderedmanage)
@@ -95,28 +95,28 @@ def render_tests(project_path, app_model):
     with open(path+'/tests.py', "w") as file:
         file.write(renderedtests)
 
-def render_settings(project_path, app_model):
+def render_settings(project_path, app_model, project_app_name):
     renderedsettings = env.get_template('settings').render(model = app_model,datetime=datetime.datetime.now(),
-                                                           guest=getpass.getuser(),app_name=app_model.app_name)
-    with open(os.path.join(project_path, app_model.app_name, 'settings.py'), "w") as file:
+                                                           guest=getpass.getuser(),app_name=project_app_name)
+    with open(os.path.join(project_path, project_app_name, 'settings.py'), "w") as file:
         file.write(renderedsettings)    
        
-def render_project_urls(project_path, app_model):
+def render_project_urls(project_path, app_model, project_app_name):
     renderedurls = env.get_template('project_urls').render(model = app_model,datetime=datetime.datetime.now(),
-                                                           guest=getpass.getuser(),app_name=app_model.app_name)
-    with open(os.path.join(project_path, app_model.app_name, 'urls.py'), "w") as file:
+                                                           guest=getpass.getuser(),app_name=project_app_name)
+    with open(os.path.join(project_path, project_app_name, 'urls.py'), "w") as file:
         file.write(renderedurls)
 
-def render_project_views(project_path, app_model):
+def render_project_views(project_path, app_model, project_app_name):
     renderedviews = env.get_template('project_views').render(model = app_model,datetime=datetime.datetime.now(),
-                                                           guest=getpass.getuser(),app_name=app_model.app_name)
-    with open(os.path.join(project_path, app_model.app_name, 'views.py'), "w") as file:
+                                                           guest=getpass.getuser(),app_name=project_app_name)
+    with open(os.path.join(project_path, project_app_name, 'views.py'), "w") as file:
         file.write(renderedviews)
 
-def render_wsgi(project_path, app_model):
+def render_wsgi(project_path, app_model, project_app_name):
     renderedwsgi = env.get_template('wsgi').render(model = app_model,datetime=datetime.datetime.now(),
-                                                           guest=getpass.getuser(),app_name=app_model.app_name)
-    with open(os.path.join(project_path, app_model.app_name, 'wsgi.py'), "w") as file:
+                                                           guest=getpass.getuser(),app_name=project_app_name)
+    with open(os.path.join(project_path, project_app_name, 'wsgi.py'), "w") as file:
         file.write(renderedwsgi)
 
 def render_templatetags(project_path, app_model):

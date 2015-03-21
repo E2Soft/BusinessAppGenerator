@@ -30,7 +30,8 @@ class Search{{form.title}}Form(forms.Form):
 	def __init__(self, *args, **kwargs):
 		super(Search{{form.title}}Form, self).__init__(*args, **kwargs)
 		
-{%- for field in form.fields -%}
+{%- for field in form.fields %}
+		self.fields['{{field.name}}'].label="{{field.label}}"
 {%- if field.field_type == "Link" -%}
 	{%- if field.link_type == "*-*" %}
 		self.fields['{{field.name}}'].choices=[('__not_assigned__', 'Not assigned')] + [ (o.id, str(o)) for o in {{field.form}}.objects.all()]
@@ -53,6 +54,9 @@ class {{form.title}}Form(forms.ModelForm):
 		
 	def __init__(self, *args, **kwargs):
 		super({{form.title}}Form, self).__init__(*args, **kwargs)
+	{%- for field in form.fields %}
+		self.fields['{{field.name}}'].label="{{field.label}}"
+	{%- endfor %}
 		for field in self.fields.values():
 			field.widget.attrs['class']='form-control'
 			if(field.__class__.__name__ == "DateTimeField"):
