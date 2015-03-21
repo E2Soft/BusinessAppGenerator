@@ -15,7 +15,6 @@ from {{app_name}}.views import {{form.title}}Create
 from {{app_name}}.views import DetailUser,UserUpdate,UserCreate
 
 urlpatterns = patterns('',
-	url(r'^$', views.index, name='index'),
 	
 {% for form in model.forms %}
 	url(r'^list{{form.title}}/$', {{form.title}}List.as_view(), name='list{{form.title}}'),

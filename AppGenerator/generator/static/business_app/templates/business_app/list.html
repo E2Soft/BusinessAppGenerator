@@ -1,6 +1,8 @@
 {% extends "business_app/menu.html" %}
 {% block title %}{{ title|title }}{% endblock %}
 
+{% load get_attribute from business_app_extras %}
+
 {% block content %}
 	<div id="page-content-wrapper">
     	<div class="container-fluid">
@@ -12,7 +14,7 @@
 					<ul class="list-group">
 						{% for obj in object_list %}
 							<div class="bs-callout bs-callout-primary">
-								<a href="{% url detail_url obj.pk %}">{{main_attributes.obj.pk}}</a>
+								<a href="{% url detail_url obj.pk %}">{{obj|get_attribute:main_attribute}}</a>
 							</div>
 						{% endfor %}
 					</ul>

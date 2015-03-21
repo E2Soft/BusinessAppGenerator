@@ -10,6 +10,8 @@ from django.views.generic.list import ListView
 from django.contrib import auth
 from django.db.models import Q
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 {{ super() }}
 
@@ -17,6 +19,7 @@ from django.shortcuts import render
 from {{app_name}}.forms import {{form.title}}Form
 from {{app_name}}.forms import Search{{form.title}}Form
 {% endfor %}
+from {{app_name}}.forms import UserForm
 
 {% for form in model.forms -%}
 #{{form.title}}
@@ -24,6 +27,10 @@ from {{app_name}}.forms import Search{{form.title}}Form
 class {{form.title}}List(ListView):
 	model = {{form.title}}
 	template_name = '{{app_name}}/list.html'
+	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super({{form.title}}List, self).dispatch(*args, **kwargs)
 	
 	def get_queryset(self):
 		return {{form.title}}.objects.all()
@@ -34,13 +41,13 @@ class {{form.title}}List(ListView):
 		context["detail_url"] = "detail{{form.title}}"
 		context["add_url"] = "add{{form.title}}"
 		context["search_url"] = "search{{form.title}}"
-		context["main_attributes"] = {obj.pk : obj.__getattribute__('{{form.main_attribute}}') for obj in self.get_queryset()}
+		context["main_attribute"] = "{{form.main_attribute}}"
 		context["custom_methods"] = [
-		{% for operation in form.operations %}
-		{% if not operation.param %}
-		MenuItem("{{operation.label}}", "{{operation.name}}"),
-		{% endif %}
-		{% endfor %}
+		{%- for operation in form.operations -%}
+		{%- if not operation.param %}
+			MenuItem("{{operation.label}}", "{{operation.name}}"),
+		{%- endif -%}
+		{%- endfor %}
 		]
 		
 		return context
@@ -50,8 +57,12 @@ class {{form.title}}Create(CreateView):
 	template_name = '{{app_name}}/add.html'
 	form_class = {{form.title}}Form
 	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super({{form.title}}Create, self).dispatch(*args, **kwargs)
+	
 	def get_success_url(self):
-		return reverse('list')
+		return reverse('list{{form.title}}')
 		
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Create, self).get_context_data(**kwargs)
@@ -64,30 +75,39 @@ class {{form.title}}Detail(DetailView):
 	template_name = '{{app_name}}/detail.html'
 	context_object_name = 'object'
 	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super({{form.title}}Detail, self).dispatch(*args, **kwargs)
+	
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Detail, self).get_context_data(**kwargs)
 		context["title"] = "{{form.title}}"
 		
 		mapa = {}
-	{% for field in form.fields %}
-		{% if field.field_type != "Link" -%}
-			mapa['{{field.name}}'] = self.object.__getattribute__('{{field.name}}')
-		{% else -%}
-			mapa['{{field.name}}'] = self.object.__getattribute__('{{field.name}}').all()
-		{% endif -%} 
-	{% endfor %}
-		
+		for name in self.object._meta.get_all_field_names():
+			if 'id' != name and not name.endswith("_id"):
+				try:
+					mapa[name] = self.object.__getattribute__(name).all()
+				except AttributeError:
+					try:
+						mapa[name] = self.object.__getattribute__(name)
+					except AttributeError:
+						try:
+							mapa[name] = self.object.__getattribute__(''.join([name,"_set"])).all()
+						except AttributeError:
+							mapa[name] = "not assigned"
+
 		context["mapa"] = mapa
 		
 		context["update_url"] = "update{{form.title}}"
 		context["delete_url"] = "delete{{form.title}}"
 		
 		context["custom_methods"] = [
-		{% for operation in form.operations %}
-		{% if operation.param %}
-		MenuItem("{{operation.label}}", "{{operation.name}}"),
-		{% endif %}
-		{% endfor %}
+		{%- for operation in form.operations -%}
+		{%- if operation.param %}
+			MenuItem("{{operation.label}}", "{{operation.name}}"),
+		{%- endif -%}
+		{%- endfor %}
 		]
 		
 		return context
@@ -95,10 +115,14 @@ class {{form.title}}Detail(DetailView):
 class {{form.title}}Update(UpdateView):
 	model = {{form.title}}
 	template_name = '{{app_name}}/update.html'
-	form_class = '{{form.title}}'
+	form_class = {{form.title}}Form
+	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super({{form.title}}Update, self).dispatch(*args, **kwargs)
 	
 	def get_success_url(self):
-		return reverse('detail',args=(self.get_object().id,))
+		return reverse('detail{{form.title}}',args=(self.get_object().id,))
 		
 	def form_valid(self, form):
 		self.object = form.save(commit=False)
@@ -117,28 +141,49 @@ class {{form.title}}Delete(DeleteView):
 	template_name = '{{app_name}}/delete.html'
 	
 	def get_success_url(self):
-		return reverse('list')
+		return reverse('list{{form.title}}')
 		
 {% for operation in form.operations %}
 {% if operation.field_type == "Search" %}
+@login_required(login_url="/")
 def {{operation.name}}(request):
 	if request.method == 'POST':
 		form = Search{{form.title}}Form(request.POST)
 		
 		if form.is_valid():
-			objects = {{form.title}}.objects.filter(
-			{% for field in form.fields -%}
-				{% if field.field_type != "Link" %}
-				Q({{field.name}}__icontains=form.cleaned_data['{{field.name}}']){% if not loop.last %}|{% endif %}
-				{% else %}
-				Q({{field.name}}__in=form.cleaned_data['{{field.name}}']){% if not loop.last %}|{% endif %}
-				{% endif %}
-			{% endfor -%}
-			)
+			
+			filter_map = {}
+	{% for field in form.fields %}
+			{{field.name}}_value = form.cleaned_data['{{field.name}}']
+			
+		{%- if field.field_type == "Link" -%}
+			{%- if field.link_type == '*-*' %}
+			if {{field.name}}_value:
+				{{field.name}}_value = {{field.name}}_value[0]
+				if {{field.name}}_value == '__not_assigned__':
+					filter_map['{{field.name}}'] = None
+				else:
+					filter_map['{{field.name}}'] = {{field.name}}_value
+			{%- else %}
+			if {{field.name}}_value:
+				if {{field.name}}_value == '__not_assigned__':
+					filter_map['{{field.name}}'] = None
+				else:
+					filter_map['{{field.name}}'] = {{field.name}}_value
+			{%- endif %}
+		{%- else %}
+			if {{field.name}}_value or {{field.name}}_value==0:
+				filter_map['{{field.name}}'] = {{field.name}}_value
+		{%- endif %}
+	{%- endfor %}
+			
+			objects = {{form.title}}.objects.filter(**filter_map)
 			
 			result = {}
 			for val in objects.all():
-				result[reverse('detail{{form.title}}', args=(val.id,))] = val.name
+				result[reverse('detail{{form.title}}', args=(val.pk,))] = val.__getattribute__("{{form.main_attribute}}")
+				
+			return render(request, '{{app_name}}/result.html', {"results":result})
 			
 	else:
 		form = Search{{form.title}}Form()
@@ -150,25 +195,23 @@ def {{operation.name}}(request):
 
 #User
 
-class UserForm(forms.ModelForm):
-	class Meta:
-		model = User
-		fields = ['first_name','last_name', 'username', 'email']
-		
-	def __init__(self, *args, **kwargs):
-		super(UserForm, self).__init__(*args, **kwargs)
-		for field in self.fields.values():
-			field.widget.attrs['class']='form-control'
-
 class DetailUser(DetailView):
 	model = User
 	template_name = '{{app_name}}/udetail.html'
 	context_object_name='user'
+	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super(DetailUser, self).dispatch(*args, **kwargs)
 
 class UserUpdate(UpdateView):
 	model = User
 	template_name = '{{app_name}}/uupdate.html'
 	form_class = UserForm
+	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super(UserUpdate, self).dispatch(*args, **kwargs)
 	
 	def get_success_url(self):
 		return reverse('udetail',args=(self.get_object().id,))
@@ -178,28 +221,12 @@ class UserCreate(CreateView):
 	template_name = '{{app_name}}/register.html'
 	form_class = UserForm
 	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super(UserCreate, self).dispatch(*args, **kwargs)
+	
 	def get_success_url(self):
-		return reverse('index')
-		
-#index used for as login page
-
-def index(request):
-	if request.user.is_authenticated():
-		context = {"isadmin":request.user.is_superuser,"user":request.user}
-		return render(request,'{{app_name}}/main.html',context)
-		
-	username = request.POST.get("username","")
-	password = request.POST.get("password","")
-	
-	user = auth.authenticate(username=username, password=password)
-	context = {"isadmin":request.user.is_superuser,"user":request.user}
-	
-	if user is not None:
-		auth.login(request, user)
-		contextt = {"isadmin":request.user.is_superuser,"user":user}
-		return render(request,'{{app_name}}/main.html',contextt)
-	else:
-		return render(request,'{{app_name}}/login.html')
+		return reverse('home')
 		
 class MenuItem:
 	def __init__(self, name, url):

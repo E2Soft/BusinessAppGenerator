@@ -1,7 +1,7 @@
 {% extends 'base' %}
 {% block content %}
 from django.contrib import auth
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 def home(request):
 	if request.user.is_authenticated():
@@ -21,8 +21,7 @@ def home(request):
 	
 	if user is not None:
 		auth.login(request, user)
-		contextt = {"isadmin":request.user.is_superuser,"user":user}
-		return render(request,'business_app/main.html',contextt)
+		return redirect('home')
 	else:
 		return render(request,'business_app/login.html')
 		

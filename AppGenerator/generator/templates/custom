@@ -1,19 +1,22 @@
-{% extends 'base' %}
+{% extends 'custombase' %}
 
 {% block content %}
+
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 {% for form in model.forms -%}
 {% for operation in form.operations %}
 {% if operation.field_type != "Search" -%}
-{% if operation.param == None -%}
-def {{operation.name}}(request):
-	#TODO:Implement this view
-	pass
-{% else -%}
+{% if operation.param -%}
+@login_required(login_url="/")
 def {{operation.name}}(request,pk):
-	#TODO:Implement this view
-	pass
+{% else -%}
+@login_required(login_url="/")
+def {{operation.name}}(request):
 {% endif -%}
+	#TODO:Implement this view
+	return HttpResponse('Unimplemented custom method [{{operation.name}}], see business_app/custom.py.')
 {% endif -%}
 {% endfor %}
 {% endfor %}

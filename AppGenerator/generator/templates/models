@@ -25,5 +25,8 @@ class {{form.title}}(models.Model):
 		{% endif -%}
 	{% endif -%}
 {% endfor %}
+
+	def __str__(self):
+		return self.__getattribute__('{{form.main_attribute}}')
 {% endfor %}
 {% endblock %}

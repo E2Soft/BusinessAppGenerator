@@ -3,6 +3,7 @@
 {% block content %}
 from django import forms
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 {{ super() }}
 
@@ -12,33 +13,66 @@ from django.contrib.auth.models import User
 class Search{{form.title}}Form(forms.Form):
 {% for field in form.fields %}
 	{% if field.field_type == "String" -%} 
-		{{field.name}} = forms.CharField(required={{field.mandatory}})
+		{{field.name}} = forms.CharField(required=False)
 	{% elif field.field_type == "Float" -%}
-		{{field.name}} = forms.FloatField(required={{field.mandatory}})
+		{{field.name}} = forms.FloatField(required=False)
 	{% elif field.field_type == "DateTime" -%}
-		{{field.name}} = forms.DateTimeField(required={{field.mandatory}})
+		{{field.name}} = forms.DateTimeField(required=False)
 	{% elif field.field_type == "Integer" -%}
-		{{field.name}} = forms.IntegerField(required={{field.mandatory}})
+		{{field.name}} = forms.IntegerField(required=False)
+	{% elif field.field_type == "Link" and field.link_type == '*-*' -%}
+		{{field.name}} = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required=False)
 	{% else -%}
-		{{field.name}} = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required={{field.mandatory}})
+		{{field.name}} = forms.ChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required=False)
 	{% endif -%}
 {% endfor %}
 
 	def __init__(self, *args, **kwargs):
-		super(Search{{form.title}}Form, self).__init__(args, kwargs)
+		super(Search{{form.title}}Form, self).__init__(*args, **kwargs)
+		
+{%- for field in form.fields %}
+		self.fields['{{field.name}}'].label="{{field.label}}"
+{%- if field.field_type == "Link" -%}
+	{%- if field.link_type == "*-*" %}
+		self.fields['{{field.name}}'].choices=[('__not_assigned__', 'Not assigned')] + [ (o.id, str(o)) for o in {{field.form}}.objects.all()]
+	{%- else %}
+		self.fields['{{field.name}}'].choices=[(None, 'Skip this field'), ('__not_assigned__', 'Not assigned')] + [ (o.id, str(o)) for o in {{field.form}}.objects.all()]
+	{%- endif %}
+{%- endif -%}
+{%- endfor %}
 		for field in self.fields.values():
 			field.widget.attrs['class']='form-control'
+			if(field.__class__.__name__ == "DateTimeField"):
+				field.widget.attrs['id']='datepicker'
+				field.widget.attrs['type'] = "text"
 
 
-class {{form.title}}Form(forms.Form):
+class {{form.title}}Form(forms.ModelForm):
 	class Meta:
 		model = {{form.title}}
 		fields = [{% for field in form.fields %}'{{field.name}}',{% endfor %}]
 		
 	def __init__(self, *args, **kwargs):
-		super({{form.title}}Form, self).__init__(args, kwargs)
+		super({{form.title}}Form, self).__init__(*args, **kwargs)
+	{%- for field in form.fields %}
+		self.fields['{{field.name}}'].label="{{field.label}}"
+	{%- endfor %}
 		for field in self.fields.values():
 			field.widget.attrs['class']='form-control'
+			if(field.__class__.__name__ == "DateTimeField"):
+				field.widget.attrs['id']='datepicker'
+				field.widget.attrs['type'] = "text"
 
 {% endfor -%}
+
+class UserForm(forms.ModelForm):
+	class Meta:
+		model = User
+		fields = ['first_name','last_name', 'username', 'email']
+		
+	def __init__(self, *args, **kwargs):
+		super(UserForm, self).__init__(*args, **kwargs)
+		for field in self.fields.values():
+			field.widget.attrs['class']='form-control'
+			
 {% endblock%}
