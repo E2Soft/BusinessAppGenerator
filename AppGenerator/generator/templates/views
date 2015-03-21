@@ -77,7 +77,10 @@ class {{form.title}}Detail(DetailView):
 					try:
 						mapa[name] = self.object.__getattribute__(name)
 					except AttributeError:
-						mapa[name] = self.object.__getattribute__(''.join([name,"_set"])).all()
+						try:
+							mapa[name] = self.object.__getattribute__(''.join([name,"_set"])).all()
+						except AttributeError:
+							mapa[name] = "not assigned"
 
 		context["mapa"] = mapa
 		
