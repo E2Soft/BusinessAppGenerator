@@ -15,11 +15,11 @@ class Search{{form.title}}Form(forms.Form):
 	{% if field.field_type == "String" -%} 
 		{{field.name}} = forms.CharField(required=False)
 	{% elif field.field_type == "Float" -%}
-		{{field.name}} = forms.FloatField(required=False, initial=0)
+		{{field.name}} = forms.FloatField(required=False)
 	{% elif field.field_type == "DateTime" -%}
-		{{field.name}} = forms.DateTimeField(required=False, initial=timezone.now())
+		{{field.name}} = forms.DateTimeField(required=False)
 	{% elif field.field_type == "Integer" -%}
-		{{field.name}} = forms.IntegerField(required=False, initial=0)
+		{{field.name}} = forms.IntegerField(required=False)
 	{% elif field.field_type == "Link" and field.link_type == '*-*' -%}
 		{{field.name}} = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required=False)
 	{% else -%}
