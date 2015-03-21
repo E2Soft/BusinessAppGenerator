@@ -36,11 +36,11 @@ class {{form.title}}List(ListView):
 		context["search_url"] = "search{{form.title}}"
 		context["main_attribute"] = "{{form.main_attribute}}"
 		context["custom_methods"] = [
-		{% for operation in form.operations -%}
-		{% if not operation.param -%}
-		MenuItem("{{operation.label}}", "{{operation.name}}"),
-		{% endif -%}
-		{% endfor -%}
+		{%- for operation in form.operations -%}
+		{%- if not operation.param %}
+			MenuItem("{{operation.label}}", "{{operation.name}}"),
+		{%- endif -%}
+		{%- endfor %}
 		]
 		
 		return context
@@ -88,11 +88,11 @@ class {{form.title}}Detail(DetailView):
 		context["delete_url"] = "delete{{form.title}}"
 		
 		context["custom_methods"] = [
-		{% for operation in form.operations -%}
-		{% if operation.param -%}
-		MenuItem("{{operation.label}}", "{{operation.name}}"),
-		{% endif -%}
-		{% endfor -%}
+		{%- for operation in form.operations -%}
+		{%- if operation.param %}
+			MenuItem("{{operation.label}}", "{{operation.name}}"),
+		{%- endif -%}
+		{%- endfor %}
 		]
 		
 		return context
@@ -133,14 +133,30 @@ def {{operation.name}}(request):
 		if form.is_valid():
 			
 			filter_map = {}
-			{% for field in form.fields %}
-			if form.cleaned_data['{{field.name}}'] or form.cleaned_data['{{field.name}}']==0:
-			{% if field.field_type == "Link" %}
-				filter_map['{{field.form}}'.lower()] = form.cleaned_data['{{field.name}}']
-			{% else %}
-				filter_map['{{field.name}}'] = form.cleaned_data['{{field.name}}']
-			{% endif %}
-			{% endfor %}
+	{% for field in form.fields %}
+			{{field.name}}_value = form.cleaned_data['{{field.name}}']
+			
+		{%- if field.field_type == "Link" -%}
+			{%- if field.link_type == '*-*' %}
+			if {{field.name}}_value:
+				{{field.name}}_value = {{field.name}}_value[0]
+				if {{field.name}}_value == '__not_assigned__':
+					filter_map['{{field.name}}'] = None
+				else:
+					filter_map['{{field.name}}'] = {{field.name}}_value
+			{%- else %}
+			if {{field.name}}_value:
+				if {{field.name}}_value == '__not_assigned__':
+					filter_map['{{field.name}}'] = None
+				else:
+					filter_map['{{field.name}}'] = {{field.name}}_value
+			{%- endif %}
+		{%- else %}
+			if {{field.name}}_value or {{field.name}}_value==0:
+				filter_map['{{field.name}}'] = {{field.name}}_value
+		{%- endif %}
+	{%- endfor %}
+			
 			objects = {{form.title}}.objects.filter(**filter_map)
 			
 			result = {}

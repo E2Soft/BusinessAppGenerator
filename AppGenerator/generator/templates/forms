@@ -20,13 +20,25 @@ class Search{{form.title}}Form(forms.Form):
 		{{field.name}} = forms.DateTimeField(required=False, initial=timezone.now())
 	{% elif field.field_type == "Integer" -%}
 		{{field.name}} = forms.IntegerField(required=False, initial=0)
-	{% else -%}
+	{% elif field.field_type == "Link" and field.link_type == '*-*' -%}
 		{{field.name}} = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required=False)
+	{% else -%}
+		{{field.name}} = forms.ChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required=False)
 	{% endif -%}
 {% endfor %}
 
 	def __init__(self, *args, **kwargs):
 		super(Search{{form.title}}Form, self).__init__(*args, **kwargs)
+		
+{%- for field in form.fields -%}
+{%- if field.field_type == "Link" -%}
+	{%- if field.link_type == "*-*" %}
+		self.fields['{{field.name}}'].choices=[('__not_assigned__', 'Not assigned')] + [ (o.id, str(o)) for o in {{field.form}}.objects.all()]
+	{%- else %}
+		self.fields['{{field.name}}'].choices=[(None, 'Skip this field'), ('__not_assigned__', 'Not assigned')] + [ (o.id, str(o)) for o in {{field.form}}.objects.all()]
+	{%- endif %}
+{%- endif -%}
+{%- endfor %}
 		for field in self.fields.values():
 			field.widget.attrs['class']='form-control'
 
