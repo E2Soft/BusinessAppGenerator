@@ -17,11 +17,12 @@ class Form:
         self.main_attribute = main_attribute
 
 class Link:
-    def __init__(self, name=None,label=None, field_type=None,mandatory=False,form=None,link_type=None):
+    def __init__(self, name=None,label=None, foreign_label=None, field_type=None,mandatory=False,form=None,link_type=None):
         self.field_type = field_type
         self.mandatory = mandatory
         self.form = form
         self.label=label
+        self.foreign_label=foreign_label
         self.name = name
         self.link_type = link_type
 

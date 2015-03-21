@@ -24,6 +24,23 @@ from {{app_name}}.forms import UserForm
 {% for form in model.forms -%}
 #{{form.title}}
 
+{{form.title}}_field_labels = {
+{%- for field in form.fields %}
+				'{{field.name}}':'{{field.label}}',
+{%- endfor -%}
+{%- for other_form in model.forms -%}
+	{%- for field in other_form.fields -%}
+		{%- if field.field_type == 'Link' and field.form == form.title -%}
+			{%- if field.link_type == '1-*' or field.link_type == '1-1' %}
+				'{{other_form.title}}'.lower():'{{field.foreign_label}}',
+			{%- else %}
+				'{{other_form.title}}'.lower():'{{field.foreign_label}}',
+			{%- endif -%}
+		{%- endif -%}
+	{%- endfor -%}
+{%- endfor %}
+}
+
 class {{form.title}}List(ListView):
 	model = {{form.title}}
 	template_name = '{{app_name}}/list.html'
@@ -84,19 +101,25 @@ class {{form.title}}Detail(DetailView):
 		context["title"] = "{{form.title}}"
 		
 		mapa = {}
+		
 		for name in self.object._meta.get_all_field_names():
 			if 'id' != name and not name.endswith("_id"):
+				
+				label = {{form.title}}_field_labels[name]
+				if not label:
+					label = name
+				
 				try:
-					mapa[name] = self.object.__getattribute__(name).all()
+					mapa[label] = self.object.__getattribute__(name).all()
 				except AttributeError:
 					try:
-						mapa[name] = self.object.__getattribute__(name)
+						mapa[label] = self.object.__getattribute__(name)
 					except AttributeError:
 						try:
-							mapa[name] = self.object.__getattribute__(''.join([name,"_set"])).all()
+							mapa[label] = self.object.__getattribute__(''.join([name,"_set"])).all()
 						except AttributeError:
-							mapa[name] = "not assigned"
-
+							mapa[label] = "not assigned"
+		
 		context["mapa"] = mapa
 		
 		context["update_url"] = "update{{form.title}}"
