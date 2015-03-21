@@ -15,11 +15,10 @@ env=Environment(loader=PackageLoader('generator', 'templates'))
 
 DJANGO_APP_NAME = "business_app"
 
-def render(project_path, app_model):
+def render(project_path, app_model, project_app_name):
     '''
     Generise fajlove na osnovu templejta i modela aplikacije.
     '''
-    project_app_name = app_model.app_name.replace(" ","_")
     render_models(project_path, app_model)
     render_views(project_path, app_model)
     render_admin(project_path, app_model)
