@@ -26,16 +26,12 @@ from {{app_name}}.forms import UserForm
 
 {{form.title}}_field_labels = {
 {%- for field in form.fields %}
-				'{{field.name}}':'{{field.label}}',
+			'{{field.name}}':'{{field.label}}',
 {%- endfor -%}
 {%- for other_form in model.forms -%}
 	{%- for field in other_form.fields -%}
 		{%- if field.field_type == 'Link' and field.form == form.title -%}
-			{%- if field.link_type == '1-*' or field.link_type == '1-1' %}
-				'{{other_form.title}}'.lower():'{{field.foreign_label}}',
-			{%- else %}
-				'{{other_form.title}}'.lower():'{{field.foreign_label}}',
-			{%- endif -%}
+			'{{other_form.title}}'.lower():'{{field.foreign_label}}',
 		{%- endif -%}
 	{%- endfor -%}
 {%- endfor %}
