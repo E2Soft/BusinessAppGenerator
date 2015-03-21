@@ -10,6 +10,8 @@ from django.views.generic.list import ListView
 from django.contrib import auth
 from django.db.models import Q
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 {{ super() }}
 
@@ -17,6 +19,7 @@ from django.shortcuts import render
 from {{app_name}}.forms import {{form.title}}Form
 from {{app_name}}.forms import Search{{form.title}}Form
 {% endfor %}
+from {{app_name}}.forms import UserForm
 
 {% for form in model.forms -%}
 #{{form.title}}
@@ -24,6 +27,10 @@ from {{app_name}}.forms import Search{{form.title}}Form
 class {{form.title}}List(ListView):
 	model = {{form.title}}
 	template_name = '{{app_name}}/list.html'
+	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super({{form.title}}List, self).dispatch(*args, **kwargs)
 	
 	def get_queryset(self):
 		return {{form.title}}.objects.all()
@@ -50,6 +57,10 @@ class {{form.title}}Create(CreateView):
 	template_name = '{{app_name}}/add.html'
 	form_class = {{form.title}}Form
 	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super({{form.title}}Create, self).dispatch(*args, **kwargs)
+	
 	def get_success_url(self):
 		return reverse('list{{form.title}}')
 		
@@ -63,6 +74,10 @@ class {{form.title}}Detail(DetailView):
 	model = {{form.title}}
 	template_name = '{{app_name}}/detail.html'
 	context_object_name = 'object'
+	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super({{form.title}}Detail, self).dispatch(*args, **kwargs)
 	
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Detail, self).get_context_data(**kwargs)
@@ -102,6 +117,10 @@ class {{form.title}}Update(UpdateView):
 	template_name = '{{app_name}}/update.html'
 	form_class = {{form.title}}Form
 	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super({{form.title}}Update, self).dispatch(*args, **kwargs)
+	
 	def get_success_url(self):
 		return reverse('detail{{form.title}}',args=(self.get_object().id,))
 		
@@ -126,6 +145,7 @@ class {{form.title}}Delete(DeleteView):
 		
 {% for operation in form.operations %}
 {% if operation.field_type == "Search" %}
+@login_required(login_url="/")
 def {{operation.name}}(request):
 	if request.method == 'POST':
 		form = Search{{form.title}}Form(request.POST)
@@ -175,25 +195,23 @@ def {{operation.name}}(request):
 
 #User
 
-class UserForm(forms.ModelForm):
-	class Meta:
-		model = User
-		fields = ['first_name','last_name', 'username', 'email']
-		
-	def __init__(self, *args, **kwargs):
-		super(UserForm, self).__init__(*args, **kwargs)
-		for field in self.fields.values():
-			field.widget.attrs['class']='form-control'
-
 class DetailUser(DetailView):
 	model = User
 	template_name = '{{app_name}}/udetail.html'
 	context_object_name='user'
+	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super(DetailUser, self).dispatch(*args, **kwargs)
 
 class UserUpdate(UpdateView):
 	model = User
 	template_name = '{{app_name}}/uupdate.html'
 	form_class = UserForm
+	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super(UserUpdate, self).dispatch(*args, **kwargs)
 	
 	def get_success_url(self):
 		return reverse('udetail',args=(self.get_object().id,))
@@ -202,6 +220,10 @@ class UserCreate(CreateView):
 	model = User
 	template_name = '{{app_name}}/register.html'
 	form_class = UserForm
+	
+	@method_decorator(login_required(login_url="/"))
+	def dispatch(self, *args, **kwargs):
+		return super(UserCreate, self).dispatch(*args, **kwargs)
 	
 	def get_success_url(self):
 		return reverse('home')

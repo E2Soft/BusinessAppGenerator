@@ -3,13 +3,16 @@
 {% block content %}
 
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 {% for form in model.forms -%}
 {% for operation in form.operations %}
 {% if operation.field_type != "Search" -%}
 {% if operation.param -%}
+@login_required(login_url="/")
 def {{operation.name}}(request,pk):
 {% else -%}
+@login_required(login_url="/")
 def {{operation.name}}(request):
 {% endif -%}
 	#TODO:Implement this view

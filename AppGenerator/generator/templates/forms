@@ -41,6 +41,9 @@ class Search{{form.title}}Form(forms.Form):
 {%- endfor %}
 		for field in self.fields.values():
 			field.widget.attrs['class']='form-control'
+			if(field.__class__.__name__ == "DateTimeField"):
+				field.widget.attrs['id']='datepicker'
+				field.widget.attrs['type'] = "text"
 
 
 class {{form.title}}Form(forms.ModelForm):
@@ -52,6 +55,20 @@ class {{form.title}}Form(forms.ModelForm):
 		super({{form.title}}Form, self).__init__(*args, **kwargs)
 		for field in self.fields.values():
 			field.widget.attrs['class']='form-control'
+			if(field.__class__.__name__ == "DateTimeField"):
+				field.widget.attrs['id']='datepicker'
+				field.widget.attrs['type'] = "text"
 
 {% endfor -%}
+
+class UserForm(forms.ModelForm):
+	class Meta:
+		model = User
+		fields = ['first_name','last_name', 'username', 'email']
+		
+	def __init__(self, *args, **kwargs):
+		super(UserForm, self).__init__(*args, **kwargs)
+		for field in self.fields.values():
+			field.widget.attrs['class']='form-control'
+			
 {% endblock%}
