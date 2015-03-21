@@ -5,7 +5,7 @@ Created on Mar 19, 2015
 '''
 from test.model import AppModel, Form, Field, Operation, Link
 
-test_app_model = AppModel(app_name='My_test_app', 
+test_app_model = AppModel(app_name='My test app', 
                                   forms=[Form(title='Firstform', 
                                               fields=[Field(name='field1', label='My Field 1', field_type='String',
                                                             mandatory=True,max_length=4),
