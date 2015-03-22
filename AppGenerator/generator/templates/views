@@ -146,7 +146,7 @@ class {{form.title}}Detail(DetailView):
 		{%- endfor %}
 		}
 		
-		foreign_field_names = {
+		context["foreign_field_names"] = {
 		{%- for field in form.fields %}
 			{%- if field.field_type == 'Link' and field.link_type == '*-*' %}
 					'{{field.name}}':'{{form.title}}'.lower(),
@@ -162,38 +162,6 @@ class {{form.title}}Detail(DetailView):
 		}
 		
 		context["object_pk"] = self.object.pk
-		context["foreign_field_names"] = foreign_field_names
-		
-		
-		context["linked_forms"] = {
-		{%- for field in form.fields -%}
-			{%- if field.field_type == 'Link' and field.link_type == '*-*' %}
-					'{{field.name}}':'{{field.form}}',
-			{%- endif -%}
-		{%- endfor -%}
-		{%- for other_form in model.forms -%}
-			{%- for field in other_form.fields -%}
-				{%- if field.field_type == 'Link' and (field.link_type == '1-*' or field.link_type == '*-*') and field.form == form.title -%}
-					'{{other_form.title}}'.lower():'{{other_form.title}}',
-				{%- endif -%}
-			{%- endfor -%}
-		{%- endfor %}
-		}
-		
-		foreign_field_names = {
-		{%- for field in form.fields %}
-			{%- if field.field_type == 'Link' and field.link_type == '*-*' %}
-					'{{field.name}}':'{{form.title}}'.lower(),
-			{% endif %}
-		{%- endfor -%}
-		{%- for other_form in model.forms -%}
-			{%- for field in other_form.fields -%}
-				{%- if field.field_type == 'Link' and (field.link_type == '1-*' or field.link_type == '*-*') and field.form == form.title -%}
-					'{{other_form.title}}'.lower():'{{field.name}}',
-				{%- endif -%}
-			{%- endfor -%}
-		{%- endfor %}
-		}
 		
 		context["update_url"] = "update{{form.title}}"
 		context["delete_url"] = "delete{{form.title}}"
