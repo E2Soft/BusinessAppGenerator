@@ -12,7 +12,7 @@
 {% block content %}
 
 <div class="jumbotron">
-	<h2>{{title|title}} detail</h2>
+	<h2>{{display_name|title}} detail</h2>
 	<div class="bs-callout bs-callout-default">
 		<ul class="list-group">
 			{% for name, value in mapa|filternormal %}
@@ -67,7 +67,7 @@
 		<b>
 			<a href="{% url update_url object.pk %}">
 				<span class="glyphicon glyphicon-pencil"></span>
-				Update {{ title|title }}
+				Update {{ display_name|title }}
 			</a>
 		</b>
 	</li>
@@ -75,7 +75,7 @@
 		<b>
 			<a href="{% url delete_url object.id %}" >
 				<span class="glyphicon glyphicon-remove"></span>
-				Delete {{ title|title }}
+				Delete {{ display_name|title }}
 			</a>
 		</b>
 	</li>

@@ -1,9 +1,9 @@
 {% extends "business_app/menu.html" %}
-{% block title %}Add {{ title|title }} {% endblock %}
+{% block title %}Add {{ display_name|title }} {% endblock %}
 
 {% block content %}
 	<div class="jumbotron">
-    	<h2>Add new {{ title|title }}</h2>
+    	<h2>Add new {{ display_name|title }}</h2>
     </div>
     
     <div class="bs-callout bs-callout-success">
