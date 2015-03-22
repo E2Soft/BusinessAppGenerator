@@ -240,10 +240,6 @@ class UserCreate(CreateView):
 	template_name = '{{app_name}}/register.html'
 	form_class = UserForm
 	
-	@method_decorator(login_required(login_url="/"))
-	def dispatch(self, *args, **kwargs):
-		return super(UserCreate, self).dispatch(*args, **kwargs)
-	
 	def get_success_url(self):
 		return reverse('home')
 		
