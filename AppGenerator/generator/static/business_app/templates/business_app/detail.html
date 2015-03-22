@@ -38,8 +38,13 @@
 	{% for name, value in mapa|filterlists %}
 			<div id="pane{{forloop.counter}}" class="tab-pane{% if forloop.first %} active{% endif %}">
 				<div class="bs-callout bs-callout-default">
-					<span class="nav navbar-nav navbar-right" style="margin-right:10px">
-						<a href="{{linked_forms|linked_add_url:name}}?linked_field={{foreign_field_names|map_value:name}}&object_pk={{object_pk}}&linked_view=detail{{title}}">Add new</a>
+					<span>
+						<a href="{{linked_forms|linked_add_url:name}}?linked_field={{foreign_field_names|map_value:name}}&object_pk={{object_pk}}&linked_view=detail{{title}}">
+						<button type="button" class="btn btn-default btn-sm" style="margin-bottom:10px">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							Add new
+						</button>
+						</a>
 					</span>
 					<ul class="list-group">
 						{% for val in value %}
