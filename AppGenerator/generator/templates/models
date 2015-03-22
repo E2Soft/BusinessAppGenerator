@@ -27,6 +27,6 @@ class {{form.title}}(models.Model):
 {% endfor %}
 
 	def __str__(self):
-		return self.__getattribute__('{{form.main_attribute}}')
+		return str(self.__getattribute__('{{form.main_attribute}}'))
 {% endfor %}
 {% endblock %}
