@@ -5,16 +5,20 @@
 {% load filternormal from business_app_extras %}
 {% load filterurl from business_app_extras %}
 {% load is_entity from business_app_extras %}
+{% load url_for from business_app_extras %}
+{% load linked_add_url from business_app_extras %}
+{% load map_value from business_app_extras %}
 
 {% block content %}
+
 <div class="jumbotron">
 	<h2>{{title|title}} detail</h2>
 	<div class="bs-callout bs-callout-default">
 		<ul class="list-group">
 			{% for name, value in mapa|filternormal %}
-				<li class="list-group-item"> <b>{{name|title}}:</b>
+				<li class="list-group-item"> <b>{{field_labels|map_value:name|title}}:</b>
 					{% if value|is_entity %}
-						<a href="{{value|filterurl}}">{{value}}</a>
+						<a href="{{value|url_for:'detail'}}">{{value}}</a>
 					{% else %}
 						{{value}}
 					{% endif%}
@@ -28,10 +32,17 @@
 		<div class="bs-callout bs-callout-default">
 			<ul class="list-group">
 				{% for name, value in mapa|filterlists %}
-					<li class="list-group-item"> <b>{{name|title}}:</b>
+					<li class="list-group-item"> <b>{{field_labels|map_value:name|title}}:</b>
+					<span class="nav navbar-nav navbar-right" style="margin-right:10px">
+					<a href="{{linked_forms|linked_add_url:name}}?linked_field={{foreign_field_names|map_value:name}}&object_pk={{object_pk}}&linked_view=detail{{title}}">Add new</a>
+					</span>
 						<ul>
 							{% for val in value %}
-								<li><a href="{{val|filterurl}}">{{val}}</a></li>
+								<li>
+								<span><a href="{{val|url_for:'detail'}}">{{val}}</a></span>
+								<span class="nav navbar-nav navbar-right" style="margin-right:10px"> <a href="{{val|url_for:'delete'}}?object_pk={{object_pk}}&linked_view=detail{{title}}"><span class="glyphicon glyphicon-remove"></span></a></span>
+								<span class="nav navbar-nav navbar-right" style="margin-right:10px"><a href="{{val|url_for:'update'}}?object_pk={{object_pk}}&linked_view=detail{{title}}"><span class="glyphicon glyphicon-pencil"></span></a></span>
+								</li>
 							{% endfor %}
 						</ul>
 					</li>

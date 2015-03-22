@@ -54,8 +54,27 @@ def filterurl(obj):
 		return reverse('udetail',args=(obj.id,))
 
 @register.filter
+def url_for(obj, url_type):
+	{% for form in model.forms -%}
+	{% if loop.first %}
+		if isinstance(obj, {{form.title}}):
+	{% else %}
+		elif isinstance(obj, {{form.title}}):
+	{% endif %}
+			return reverse(url_type+'{{form.title}}',args=(obj.id,))
+	{% endfor %}
+
+@register.filter
+def linked_add_url(linked_forms, field_name):
+	return reverse('add'+linked_forms[field_name])
+
+@register.filter
 def get_attribute(o, key):
     return o.__getattribute__(key)
+    
+@register.filter
+def map_value(dict, key):    
+    return dict[key]
 
 {% endblock %}
 

@@ -75,7 +75,16 @@ class {{form.title}}Create(CreateView):
 		return super({{form.title}}Create, self).dispatch(*args, **kwargs)
 	
 	def get_success_url(self):
-		return reverse('list{{form.title}}')
+		if self.request.GET.get('linked_view'):
+			return reverse(self.request.GET.get('linked_view'), args=[self.request.GET.get('object_pk')])
+		else:
+			return reverse('list{{form.title}}')
+	
+	def get_initial(self):
+		defaults = {}
+		if self.request.GET:
+			defaults[self.request.GET.get('linked_field')] = self.request.GET.get('object_pk')
+		return defaults
 		
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Create, self).get_context_data(**kwargs)
@@ -97,6 +106,7 @@ class {{form.title}}Detail(DetailView):
 		context["title"] = "{{form.title}}"
 		
 		mapa = {}
+		field_labels = {}
 		
 		for name in self.object._meta.get_all_field_names():
 			if 'id' != name and not name.endswith("_id"):
@@ -105,18 +115,55 @@ class {{form.title}}Detail(DetailView):
 				if not label:
 					label = name
 				
+				field_labels[name] = label
+				
 				try:
-					mapa[label] = self.object.__getattribute__(name).all()
+					mapa[name] = self.object.__getattribute__(name).all()
 				except AttributeError:
 					try:
-						mapa[label] = self.object.__getattribute__(name)
+						mapa[name] = self.object.__getattribute__(name)
 					except AttributeError:
 						try:
-							mapa[label] = self.object.__getattribute__(''.join([name,"_set"])).all()
+							mapa[name] = self.object.__getattribute__(''.join([name,"_set"])).all()
 						except AttributeError:
-							mapa[label] = "not assigned"
+							mapa[name] = "not assigned"
 		
 		context["mapa"] = mapa
+		context["field_labels"] = field_labels
+		
+		context["linked_forms"] = {
+		{%- for field in form.fields -%}
+			{%- if field.field_type == 'Link' and field.link_type == '*-*' %}
+					'{{field.name}}':'{{field.form}}',
+			{%- endif -%}
+		{%- endfor -%}
+		{%- for other_form in model.forms -%}
+			{%- for field in other_form.fields -%}
+				{%- if field.field_type == 'Link' and (field.link_type == '1-*' or field.link_type == '*-*') and field.form == form.title -%}
+					'{{other_form.title}}'.lower():'{{other_form.title}}',
+				{%- endif -%}
+			{%- endfor -%}
+		{%- endfor %}
+		}
+		
+		foreign_field_names = {
+		{%- for field in form.fields %}
+			{%- if field.field_type == 'Link' and field.link_type == '*-*' %}
+					'{{field.name}}':'{{form.title}}'.lower(),
+			{% endif %}
+		{%- endfor -%}
+		{%- for other_form in model.forms -%}
+			{%- for field in other_form.fields -%}
+				{%- if field.field_type == 'Link' and (field.link_type == '1-*' or field.link_type == '*-*') and field.form == form.title -%}
+					'{{other_form.title}}'.lower():'{{field.name}}',
+				{%- endif -%}
+			{%- endfor -%}
+		{%- endfor %}
+		}
+		
+		context["object_pk"] = self.object.pk
+		context["foreign_field_names"] = foreign_field_names
+		
 		
 		context["update_url"] = "update{{form.title}}"
 		context["delete_url"] = "delete{{form.title}}"
@@ -141,7 +188,10 @@ class {{form.title}}Update(UpdateView):
 		return super({{form.title}}Update, self).dispatch(*args, **kwargs)
 	
 	def get_success_url(self):
-		return reverse('detail{{form.title}}',args=(self.get_object().id,))
+		if self.request.GET.get('linked_view'):
+			return reverse(self.request.GET.get('linked_view'), args=[self.request.GET.get('object_pk')])
+		else:
+			return reverse('detail{{form.title}}',args=(self.get_object().id,))
 		
 	def form_valid(self, form):
 		self.object = form.save(commit=False)
@@ -160,7 +210,10 @@ class {{form.title}}Delete(DeleteView):
 	template_name = '{{app_name}}/delete.html'
 	
 	def get_success_url(self):
-		return reverse('list{{form.title}}')
+		if self.request.GET.get('linked_view'):
+			return reverse(self.request.GET.get('linked_view'), args=[self.request.GET.get('object_pk')])
+		else:
+			return reverse('list{{form.title}}')
 		
 {% for operation in form.operations %}
 {% if operation.field_type == "Search" %}
