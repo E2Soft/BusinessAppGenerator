@@ -69,6 +69,20 @@
 			</a>
 		</b>
 	</li>
+	<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
+		<span class="glyphicon glyphicon-link"></span>
+		<b>Connected tables</b>
+		<span class="caret"></span></a>
+		<ul class="dropdown-menu">
+			{% if linked_forms|length > 0%}
+				{% for k,v in linked_forms.items %}
+					<li><a href="/list{{v}}">{{v}}</a></li>
+				{% endfor %}
+			{% else %}
+				<li><a href="#">No connected tables</a></li>
+			{% endif %}
+		</ul>
+    </li>	
 	{% for custom_method in custom_methods %}
 	<li>
 		<b>
