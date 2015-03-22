@@ -1,5 +1,5 @@
 {% extends "business_app/menu.html" %}
-{% block title %}{{ title|title }}{% endblock %}
+{% block title %}{{ display_name|title }}{% endblock %}
 
 {% load get_attribute from business_app_extras %}
 
@@ -9,7 +9,7 @@
         	<div class="row">
             	<div class="col-lg-12">	
             		<div class="page-header">
-       					<h2><span class="glyphicon glyphicon-flag"></span> {{ title|title }}</h2>
+       					<h2><span class="glyphicon glyphicon-flag"></span> {{ display_name|title }}</h2>
     				</div>
 					<ul class="list-group">
 						{% for obj in object_list %}
@@ -30,7 +30,7 @@
 		<b>
 			<a href="{% url add_url %}">
 				<span class="glyphicon glyphicon-file"></span>
-				Add new {{ title|title }}
+				Add new {{ display_name|title }}
 			</a>
 		</b>
 	</li>

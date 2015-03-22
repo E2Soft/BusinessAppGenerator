@@ -51,6 +51,7 @@ class {{form.title}}List(ListView):
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}List, self).get_context_data(**kwargs)
 		context["title"] = "{{form.title}}"
+		context["display_name"] = "{{form.display_name}}"
 		context["detail_url"] = "detail{{form.title}}"
 		context["add_url"] = "add{{form.title}}"
 		context["search_url"] = "search{{form.title}}"
@@ -80,6 +81,7 @@ class {{form.title}}Create(CreateView):
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Create, self).get_context_data(**kwargs)
 		context["title"] = "{{form.title}}"
+		context["display_name"] = "{{form.display_name}}"
 		
 		return context
 	
@@ -95,6 +97,7 @@ class {{form.title}}Detail(DetailView):
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Detail, self).get_context_data(**kwargs)
 		context["title"] = "{{form.title}}"
+		context["display_name"] = "{{form.display_name}}"
 		
 		mapa = {}
 		
@@ -152,6 +155,7 @@ class {{form.title}}Update(UpdateView):
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Update, self).get_context_data(**kwargs)
 		context["title"] = "{{form.title}}"
+		context["display_name"] = "{{form.display_name}}"
 		
 		return context
 
@@ -207,7 +211,7 @@ def {{operation.name}}(request):
 	else:
 		form = Search{{form.title}}Form()
 		
-	return render(request, '{{app_name}}/search.html', {'form': form,'title':"{{form.title}}"})
+	return render(request, '{{app_name}}/search.html', {'form': form,'display_name':"{{form.display_name}}"})
 {% endif %}
 {% endfor %}
 {% endfor -%}
