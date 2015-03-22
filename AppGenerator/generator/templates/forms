@@ -11,7 +11,7 @@ from django.utils import timezone
 #{{form.title}}
 
 class Search{{form.title}}Form(forms.Form):
-{% for field in form.fields %}
+{% for field in form.fields|sort(attribute='weight') %}
 	{% if field.field_type == "String" -%} 
 		{{field.name}} = forms.CharField(required=False)
 	{% elif field.field_type == "Float" -%}
@@ -50,7 +50,7 @@ class Search{{form.title}}Form(forms.Form):
 class {{form.title}}Form(forms.ModelForm):
 	class Meta:
 		model = {{form.title}}
-		fields = [{% for field in form.fields %}'{{field.name}}',{% endfor %}]
+		fields = [{% for field in form.fields|sort(attribute='weight') %}'{{field.name}}',{% endfor %}]
 		
 	def __init__(self, *args, **kwargs):
 		super({{form.title}}Form, self).__init__(*args, **kwargs)
