@@ -10,7 +10,7 @@ def home(request):
 		MenuItem("{{form.title}}", "list{{form.title}}"),
 		{% endfor %}
 		]
-		context = {"isadmin":request.user.is_superuser,"user":request.user, "toolbar_items":toolbar_items}
+		context = {"isadmin":request.user.is_superuser,"user":request.user, "toolbar_items":toolbar_items,"title":"{{model.app_name}}"}
 		return render(request,'business_app/main.html',context)
 		
 	username = request.POST.get("username","")
@@ -23,11 +23,13 @@ def home(request):
 		auth.login(request, user)
 		return redirect('home')
 	else:
-		return render(request,'business_app/login.html')
+		context = {"title":"{{model.app_name}}"}
+		return render(request,'business_app/login.html',context)
 		
 def logout(request):
 	auth.logout(request)
-	return render(request, 'business_app/login.html')
+	context = {"title":"{{model.app_name}}"}
+	return render(request, 'business_app/login.html',context)
 	
 class MenuItem:
 	def __init__(self, name, url):

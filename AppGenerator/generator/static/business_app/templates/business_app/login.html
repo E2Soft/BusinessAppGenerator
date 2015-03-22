@@ -7,7 +7,7 @@
 {% endif %}
 		<div class="jumbotron">
 			<form action="{% url 'home' %}" method="post" role="form">{% csrf_token %}
-				<h1>StarTrac</h1> 
+				<h1>{{title}}</h1> 
 				<p>Referent implementation of MBRS project</p>
 				
 				<div class="form-group">
