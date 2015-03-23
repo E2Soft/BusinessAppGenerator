@@ -10,6 +10,6 @@
         </requires>
         <runtime>
            <library name="plugin.jar"/>
-           <library name="xstream-1.3.1.jar"/>
+           <library name="xstream-1.4.8.jar"/>
         </runtime>
 </plugin>
