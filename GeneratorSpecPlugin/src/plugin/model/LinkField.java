@@ -7,10 +7,12 @@ public class LinkField extends Field
 {
 	Form form;
 	String link_type;
-	public LinkField(String name, String label, String field_type,boolean mandatory, Form form, String link_type)
+	String foreign_label;
+	public LinkField(String name, String label, String field_type,boolean mandatory, int weight, Form form, String link_type, String foreign_label)
 	{
-		super(name, label, field_type, mandatory);
+		super(name, label, field_type, mandatory, weight);
 		this.form=form;
 		this.link_type=link_type;
+		this.foreign_label = foreign_label;
 	}
 }
