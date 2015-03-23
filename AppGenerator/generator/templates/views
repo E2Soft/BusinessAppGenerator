@@ -50,7 +50,6 @@ class {{form.title}}List(ListView):
 		
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}List, self).get_context_data(**kwargs)
-		context["title"] = "{{form.title}}"
 		context["display_name"] = "{{form.display_name}}"
 		context["detail_url"] = "detail{{form.title}}"
 		context["add_url"] = "add{{form.title}}"
@@ -80,7 +79,6 @@ class {{form.title}}Create(CreateView):
 		
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Create, self).get_context_data(**kwargs)
-		context["title"] = "{{form.title}}"
 		context["display_name"] = "{{form.display_name}}"
 		
 		return context
@@ -96,7 +94,6 @@ class {{form.title}}Detail(DetailView):
 	
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Detail, self).get_context_data(**kwargs)
-		context["title"] = "{{form.title}}"
 		context["display_name"] = "{{form.display_name}}"
 		
 		mapa = {}
@@ -154,7 +151,6 @@ class {{form.title}}Update(UpdateView):
 		
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Update, self).get_context_data(**kwargs)
-		context["title"] = "{{form.title}}"
 		context["display_name"] = "{{form.display_name}}"
 		
 		return context
@@ -165,6 +161,12 @@ class {{form.title}}Delete(DeleteView):
 	
 	def get_success_url(self):
 		return reverse('list{{form.title}}')
+		
+	def get_context_data(self, **kwargs):
+		context = super({{form.title}}Delete, self).get_context_data(**kwargs)
+		context["display_name"] = "{{form.display_name}}"
+		
+		return context
 		
 {% for operation in form.operations %}
 {% if operation.field_type == "Search" %}
@@ -206,7 +208,7 @@ def {{operation.name}}(request):
 			for val in objects.all():
 				result[reverse('detail{{form.title}}', args=(val.pk,))] = val.__getattribute__("{{form.main_attribute}}")
 				
-			return render(request, '{{app_name}}/result.html', {"results":result})
+			return render(request, '{{app_name}}/result.html', {"results":result,'display_name':"{{form.display_name}}"})
 			
 	else:
 		form = Search{{form.title}}Form()
