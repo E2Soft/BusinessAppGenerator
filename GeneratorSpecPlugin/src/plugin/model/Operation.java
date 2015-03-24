@@ -8,13 +8,20 @@ public class Operation
     String name;
     String label;
     String field_type;
-    boolean param;
-	public Operation(String name, String label, String field_type, boolean param)
+    Boolean param;
+	public Operation(String name, String label, String field_type, Boolean param)
 	{
 		super();
 		this.name = name;
 		this.label = label;
 		this.field_type = field_type;
-		this.param = param;
+		if (param == null)
+		{
+			this.param = false;
+		}
+		else
+		{
+			this.param = param;
+		}
 	}
 }

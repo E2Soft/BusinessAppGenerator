@@ -21,4 +21,9 @@ public class Form
 		this.fields = fields;
 		this.operations = operations;
 	}
+	
+	public List<Field> getFields()
+	{
+		return fields;
+	}
 }

@@ -1,10 +1,13 @@
 package plugin;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 import plugin.analyzer.AnalyzeException;
@@ -42,6 +45,26 @@ class GenerateAction extends MDAction
 		catch (AnalyzeException e)
 		{
 			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+		catch(Exception e)
+		{
+			StringBuilder sb = new StringBuilder("Error: ");
+            sb.append(e.getMessage());
+            sb.append("\n");
+            for (StackTraceElement ste : e.getStackTrace()) {
+                sb.append(ste.toString());
+                sb.append("\n");
+            }
+            JTextArea jta = new JTextArea(sb.toString());
+            @SuppressWarnings("serial")
+			JScrollPane jsp = new JScrollPane(jta){
+                @Override
+                public Dimension getPreferredSize() {
+                    return new Dimension(480, 320);
+                }
+            };
+            
+            JOptionPane.showMessageDialog(null, jsp, "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

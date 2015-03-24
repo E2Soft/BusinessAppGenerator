@@ -5,9 +5,9 @@ public abstract class Field
 	String name;
     String label;
 	String field_type;
-    boolean mandatory;
-    int weight;
-	public Field(String name, String label, String field_type, boolean mandatory, int weight)
+    Boolean mandatory;
+    Integer weight;
+	public Field(String name, String label, String field_type, Boolean mandatory, Integer weight)
 	{
 		super();
 		this.name = name;
