@@ -150,7 +150,7 @@ public class ModelAnalyzer
 				
 				String link_type = firstMultiplicity.getMax()+".."+secondMultiplicity.getMax();
 				
-				LinkField newLink = new LinkField(linkName, label, "Link", firstMultiplicity.isMandatory(), weight, formMap.get(secondForm.getName()), link_type, foreign_label);
+				LinkField newLink = new LinkField(linkName, label, "Link", firstMultiplicity.isMandatory(), weight, secondForm.getName(), link_type, foreign_label);
 				
 				formMap.get(firstForm.getName()).getFields().add(newLink);
 			}
