@@ -1,0 +1,106 @@
+{% extends "business_app/menu.html" %}
+{% block title %}{{title|title}} detail page{% endblock %}
+{% load classname from business_app_extras %}
+{% load filterlists from business_app_extras %}
+{% load filternormal from business_app_extras %}
+{% load filterurl from business_app_extras %}
+{% load is_entity from business_app_extras %}
+{% load url_for from business_app_extras %}
+{% load linked_add_url from business_app_extras %}
+{% load map_value from business_app_extras %}
+
+{% block content %}
+
+<div class="jumbotron">
+	<h2>{{display_name|title}} detail</h2>
+	<div class="bs-callout bs-callout-default">
+		<ul class="list-group">
+			{% for name, value in mapa|filternormal %}
+				<li class="list-group-item"> <b>{{field_labels|map_value:name|title}}:</b>
+					{% if value|is_entity %}
+						<a href="{{value|url_for:'detail'}}">{{value}}</a>
+					{% else %}
+						{{value}}
+					{% endif%}
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+
+<ul class="nav nav-tabs" role="tablist">
+	{% for name, value in mapa|filterlists %}
+		<li {% if forloop.first %}class="active"{% endif %}><a href="#pane{{forloop.counter}}" data-toggle="tab"><span class="glyphicon glyphicon-tasks"></span> {{field_labels|map_value:name|title}}</a></li>
+	{% endfor %}
+</ul>
+	
+<div class="tab-content">
+	{% for name, value in mapa|filterlists %}
+			<div id="pane{{forloop.counter}}" class="tab-pane{% if forloop.first %} active{% endif %}">
+				<div class="bs-callout bs-callout-default">
+					<span>
+						<a href="{{linked_forms|linked_add_url:name}}?linked_field={{foreign_field_names|map_value:name}}&object_pk={{object_pk}}&linked_view=detail{{title}}">
+						<button type="button" class="btn btn-default btn-sm" style="margin-bottom:10px">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							Add new
+						</button>
+						</a>
+					</span>
+					<ul class="list-group">
+						{% for val in value %}
+							<li class="list-group-item">
+							<span><a href="{{val|url_for:'detail'}}">{{val}}</a></span>
+							<span class="nav navbar-nav navbar-right" style="margin-right:10px"> <a href="{{val|url_for:'delete'}}?object_pk={{object_pk}}&linked_view=detail{{title}}"><span class="glyphicon glyphicon-remove"></span></a></span>
+							<span class="nav navbar-nav navbar-right" style="margin-right:10px"><a href="{{val|url_for:'update'}}?object_pk={{object_pk}}&linked_view=detail{{title}}"><span class="glyphicon glyphicon-pencil"></span></a></span>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+	{% endfor %}
+</div>
+
+{% endblock %}
+
+{% block sidebar_content %}
+	<li>
+		<b>
+			<a href="{% url update_url object.pk %}">
+				<span class="glyphicon glyphicon-pencil"></span>
+				Update {{ display_name|title }}
+			</a>
+		</b>
+	</li>
+		<li>
+		<b>
+			<a href="{% url delete_url object.id %}" >
+				<span class="glyphicon glyphicon-remove"></span>
+				Delete {{ display_name|title }}
+			</a>
+		</b>
+	</li>
+	<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
+		<span class="glyphicon glyphicon-link"></span>
+		<b>Connected tables</b>
+		<span class="caret"></span></a>
+		<ul class="dropdown-menu">
+			{% if linked_forms|length > 0%}
+				{% for k,v in linked_forms.items %}
+					<li><a href="/list{{v}}">{{v}}</a></li>
+				{% endfor %}
+			{% else %}
+				<li><a href="#">No connected tables</a></li>
+			{% endif %}
+		</ul>
+    </li>	
+	{% for custom_method in custom_methods %}
+	<li>
+		<b>
+			<a href="{% url custom_method.url object.pk %}">
+				<span class="glyphicon glyphicon-list-alt"></span>
+					{{custom_method.name}}
+			</a>
+		</b>
+	</li>
+	{% endfor %}
+{% endblock %}

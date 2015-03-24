@@ -1,0 +1,40 @@
+{% extends "business_app/menu.html" %}
+{% block title %}Login Page{% endblock %}
+
+{% block content %}
+{% if message %}
+		{{message}}
+{% endif %}
+		<div class="jumbotron">
+			<form action="{% url 'home' %}" method="post" role="form">{% csrf_token %}
+				<h1>{{title}}</h1> 
+				<p>Referent implementation of MBRS project</p>
+				
+				<div class="form-group">
+			      <label for="username">Username:</label>
+			      <input type="text" id="username" name="username" class="form-control" placeholder="Enter username" />
+			    </div>
+				
+				<div class="form-group">
+			      <label for="password">Password:</label>
+			      <input type="password" id="password" name="password" class="form-control" placeholder="Enter password" />
+			    </div>
+				
+				<button type="submit" class="btn btn-info">
+					<span class="glyphicon glyphicon-log-in"></span>
+					Login
+				</button>
+			</form>
+		</div>
+{% endblock %}
+
+{% block sidebar_content %}
+	<li>
+		<b>
+			<a href="{% url 'register' %}">
+				<span class="glyphicon glyphicon-user"></span>
+				Register
+			</a>
+		</b>
+	</li>
+{% endblock %}

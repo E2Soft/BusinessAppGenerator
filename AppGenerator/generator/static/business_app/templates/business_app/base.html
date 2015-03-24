@@ -1,0 +1,40 @@
+<html>
+
+<head>
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	<link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+	
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static 'business_app/theme.css' %}">
+	<link rel="stylesheet" href="{% static 'business_app/callout.css' %}">
+	<script type="text/javascript" src="{% static 'business_app/actions.js' %}" ></script>
+	
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	
+	<title>{% block title %}{{title|title}}{% endblock %}</title>
+
+</head>
+
+<body>
+
+	{% block content_wrapper %}
+	
+		<div class="container">
+			<div id="wrapper">
+			
+				{% block sidebar %}{% endblock %}
+			    
+			    {% block content %}
+			    	{% block toolbar %}{% endblock %}
+			    {% endblock %}
+			     
+			</div>
+	    </div>
+
+	{% endblock %}
+	
+</body>
+
+</html>

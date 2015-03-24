@@ -1,0 +1,32 @@
+{% extends 'base' %}
+
+{% block content %}
+from django.contrib.auth.models import User
+from django.db import models
+
+{% for form in model.forms %}
+class {{form.title}}(models.Model):
+{% for field in form.fields %}
+	{% if field.field_type == "String" -%} 
+		{{field.name}} = models.CharField(max_length={{field.max_length}}, null={{field.mandatory}}, blank={{field.mandatory}})
+	{% elif field.field_type == "Float" -%}
+		{{field.name}} = models.FloatField(null={{field.mandatory}}, blank={{field.mandatory}})
+	{% elif field.field_type == "DateTime" -%}
+		{{field.name}} = models.DateTimeField(null={{field.mandatory}}, blank={{field.mandatory}})
+	{% elif field.field_type == "Integer" -%}
+		{{field.name}} = models.IntegerField(null={{field.mandatory}}, blank={{field.mandatory}})
+	{% else -%}
+		{% if field.link_type == '1-*' -%}
+			{{field.name}} = models.ForeignKey({{field.form}}, blank={{field.mandatory}}, null={{field.mandatory}})
+		{% elif field.link_type == '*-*' -%}
+			{{field.name}} = models.ManyToManyField({{field.form}}, blank={{field.mandatory}}, null={{field.mandatory}})
+		{% else -%}
+			{{field.name}} = models.OneToOneField({{field.form}}, blank={{field.mandatory}}, null={{field.mandatory}})
+		{% endif -%}
+	{% endif -%}
+{% endfor %}
+
+	def __str__(self):
+		return str(self.__getattribute__('{{form.main_attribute}}'))
+{% endfor %}
+{% endblock %}

@@ -47,4 +47,3 @@ def _resolve_links(app_model):
         if hasattr(form.fields, 'LinkField'):
             for link in form.fields.LinkField:
                 link.form = link.form.xpath(link.form.get('reference'))[0]
-
