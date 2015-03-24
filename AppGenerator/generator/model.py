@@ -5,17 +5,28 @@ Created on Mar 17, 2015
 '''
 
 class AppModel():
-    def __init__(self, app_name=None, forms=[]):
+    def __init__(self, app_name=None, forms=None):
         self.app_name=app_name
-        self.forms=forms
-    
+        if not forms:
+            self.forms=[]
+        else:
+            self.forms=forms
 class Form:
-    def __init__(self, title=None, fields=[], operations=[], main_attribute=None, display_name=None):
+    def __init__(self, title=None, fields=None, operations=None, main_attribute=None, display_name=None):
         self.title = title
         self.fields = fields
         self.operations = operations
         self.main_attribute = main_attribute
         self.display_name = display_name
+        if not fields:
+            self.fields=[]
+        else:
+            self.fields=fields
+        if not operations:
+            self.operations=[]
+        else:
+            self.operations=operations 
+        
 class Link:
     def __init__(self, name=None,label=None, foreign_label=None, field_type=None,mandatory=False,form=None,link_type=None,weight=0):
         self.field_type = field_type

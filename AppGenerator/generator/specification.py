@@ -6,44 +6,69 @@ Created on Mar 13, 2015
 
 from lxml import objectify
 
+from generator.model import AppModel, Form, Field, Operation, Link
+
+
 def from_xml_file(file_path):
     with open(file_path, 'r') as fileobject:
-        app_model = objectify.parse(fileobject).getroot()
-        return _process_model(app_model)
+        xml_model = objectify.parse(fileobject).getroot()
+        return _create_app_model(xml_model)
     
 def from_xml_string(xml):
-    app_model = objectify.fromstring(xml)
-    return _process_model(app_model)
+    xml_model = objectify.fromstring(xml)
+    return _create_app_model(xml_model)
 
-def _process_model(app_model):
+def _create_app_model(xml_model):
+    app_model = AppModel()
+    app_model.app_name = xml_model.app_name.text
     
-    _resolve_links(app_model)
-    
-    app_model.forms = [_process_form(f) for f in app_model.forms.Form]
-    
+    for xml_form in xml_model.forms.Form:
+        app_model.forms.append(_create_form_model(xml_form))
+
     return app_model
 
-def _process_form(form):
-    if hasattr(form.fields, 'FormField'):
-        form_fields = [f for f in form.fields.FormField]
-    else:
-        form_fields = []
-    if hasattr(form.fields, 'LinkField'):
-        link_fields = [f for f in form.fields.LinkField]
-    else:
-        link_fields = []
+def _create_form_model(xml_form):
+    form = Form()
+    form.title = xml_form.title.text
+    form.display_name = xml_form.display_name.text
+    form.main_attribute = xml_form.main_attribute.text
     
-    form.fields = form_fields + link_fields
+    if hasattr(xml_form.fields, 'Field'):
+        for xml_field in xml_form.fields.Field:
+            field = Field()
+            if hasattr(xml_field, 'max_length'):
+                field.max_length = int(xml_field.max_length.text)
+            field.name = xml_field.name.text
+            field.label = xml_field.label.text
+            field.field_type = xml_field.field_type.text
+            field.mandatory = xml_field.mandatory.text.lower() == 'true'
+            field.weight = int(xml_field.weight.text)
+            
+            form.fields.append(field)
+       
+    if hasattr(xml_form.fields, 'Link'):
+        for xml_field in xml_form.fields.Link:
+            field = Link()
+            field.form = xml_field.form.text
+            field.foreign_label = xml_field.foreign_label.text
+            field.link_type = xml_field.link_type.text
+            
+            field.name = xml_field.name.text
+            field.label = xml_field.label.text
+            field.field_type = xml_field.field_type.text
+            field.mandatory = xml_field.mandatory.text.lower() == 'true'
+            field.weight = int(xml_field.weight.text)
+            
+            form.fields.append(field)
     
-    if hasattr(form.operations, 'Operation'):
-        form.operations = [o for o in form.operations.Operation]
-    else:
-        form.operations = []
+    if hasattr(xml_form.operations, 'Operation'):
+        for xml_operation in xml_form.operations.Operation:
+            operation = Operation()
+            operation.name = xml_operation.name.text
+            operation.label = xml_operation.label.text
+            operation.field_type = xml_operation.field_type.text
+            operation.param = xml_operation.param.text.lower() == 'true'
+            
+            form.operations.append(operation)
     
     return form
-
-def _resolve_links(app_model):
-    for form in app_model.forms.Form:
-        if hasattr(form.fields, 'LinkField'):
-            for link in form.fields.LinkField:
-                link.form = link.form.xpath(link.form.get('reference'))[0]
