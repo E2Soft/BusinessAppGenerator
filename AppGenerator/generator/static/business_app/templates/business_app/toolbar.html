@@ -10,7 +10,9 @@
 				<li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
 				{% for toolbar_item in toolbar_items %}
 			    	<li>
-			    		<a href="{% url toolbar_item.url %}" data-toggle="tooltip" data-placement="bottom" title="{{toolbar_item.tooltip}}">
+			    		<a href="{% url toolbar_item.url %}" data-toggle="tooltip" 
+			    											 data-placement="bottom" 
+			    											 title="{{toolbar_item.tooltip}}">
 			    			<span class="glyphicon glyphicon-tasks"></span> {{toolbar_item.name}}
 			    		</a>
 			    	</li>

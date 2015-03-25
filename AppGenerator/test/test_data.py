@@ -5,6 +5,7 @@ Created on Mar 19, 2015
 '''
 from generator.model import AppModel, Form, Field, Operation, Link
 
+
 test_app_model = AppModel(app_name='My test app', 
                                   forms=[Form(title='Firstform', display_name='First form',
                                               fields=[Field(name='field1', label='My Field 1', field_type='String',
