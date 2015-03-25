@@ -17,11 +17,11 @@ class {{form.title}}(models.Model):
 		{{field.name}} = models.IntegerField(null={{field.mandatory}}, blank={{field.mandatory}})
 	{% else -%}
 		{% if field.link_type == '1-*' -%}
-			{{field.name}} = models.ForeignKey({{field.form}}, blank={{field.mandatory}}, null={{field.mandatory}})
+			{{field.name}} = models.ForeignKey('{{field.form}}', blank={{field.mandatory}}, null={{field.mandatory}})
 		{% elif field.link_type == '*-*' -%}
-			{{field.name}} = models.ManyToManyField({{field.form}}, blank={{field.mandatory}}, null={{field.mandatory}})
+			{{field.name}} = models.ManyToManyField('{{field.form}}', blank={{field.mandatory}}, null={{field.mandatory}})
 		{% else -%}
-			{{field.name}} = models.OneToOneField({{field.form}}, blank={{field.mandatory}}, null={{field.mandatory}})
+			{{field.name}} = models.OneToOneField('{{field.form}}', blank={{field.mandatory}}, null={{field.mandatory}})
 		{% endif -%}
 	{% endif -%}
 {% endfor %}
