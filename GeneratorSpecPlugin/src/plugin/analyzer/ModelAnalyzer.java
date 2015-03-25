@@ -130,12 +130,12 @@ public class ModelAnalyzer
 					if(linkEnd.isNavigable())
 					{
 						secondForm = (Class) linkEnd.getType();
-						firstMultiplicity = Multiplicity.get(ModelHelper.getMultiplicity(linkEnd));
+						secondMultiplicity = Multiplicity.get(ModelHelper.getMultiplicity(linkEnd));
 					}
 					else
 					{
 						firstForm = (Class) linkEnd.getType();
-						secondMultiplicity = Multiplicity.get(ModelHelper.getMultiplicity(linkEnd));
+						firstMultiplicity = Multiplicity.get(ModelHelper.getMultiplicity(linkEnd));
 					}
 				}
 				
@@ -150,9 +150,9 @@ public class ModelAnalyzer
 				
 				String link_type = firstMultiplicity.getMax()+".."+secondMultiplicity.getMax();
 				
-				LinkField newLink = new LinkField(linkName, label, "Link", firstMultiplicity.isMandatory(), weight, secondForm.getName(), link_type, foreign_label);
+				LinkField newLink = new LinkField(linkName, label, "Link", firstMultiplicity.isMandatory(), weight, firstForm.getName(), link_type, foreign_label);
 				
-				formMap.get(firstForm.getName()).getFields().add(newLink);
+				formMap.get(secondForm.getName()).getFields().add(newLink);
 			}
 		}
 	}
