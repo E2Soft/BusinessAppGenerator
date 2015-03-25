@@ -148,7 +148,7 @@ public class ModelAnalyzer
 					throw new AnalyzeException("No members of an association <"+linkName+"> are navigable. Exactly one member should be navigable.");
 				}
 				
-				String link_type = firstMultiplicity.getMax()+".."+secondMultiplicity.getMax();
+				String link_type = firstMultiplicity.getMax()+"-"+secondMultiplicity.getMax();
 				
 				LinkField newLink = new LinkField(linkName, label, "Link", firstMultiplicity.isMandatory(), weight, firstForm.getName(), link_type, foreign_label);
 				
