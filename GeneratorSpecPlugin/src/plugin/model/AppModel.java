@@ -14,5 +14,6 @@ public class AppModel
 		super();
 		this.app_name = app_name;
 		this.forms = forms;
+		
 	}
 }
