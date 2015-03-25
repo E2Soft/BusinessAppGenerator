@@ -26,7 +26,7 @@ urlpatterns = patterns('',
 	{% if operation.field_type == "Search" -%}
 	url(r'^{{operation.name}}/$', views.{{operation.name}}, name='{{operation.name}}'),
 	{% else -%}
-	{% if operation.param == None -%}
+	{% if not operation.param -%}
 	#add method with this header {{operation.name}}(request) in custom.py
 	url(r'^{{operation.name}}/$', custom.{{operation.name}}, name='{{operation.name}}'),
 	{% else -%}
