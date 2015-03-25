@@ -91,14 +91,24 @@ test_app_string = '''
           <max_length>20</max_length>
         </Field>
         <Link>
-          <name>relationship5</name>
+          <name>relationship3</name>
           <label>Artikal</label>
           <field_type>Link</field_type>
           <mandatory>true</mandatory>
           <weight>1</weight>
-          <form>Radnja</form>
-          <link_type>*..*</link_type>
-          <foreign_label>Radnja</foreign_label>
+          <form>Deklaracija</form>
+          <link_type>1..*</link_type>
+          <foreign_label>Deklaracija</foreign_label>
+        </Link>
+        <Link>
+          <name>relationship9</name>
+          <label>Kategorija</label>
+          <field_type>Link</field_type>
+          <mandatory>true</mandatory>
+          <weight>1</weight>
+          <form>Kategorija</form>
+          <link_type>1..*</link_type>
+          <foreign_label>Artikal</foreign_label>
         </Link>
       </fields>
       <operations>
@@ -154,14 +164,24 @@ test_app_string = '''
           <max_length>30</max_length>
         </Field>
         <Link>
-          <name>relationship6</name>
-          <label>Radnja</label>
+          <name>relationship5</name>
+          <label>Artikal</label>
           <field_type>Link</field_type>
           <mandatory>false</mandatory>
           <weight>1</weight>
-          <form>Korisnik</form>
-          <link_type>*..1</link_type>
-          <foreign_label>Korisnik</foreign_label>
+          <form>Artikal</form>
+          <link_type>*..*</link_type>
+          <foreign_label>Radnja</foreign_label>
+        </Link>
+        <Link>
+          <name>relationship7</name>
+          <label>Drzava</label>
+          <field_type>Link</field_type>
+          <mandatory>true</mandatory>
+          <weight>1</weight>
+          <form>Drzava</form>
+          <link_type>1..*</link_type>
+          <foreign_label>Radnja</foreign_label>
         </Link>
       </fields>
       <operations>
@@ -219,13 +239,13 @@ test_app_string = '''
           <max_length>20</max_length>
         </Field>
         <Link>
-          <name>relationship4</name>
+          <name>drzavaUvoznika</name>
           <label>Drzava</label>
           <field_type>Link</field_type>
           <mandatory>false</mandatory>
           <weight>1</weight>
-          <form>Deklaracija</form>
-          <link_type>*..1</link_type>
+          <form>Drzava</form>
+          <link_type>1..*</link_type>
           <foreign_label>Uvoznik</foreign_label>
         </Link>
       </fields>
@@ -267,14 +287,24 @@ test_app_string = '''
           <max_length>20</max_length>
         </Field>
         <Link>
-          <name>relationship3</name>
-          <label>Artikal</label>
+          <name>relationship4</name>
+          <label>Drzava</label>
           <field_type>Link</field_type>
-          <mandatory>false</mandatory>
+          <mandatory>true</mandatory>
           <weight>1</weight>
-          <form>Artikal</form>
-          <link_type>*..1</link_type>
-          <foreign_label>Deklaracija</foreign_label>
+          <form>Uvoznik</form>
+          <link_type>1..*</link_type>
+          <foreign_label>Uvoznik</foreign_label>
+        </Link>
+        <Link>
+          <name>relationship8</name>
+          <label>Deklaracija</label>
+          <field_type>Link</field_type>
+          <mandatory>true</mandatory>
+          <weight>1</weight>
+          <form>Drzava</form>
+          <link_type>1..*</link_type>
+          <foreign_label>Drzava</foreign_label>
         </Link>
       </fields>
       <operations>
@@ -315,46 +345,6 @@ test_app_string = '''
           <weight>3</weight>
           <max_length>20</max_length>
         </Field>
-        <Link>
-          <name>relationship7</name>
-          <label>Drzava</label>
-          <field_type>Link</field_type>
-          <mandatory>false</mandatory>
-          <weight>1</weight>
-          <form>Radnja</form>
-          <link_type>*..1</link_type>
-          <foreign_label>Radnja</foreign_label>
-        </Link>
-        <Link>
-          <name>relationship8</name>
-          <label>Deklaracija</label>
-          <field_type>Link</field_type>
-          <mandatory>false</mandatory>
-          <weight>1</weight>
-          <form>Deklaracija</form>
-          <link_type>*..1</link_type>
-          <foreign_label>Drzava</foreign_label>
-        </Link>
-        <Link>
-          <name>drzavaUvoznika</name>
-          <label>Drzava</label>
-          <field_type>Link</field_type>
-          <mandatory>false</mandatory>
-          <weight>1</weight>
-          <form>Uvoznik</form>
-          <link_type>*..1</link_type>
-          <foreign_label>Uvoznik</foreign_label>
-        </Link>
-        <Link>
-          <name>drzavaProizvodjaca</name>
-          <label>Proizvodjac</label>
-          <field_type>Link</field_type>
-          <mandatory>false</mandatory>
-          <weight>1</weight>
-          <form>Proizvodjac</form>
-          <link_type>*..1</link_type>
-          <foreign_label>Drzava</foreign_label>
-        </Link>
       </fields>
       <operations>
         <Operation>
@@ -402,6 +392,16 @@ test_app_string = '''
           <weight>4</weight>
           <max_length>10</max_length>
         </Field>
+        <Link>
+          <name>relationship6</name>
+          <label>Radnja</label>
+          <field_type>Link</field_type>
+          <mandatory>false</mandatory>
+          <weight>1</weight>
+          <form>Radnja</form>
+          <link_type>1..*</link_type>
+          <foreign_label>Korisnik</foreign_label>
+        </Link>
       </fields>
       <operations>
         <Operation>
@@ -425,16 +425,6 @@ test_app_string = '''
           <weight>1</weight>
           <max_length>20</max_length>
         </Field>
-        <Link>
-          <name>relationship9</name>
-          <label>Kategorija</label>
-          <field_type>Link</field_type>
-          <mandatory>false</mandatory>
-          <weight>1</weight>
-          <form>Artikal</form>
-          <link_type>*..1</link_type>
-          <foreign_label>Artikal</foreign_label>
-        </Link>
       </fields>
       <operations>
         <Operation>
@@ -490,6 +480,16 @@ test_app_string = '''
           <weight>5</weight>
           <max_length>30</max_length>
         </Field>
+        <Link>
+          <name>drzavaProizvodjaca</name>
+          <label>Proizvodjac</label>
+          <field_type>Link</field_type>
+          <mandatory>false</mandatory>
+          <weight>1</weight>
+          <form>Drzava</form>
+          <link_type>1..*</link_type>
+          <foreign_label>Drzava</foreign_label>
+        </Link>
       </fields>
       <operations>
         <Operation>
