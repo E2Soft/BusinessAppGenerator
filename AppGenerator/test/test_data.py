@@ -16,7 +16,8 @@ test_app_model = AppModel(app_name='My test app',
                                                      ],
                                               operations=[Operation(name="searchFirstForm",field_type="Search",label="Search"),
                                                           Operation(name="customshit",label="Custom shit",field_type="Custom",param=True)],
-                                              main_attribute='field1'
+                                              main_attribute='field1',
+                                              tooltip = "Firstform is here"
                                               ),
                                          Form(title='Secondform', display_name='Second form',
                                               fields=[Field(name='field3', label='My Field 3', field_type='String',
@@ -27,7 +28,8 @@ test_app_model = AppModel(app_name='My test app',
                                                            form="Firstform",link_type="1-*")
                                                      ],
                                               operations=[Operation(name="searchSecondForm",field_type="Search",label="Search")],
-                                              main_attribute='field3'
+                                              main_attribute='field3',
+                                              tooltip = "Secondform is here"
                                               ),
                                          Form(title='Thirdform', display_name='Third form',
                                               fields=[Field(name='field1', label='My Field 1', field_type='String',
@@ -45,7 +47,8 @@ test_app_model = AppModel(app_name='My test app',
                                                      ],
                                               operations=[Operation(name="searchThirdForm",field_type="Search",label="Search"),
                                                           Operation(name="custommethod",label="Custom shit",field_type="Custom")],
-                                              main_attribute='field1'
+                                              main_attribute='field1',
+                                              tooltip = "Thirdform is here"
                                               ),
                                         ])
 

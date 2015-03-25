@@ -12,7 +12,8 @@ class AppModel():
         else:
             self.forms=forms
 class Form:
-    def __init__(self, title=None, fields=None, operations=None, main_attribute=None, display_name=None):
+    def __init__(self, title=None, fields=None, operations=None, main_attribute=None, 
+                 display_name=None, tooltip = ""):
         self.title = title
         self.fields = fields
         self.operations = operations
@@ -25,7 +26,8 @@ class Form:
         if not operations:
             self.operations=[]
         else:
-            self.operations=operations 
+            self.operations=operations
+        self.tooltip = tooltip 
         
 class Link:
     def __init__(self, name=None,label=None, foreign_label=None, field_type=None,mandatory=False,form=None,link_type=None,weight=0):
