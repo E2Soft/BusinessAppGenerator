@@ -46,10 +46,11 @@ class Operation:
         self.param = param
 
 class Field:
-    def __init__(self, name=None, label=None, field_type=None, mandatory = True, max_length=0, weight=0):
+    def __init__(self, name=None, label=None, field_type=None, mandatory = True, max_length=0, weight=0, custom_validation=False):
         self.name=name
         self.label=label
         self.field_type=field_type #Custom->generise se samo poziv funkcije koju ce korisnik dodati, Search -> generise se search
         self.mandatory = mandatory
         self.max_length = max_length
         self.weight = weight
+        self.custom_validation = custom_validation

@@ -49,6 +49,7 @@ def copy_static_files(project_path, project_app_name, **kwargs):
     # remove directory if exists
     if os.path.exists(project_path):
         backup_manager.backup(app_path, 'custom.py')
+        backup_manager.backup(app_path, 'custom_validators.py')
         backup_manager.backup(templates_path, 'custom')
         if not rewrite_db:
             backup_manager.backup(project_path, 'db.sqlite3')
@@ -77,6 +78,7 @@ class BackupManager():
     def backup(self, dir_path, name):
         temp_path = os.path.join(temp_dir_path, name)
         target_path = os.path.join(dir_path, name)
+        
         if os.path.exists(target_path):
             self.remove(temp_path)
             shutil.move(target_path, temp_path)
