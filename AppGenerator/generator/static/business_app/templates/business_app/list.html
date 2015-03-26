@@ -37,7 +37,11 @@
 	{% for custom_method in custom_methods %}
 	<li>
 		<b>
+			{% if custom_method.name == 'Search' %}
+			<a href="{% url search_url %}">
+			{% else %}
 			<a href="{% url custom_method.url %}">
+			{% endif %}
 				<span class="glyphicon glyphicon-list-alt"></span>
 					{{custom_method.name}}
 			</a>

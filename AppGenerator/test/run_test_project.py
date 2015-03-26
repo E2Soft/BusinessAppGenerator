@@ -14,7 +14,7 @@ def generate_test_app(app_model):
     app_name=app_model.app_name.replace(' ', '_')
     project_path = os.path.join('test_gen', app_name)
     
-    app_generator.generate("test_gen", app_model)
+    app_generator.generate("test_gen", app_model, rewrite_db=False, rewrite_migrations=False)
     
     manager = Manager(project_path, app_name)
     manager.migrate_database()

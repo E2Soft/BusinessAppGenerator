@@ -14,14 +14,12 @@ def classname(obj):
 	return obj.__class__.__name__ != "QuerySet"
 
 @register.filter
-def filternormal(obj):
-	filtered = [ (key,value) for key,value in obj.items() if value.__class__.__name__ != "QuerySet"]
-	return filtered
+def filternormal(field_names, field_values):
+	return [name for name in field_names if field_values[name].__class__.__name__ != "QuerySet"]
 
 @register.filter
-def filterlists(obj):
-	filtered = [ (key,value) for key,value in obj.items() if value.__class__.__name__ == "QuerySet"]
-	return filtered
+def filterlists(field_names, field_values):
+	return [name for name in field_names if field_values[name].__class__.__name__ == "QuerySet"]
 
 @register.filter
 def is_entity(obj):

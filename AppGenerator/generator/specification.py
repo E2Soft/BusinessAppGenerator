@@ -43,6 +43,8 @@ def _create_form_model(xml_form):
             field.field_type = xml_field.field_type.text
             field.mandatory = xml_field.mandatory.text.lower() == 'true'
             field.weight = int(xml_field.weight.text)
+            if hasattr(xml_field, 'custom_validation'):
+                field.custom_validation = xml_field.custom_validation.text.lower() == 'true'
             
             form.fields.append(field)
        
