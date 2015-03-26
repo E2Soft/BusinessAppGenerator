@@ -30,7 +30,7 @@ from {{app_name}}.forms import UserForm
 {%- endfor -%}
 {%- for other_form in model.forms -%}
 	{%- for field in other_form.fields -%}
-		{%- if field.field_type == 'Link' and field.form == form.title -%}
+		{%- if field.field_type == 'Link' and field.form == form.title %}
 			'{{other_form.title}}'.lower():'{{field.foreign_label}}',
 		{%- endif -%}
 	{%- endfor -%}
@@ -101,16 +101,34 @@ class {{form.title}}Detail(DetailView):
 	def dispatch(self, *args, **kwargs):
 		return super({{form.title}}Detail, self).dispatch(*args, **kwargs)
 	
+	@staticmethod
+	def sort_fields_key(name):
+		return {
+{%- for field in form.fields %}
+			'{{field.name}}':'{{field.weight}}',
+{%- endfor -%}
+{%- for other_form in model.forms -%}
+	{%- for field in other_form.fields -%}
+		{%- if field.field_type == 'Link' and field.form == form.title %}
+			'{{other_form.title}}'.lower():'{{field.weight}}',
+		{%- endif -%}
+	{%- endfor -%}
+{%- endfor %}
+		}[name]
+			
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Detail, self).get_context_data(**kwargs)
 		context["display_name"] = "{{form.display_name}}"
 		context["title"] = "{{form.title}}"
 		
-		mapa = {}
+		field_names = []
+		field_values = {}
 		field_labels = {}
 		
 		for name in self.object._meta.get_all_field_names():
 			if 'id' != name and not name.endswith("_id"):
+				
+				field_names.append(name)
 				
 				label = {{form.title}}_field_labels[name]
 				if not label:
@@ -119,17 +137,20 @@ class {{form.title}}Detail(DetailView):
 				field_labels[name] = label
 				
 				try:
-					mapa[name] = self.object.__getattribute__(name).all()
+					field_values[name] = self.object.__getattribute__(name).all()
 				except AttributeError:
 					try:
-						mapa[name] = self.object.__getattribute__(name)
+						field_values[name] = self.object.__getattribute__(name)
 					except AttributeError:
 						try:
-							mapa[name] = self.object.__getattribute__(''.join([name,"_set"])).all()
+							field_values[name] = self.object.__getattribute__(''.join([name,"_set"])).all()
 						except AttributeError:
-							mapa[name] = "not assigned"
+							field_values[name] = "not assigned"
 		
-		context["mapa"] = mapa
+		field_names.sort(key={{form.title}}Detail.sort_fields_key)
+		
+		context["field_names"] = field_names
+		context["field_values"] = field_values
 		context["field_labels"] = field_labels
 		
 		context["linked_forms"] = {
@@ -166,6 +187,7 @@ class {{form.title}}Detail(DetailView):
 		
 		context["update_url"] = "update{{form.title}}"
 		context["delete_url"] = "delete{{form.title}}"
+		context["search_url"] = "search{{form.title}}"
 		
 		context["custom_methods"] = [
 		{%- for operation in form.operations -%}
@@ -223,7 +245,7 @@ class {{form.title}}Delete(DeleteView):
 {% for operation in form.operations %}
 {% if operation.field_type == "Search" %}
 @login_required(login_url="/")
-def {{operation.name}}(request):
+def search{{form.title}}(request):
 	if request.method == 'POST':
 		form = Search{{form.title}}Form(request.POST)
 		

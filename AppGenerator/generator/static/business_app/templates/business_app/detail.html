@@ -15,12 +15,12 @@
 	<h2>{{display_name|title}} detail</h2>
 	<div class="bs-callout bs-callout-default">
 		<ul class="list-group">
-			{% for name, value in mapa|filternormal %}
+			{% for name in field_names|filternormal:field_values %}
 				<li class="list-group-item"> <b>{{field_labels|map_value:name|title}}:</b>
-					{% if value|is_entity %}
-						<a href="{{value|url_for:'detail'}}">{{value}}</a>
+					{% if field_values|map_value:name|is_entity %}
+						<a href="{{field_values|map_value:name|url_for:'detail'}}">{{field_values|map_value:name}}</a>
 					{% else %}
-						{{value}}
+						{{field_values|map_value:name}}
 					{% endif%}
 				</li>
 			{% endfor %}
@@ -29,13 +29,13 @@
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
-	{% for name, value in mapa|filterlists %}
+	{% for name in field_names|filterlists:field_values %}
 		<li {% if forloop.first %}class="active"{% endif %}><a href="#pane{{forloop.counter}}" data-toggle="tab"><span class="glyphicon glyphicon-tasks"></span> {{field_labels|map_value:name|title}}</a></li>
 	{% endfor %}
 </ul>
 	
 <div class="tab-content">
-	{% for name, value in mapa|filterlists %}
+	{% for name in field_names|filterlists:field_values %}
 			<div id="pane{{forloop.counter}}" class="tab-pane{% if forloop.first %} active{% endif %}">
 				<div class="bs-callout bs-callout-default">
 					<span>
@@ -47,7 +47,7 @@
 						</a>
 					</span>
 					<ul class="list-group">
-						{% for val in value %}
+						{% for val in field_values|map_value:name %}
 							<li class="list-group-item">
 							<span><a href="{{val|url_for:'detail'}}">{{val}}</a></span>
 							<span class="nav navbar-nav navbar-right" style="margin-right:10px"> <a href="{{val|url_for:'delete'}}?object_pk={{object_pk}}&linked_view=detail{{title}}"><span class="glyphicon glyphicon-remove"></span></a></span>
@@ -95,7 +95,7 @@
     </li>	
 	{% for custom_method in custom_methods %}
 	<li>
-		<b>
+		<b>Search{{form.title}}
 			<a href="{% url custom_method.url object.pk %}">
 				<span class="glyphicon glyphicon-list-alt"></span>
 					{{custom_method.name}}
