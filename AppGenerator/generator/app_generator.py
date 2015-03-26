@@ -41,38 +41,64 @@ def copy_static_files(project_path, project_app_name, **kwargs):
     rewrite_db = kwargs.get('rewrite_db')
     rewrite_migrations = kwargs.get('rewrite_migrations')
     
+    backup_manager = BackupManager()
+    
     app_path = os.path.join(project_path, 'business_app')
     
     # remove directory if exists
     if os.path.exists(project_path):
-        backup(app_path, 'custom.py')
+        backup_manager.add_to_backup(app_path, 'custom.py')
         if not rewrite_db:
-            backup(project_path, 'db.sqlite3')
+            backup_manager.add_to_backup(project_path, 'db.sqlite3')
         if not rewrite_migrations:
-            backup(app_path, 'migrations')
+            backup_manager.add_to_backup(app_path, 'migrations')
         # remove old project
         shutil.rmtree(project_path)
         
     # copy static files
     shutil.copytree(static_files_path, project_path)
     
-    # move saved custom.py
-    restore(app_path, 'custom.py')
-    restore(project_path, 'db.sqlite3')
-    restore(app_path, 'migrations')
+    # restore saved files
+    backup_manager.restore_all()
     
     # rename app directory
     os.rename(os.path.join(project_path, '__app__'), os.path.join(project_path, project_app_name))
 
-def backup(dir_path, name):
-    temp_path = os.path.join(temp_dir_path, name)
-    target_path = os.path.join(dir_path, name)
-    if os.path.exists(target_path):
-        shutil.move(target_path, temp_path)
+class BackupManager():
+    def __init__(self):
+        self.restore_tasks=[]
+        
+    def add_to_backup(self, dir_path, name):
+        self.backup(dir_path, name)
+        self.restore_tasks.append((dir_path, name))
+        
+    def restore_all(self):
+        for restore_task in self.restore_tasks:
+            self.restore(*restore_task)
 
-def restore(dir_path, name):
-    temp_path = os.path.join(temp_dir_path, name)
-    target_path = os.path.join(dir_path, name)
-    if os.path.exists(temp_path):
-        shutil.move(temp_path, target_path)
+    def backup(self, dir_path, name):
+        temp_path = os.path.join(temp_dir_path, name)
+        target_path = os.path.join(dir_path, name)
+        if os.path.exists(target_path):
+            self.remove(temp_path)
+            shutil.move(target_path, temp_path)
+    
+    def restore(self, dir_path, name):
+        temp_path = os.path.join(temp_dir_path, name)
+        target_path = os.path.join(dir_path, name)
+        
+        self.remove(target_path)
+        
+        if os.path.isdir(target_path):
+            target_path = dir_path
+        
+        if os.path.exists(temp_path):
+            shutil.move(temp_path, target_path)
+            
+    def remove(self, path):
+        if os.path.exists(path):
+            if os.path.isdir(path):
+                shutil.rmtree(path)
+            else:
+                os.remove(path)
     
