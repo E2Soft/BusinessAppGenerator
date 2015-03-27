@@ -9,16 +9,6 @@
 {% endblock%}
 
 {% block visuals %}
-	<div class="placeholder">
-	{% for position, val in visuals.items %}
-		{% if position != "graph" %}
-			<div class="cellContainer">
-			</div>
-		{% else %}
-			<div class="graph">
-				<canvas id="canvas{{forloop.counter}}" height="100"></canvas>
-			</div>
-		{% endif %}
-	{% endfor %}
+	<div class="placeholder" id="placeHolder">
 	</div>
 {% endblock %}

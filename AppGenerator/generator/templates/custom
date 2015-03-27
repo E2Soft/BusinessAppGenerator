@@ -5,6 +5,7 @@
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from collections import OrderedDict
+import json
 
 {% for form in model.forms -%}
 {% for operation in form.operations %}
@@ -22,12 +23,10 @@ def {{operation.name}}(request):
 {% endfor %}
 {% endfor %}
 #add some special context here, to show it on main page
-def visuals():
-	vs = OrderedDict() 
-	vs["left"] = []
-	vs["right"] = []
-	vs["center"] = []
-	vs["graph"] = []
+@login_required(login_url="/")	
+def visual(request):
+	resp_list = {}
 	
-	return vs
+	resp_list['hello'] = 'world'
+	return HttpResponse(json.dumps(resp_list), content_type="application/json")
 {% endblock %}

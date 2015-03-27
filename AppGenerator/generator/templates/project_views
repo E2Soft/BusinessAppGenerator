@@ -2,17 +2,15 @@
 {% block content %}
 from django.contrib import auth
 from django.shortcuts import render, redirect
-from business_app.custom import visuals
 
 def home(request):
-	vs = visuals()
 	if request.user.is_authenticated():
 		toolbar_items = [
 		{% for form in model.forms -%}
 		MenuItem("{{form.display_name|title}}", "list{{form.title}}", "{{form.tooltip}}"),
 		{% endfor %}
 		]
-		context = {"isadmin":request.user.is_superuser,"user":request.user, "toolbar_items":toolbar_items,"display_name":"{{model.app_name}}", "visuals":vs}
+		context = {"isadmin":request.user.is_superuser,"user":request.user, "toolbar_items":toolbar_items,"display_name":"{{model.app_name}}"}
 		return render(request,'business_app/main.html',context)
 		
 	username = request.POST.get("username","")
