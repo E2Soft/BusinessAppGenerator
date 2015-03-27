@@ -24,7 +24,7 @@ urlpatterns = patterns('',
 	url(r'^delete{{form.title}}/(?P<pk>\d+)/$', {{form.title}}Delete.as_view(), name='delete{{form.title}}'),
 	{% for operation in form.operations %}
 	{% if operation.field_type == "Search" -%}
-	url(r'^{{operation.name}}/$', views.{{operation.name}}, name='{{operation.name}}'),
+	url(r'^search{{form.title}}/$', views.search{{form.title}}, name='search{{form.title}}'),
 	{% else -%}
 	{% if not operation.param -%}
 	#add method with this header {{operation.name}}(request) in custom.py
