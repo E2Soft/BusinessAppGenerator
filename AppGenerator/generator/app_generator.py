@@ -44,14 +44,17 @@ def copy_static_files(project_path, project_app_name, **kwargs):
     backup_manager = BackupManager()
     
     app_path = os.path.join(project_path, 'business_app')
+    templates_path = os.path.join(app_path, 'templates')
     
     # remove directory if exists
     if os.path.exists(project_path):
-        backup_manager.add_to_backup(app_path, 'custom.py')
+        backup_manager.backup(app_path, 'custom.py')
+        backup_manager.backup(app_path, 'custom_validators.py')
+        backup_manager.backup(templates_path, 'custom')
         if not rewrite_db:
-            backup_manager.add_to_backup(project_path, 'db.sqlite3')
+            backup_manager.backup(project_path, 'db.sqlite3')
         if not rewrite_migrations:
-            backup_manager.add_to_backup(app_path, 'migrations')
+            backup_manager.backup(app_path, 'migrations')
         # remove old project
         shutil.rmtree(project_path)
         
@@ -68,10 +71,6 @@ class BackupManager():
     def __init__(self):
         self.restore_tasks=[]
         
-    def add_to_backup(self, dir_path, name):
-        self.backup(dir_path, name)
-        self.restore_tasks.append((dir_path, name))
-        
     def restore_all(self):
         for restore_task in self.restore_tasks:
             self.restore(*restore_task)
@@ -79,9 +78,11 @@ class BackupManager():
     def backup(self, dir_path, name):
         temp_path = os.path.join(temp_dir_path, name)
         target_path = os.path.join(dir_path, name)
+        
         if os.path.exists(target_path):
             self.remove(temp_path)
             shutil.move(target_path, temp_path)
+            self.restore_tasks.append((dir_path, name))
     
     def restore(self, dir_path, name):
         temp_path = os.path.join(temp_dir_path, name)
