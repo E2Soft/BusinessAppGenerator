@@ -59,6 +59,32 @@ def visual(request):
 												}
 											]
 										}
+				 			},
+				 	"left":{
+				 			"elem1":{
+				 						"title":"Naslov",
+				 						"description":"Bla bla",
+				 						"url":"www.google.com"
+				 					},
+				 			"elem2":{
+				 						"title":"Rat i mir",
+				 						"description":"Nek ide zivot",
+				 						"url":"www.google.com"
+				 					}
+				 			},
+				 	"center":{
+				 			"elem1":{
+				 						"title":"Dummy",
+				 						"description":"Hello world",
+				 						"url":"www.google.com"
+				 					}
+				 			},
+				 	"right":{
+				 			"elem1":{
+				 						"title":"Hello",
+				 						"description":"world",
+				 						"url":"www.google.com"
+				 					}
 				 			}
 				 			
 					}
