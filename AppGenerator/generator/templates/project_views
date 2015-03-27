@@ -12,7 +12,7 @@ def home(request):
 		MenuItem("{{form.display_name|title}}", "list{{form.title}}", "{{form.tooltip}}"),
 		{% endfor %}
 		]
-		context = {"isadmin":request.user.is_superuser,"user":request.user, "toolbar_items":toolbar_items,"display_name":"{{model.app_name}}"}
+		context = {"isadmin":request.user.is_superuser,"user":request.user, "toolbar_items":toolbar_items,"display_name":"{{model.app_name}}", "visuals":vs}
 		return render(request,'business_app/main.html',context)
 		
 	username = request.POST.get("username","")
