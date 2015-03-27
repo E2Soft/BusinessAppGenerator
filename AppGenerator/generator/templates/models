@@ -4,27 +4,39 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from business_app import derived_fields
+
 {% for form in model.forms %}
 class {{form.title}}(models.Model):
-{% for field in form.fields %}
-	{% if field.field_type == "String" -%} 
-		{{field.name}} = models.CharField(max_length={{field.max_length}}, null={{not field.mandatory}}, blank={{not field.mandatory}})
-	{% elif field.field_type == "Float" -%}
-		{{field.name}} = models.FloatField(null={{not field.mandatory}}, blank={{not field.mandatory}})
-	{% elif field.field_type == "DateTime" -%}
-		{{field.name}} = models.DateTimeField(null={{not field.mandatory}}, blank={{not field.mandatory}})
-	{% elif field.field_type == "Integer" -%}
-		{{field.name}} = models.IntegerField(null={{not field.mandatory}}, blank={{not field.mandatory}})
-	{% else -%}
-		{% if field.link_type == '1-*' -%}
-			{{field.name}} = models.ForeignKey('{{field.form}}', blank={{not field.mandatory}}, null={{not field.mandatory}})
-		{% elif field.link_type == '*-*' -%}
-			{{field.name}} = models.ManyToManyField('{{field.form}}', blank={{not field.mandatory}}, null={{not field.mandatory}})
-		{% else -%}
-			{{field.name}} = models.OneToOneField('{{field.form}}', blank={{not field.mandatory}}, null={{not field.mandatory}})
-		{% endif -%}
-	{% endif -%}
-{% endfor %}
+{%- for field in form.fields -%}
+	{%- if not field.derived == "REAL_TIME" -%}
+		{%- if field.field_type == "String" %} 
+	{{field.name}} = models.CharField(max_length={{field.max_length}}, null={{not field.mandatory}}, blank={{not field.mandatory}})
+		{%- elif field.field_type == "Float" %}
+	{{field.name}} = models.FloatField(null={{not field.mandatory}}, blank={{not field.mandatory}})
+		{%- elif field.field_type == "DateTime" %}
+	{{field.name}} = models.DateTimeField(null={{not field.mandatory}}, blank={{not field.mandatory}})
+		{%- elif field.field_type == "Integer" %}
+	{{field.name}} = models.IntegerField(null={{not field.mandatory}}, blank={{not field.mandatory}})
+		{%- else -%}
+			{%- if field.link_type == '1-*' %}
+	{{field.name}} = models.ForeignKey('{{field.form}}', blank={{not field.mandatory}}, null={{not field.mandatory}})
+			{%- elif field.link_type == '*-*' %}
+	{{field.name}} = models.ManyToManyField('{{field.form}}', blank={{not field.mandatory}}, null={{not field.mandatory}})
+			{%- else %}
+	{{field.name}} = models.OneToOneField('{{field.form}}', blank={{not field.mandatory}}, null={{not field.mandatory}})
+			{%- endif -%}
+		{%- endif -%}
+	{%- endif -%}
+{%- endfor %}
+
+	def save(self, *args, **kwargs):
+{%- for field in form.fields -%}
+	{%- if field.derived == "CACHED" %}
+		self.{{field.name}} = derived_fields.calculate_{{field.name}}(self, *args, **kwargs)
+	{%- endif -%}
+{%- endfor %}
+		super({{form.title}}, self).save(*args, **kwargs)
 
 	def __str__(self):
 		return str(self.__getattribute__('{{form.main_attribute}}'))

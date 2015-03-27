@@ -1,0 +1,21 @@
+{%- extends 'custombase' -%}
+{%- block content %}
+
+{% for form in model.forms -%}
+	{%- for field in form.fields -%}
+		{%- if field.derived == "CACHED"  %}
+def calculate_{{field.name}}(obj, *args, **kwargs):
+	# return the calculated value to be stored in the database, the value will be calculated before the object is saved to the database
+	# object type is {{form.title}}, field type is {{field.field_type}}
+	pass
+		{%- endif -%}
+		{%- if field.derived == "REAL_TIME"  %}
+def calculate_{{field.name}}(obj):
+	# return the calculated value to be presented in the view, the value will be calculated each time the object is presented
+	# object type is {{form.title}}, field type is {{field.field_type}}
+	pass
+		{%- endif -%}
+	{%- endfor -%}
+{%- endfor %}
+
+{%- endblock -%}
