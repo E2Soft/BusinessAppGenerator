@@ -17,9 +17,16 @@ window.onload = function(){
 	        },
 	        url: '/visuals/',
 	        success: function(data){
-	        var json = JSON.stringify(data);
-	        	alert(json);
-	        	alert(data["hello"]);
+	        	var graph = data["graph"];
+	        	
+	        	for(var index in graph){
+	        		$("#graph").append("<canvas id='" + index +"' height='100'></canvas>");
+	        		var ctx = document.getElementById(index).getContext("2d");
+					window.index = new Chart(ctx).Line(graph[index], {
+						responsive: true
+					});
+	        	}
+	   			
 	        },
 	        error: function(){
 	        	alert("error");
