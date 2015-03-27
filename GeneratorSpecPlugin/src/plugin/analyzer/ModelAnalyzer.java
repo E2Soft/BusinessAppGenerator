@@ -83,8 +83,9 @@ public class ModelAnalyzer
 						Boolean mandatory = getBooleanValue(prop, "Field", "mandatory");
 						Integer weight = getIntegerValue(prop, "Field", "weight");
 						Integer max_length = getIntegerValue(prop, "Field", "max_length");
+						Boolean custom_validation = getBooleanValue(prop, "Field", "custom_validation");
 						
-						fields.add(new FormField(prop.getName(), label, field_type, mandatory, weight, max_length));
+						fields.add(new FormField(prop.getName(), label, field_type, mandatory, weight, max_length, custom_validation));
 					}
 				}
 				
