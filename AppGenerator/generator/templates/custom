@@ -70,7 +70,7 @@ def visual(request):
 				 						"description":"Nek ide zivot",
 				 					}
 				 			},
-				 	"center":{
+				 	"centar":{
 				 			"elem1":{
 				 						"title":["Dummy","www.google.com"],
 				 						"description":"Hello world",

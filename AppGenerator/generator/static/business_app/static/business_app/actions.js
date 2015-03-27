@@ -48,6 +48,25 @@ window.onload = function(){
 	        		counter++;
 	        	}
 	   			counter++;
+	   			
+	   			//popuni centralni panel
+	   			var centar = data["centar"];
+	        	
+	        	for(var index in centar){
+	        		var prop = centar[index];//elem
+	        		
+	        		$("#centarPanel").append("<div class='box'><ul class='list-group' id='box" + counter + "'>");
+	        		for(var i in prop){
+	        			if(i != "title"){
+	        				$("#box"+counter).append("<li class='list-group-item'><span class='glyphicon glyphicon-chevron-right'></span> "+prop[i]+"</li>");
+	        			}else{
+	        				$("#box"+counter).append("<li class='list-group-item list-group-item-info'><b><span class='glyphicon glyphicon-certificate'></span><a href='"+prop[i][1]+"'> "+prop[i][0]+"</a></b></li>");
+	        			}
+	        		}
+	        		$("#centarPanel").append("</ul></div>");
+	        		counter++;
+	        	}
+	   			counter++;
 	        },
 	        error: function(){
 	        	alert("error");
