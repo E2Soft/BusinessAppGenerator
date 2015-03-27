@@ -41,7 +41,7 @@ window.onload = function(){
 	        			if(i != "title"){
 	        				$("#box"+counter).append("<li class='list-group-item'><span class='glyphicon glyphicon-chevron-right'></span> "+prop[i]+"</li>");
 	        			}else{
-	        				$("#box"+counter).append("<li class='list-group-item list-group-item-info'><b><span class='glyphicon glyphicon-certificate'></span> "+prop[i]+"</b></li>");
+	        				$("#box"+counter).append("<li class='list-group-item list-group-item-info'><b><span class='glyphicon glyphicon-certificate'></span><a href='"+prop[i][1]+"'> "+prop[i][0]+"</a></b></li>");
 	        			}
 	        		}
 	        		$("#leftPanel").append("</ul></div>");
