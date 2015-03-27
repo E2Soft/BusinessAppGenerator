@@ -14,26 +14,29 @@ from business_app import custom_validators
 #{{form.title}}
 
 class Search{{form.title}}Form(forms.Form):
-{% for field in form.fields|sort(attribute='weight') %}
-	{% if field.field_type == "String" -%} 
-		{{field.name}} = forms.CharField(required=False)
-	{% elif field.field_type == "Float" -%}
-		{{field.name}} = forms.FloatField(required=False)
-	{% elif field.field_type == "DateTime" -%}
-		{{field.name}} = forms.DateTimeField(required=False)
-	{% elif field.field_type == "Integer" -%}
-		{{field.name}} = forms.IntegerField(required=False)
-	{% elif field.field_type == "Link" and field.link_type == '*-*' -%}
-		{{field.name}} = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required=False)
-	{% else -%}
-		{{field.name}} = forms.ChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required=False)
-	{% endif -%}
-{% endfor %}
+{% for field in form.fields|sort(attribute='weight') -%}
+{%- if not field.derived -%}
+{%- if field.field_type == "String" %}
+	{{field.name}} = forms.CharField(required=False)
+{%- elif field.field_type == "Float" %}
+	{{field.name}} = forms.FloatField(required=False)
+{%- elif field.field_type == "DateTime" %}
+	{{field.name}} = forms.DateTimeField(required=False)
+{%- elif field.field_type == "Integer" %}
+	{{field.name}} = forms.IntegerField(required=False)
+{%- elif field.field_type == "Link" and field.link_type == '*-*' %}
+	{{field.name}} = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required=False)
+{%- else %}
+	{{field.name}} = forms.ChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required=False)
+{%- endif -%}
+{%- endif -%}
+{%- endfor %}
 
 	def __init__(self, *args, **kwargs):
 		super(Search{{form.title}}Form, self).__init__(*args, **kwargs)
 		
-{%- for field in form.fields %}
+{%- for field in form.fields -%}
+{%- if not field.derived %}
 		self.fields['{{field.name}}'].label="{{field.label}}"
 {%- if field.field_type == "Link" -%}
 	{%- if field.link_type == "*-*" %}
@@ -41,6 +44,7 @@ class Search{{form.title}}Form(forms.Form):
 	{%- else %}
 		self.fields['{{field.name}}'].choices=[(None, 'Skip this field'), ('__not_assigned__', 'Not assigned')] + [ (o.id, str(o)) for o in {{field.form}}.objects.all()]
 	{%- endif %}
+{%- endif -%}
 {%- endif -%}
 {%- endfor %}
 		for field in self.fields.values():
@@ -53,15 +57,17 @@ class Search{{form.title}}Form(forms.Form):
 class {{form.title}}Form(forms.ModelForm):
 	class Meta:
 		model = {{form.title}}
-		fields = [{% for field in form.fields|sort(attribute='weight') %}'{{field.name}}',{% endfor %}]
+		fields = [{% for field in form.fields|sort(attribute='weight') %}{% if not field.derived %}'{{field.name}}',{% endif %}{% endfor %}]
 		
 	def __init__(self, *args, **kwargs):
 		super({{form.title}}Form, self).__init__(*args, **kwargs)
 	{%- for field in form.fields %}
+		{% if not field.derived -%}
 		self.fields['{{field.name}}'].label="{{field.label}}"
 		{%- if field.custom_validation %}
 		self.fields['{{field.name}}'].validators.append(custom_validators.{{form.title}}_{{field.name}}_validator)
 		{%- endif -%}
+	{%- endif -%}
 	{%- endfor %}
 		for field in self.fields.values():
 			field.widget.attrs['class']='form-control'

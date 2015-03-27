@@ -33,6 +33,7 @@ def render(project_path, app_model, project_app_name):
     render_project_urls(project_path, app_model, project_app_name)
     render_templatetags(project_path, app_model)
     render_custom_validators(project_path, app_model)
+    render_derived_fields(project_path, app_model)
 
 def render_models(project_path, app_model):
     renderedmodel = env.get_template('models').render(model = app_model,datetime=datetime.datetime.now(),
@@ -132,6 +133,15 @@ def render_custom_validators(project_path, app_model):
     custom_code_path = os.path.join(project_path, DJANGO_APP_NAME, 'custom_validators.py')
     if not os.path.exists(custom_code_path):
         rendered_data = env.get_template('custom_validators').render(model = app_model,datetime=datetime.datetime.now(),
+                                                                   guest=getpass.getuser(),app_name=DJANGO_APP_NAME)
+    
+        with open(custom_code_path, 'w') as file:
+            file.write(rendered_data)
+
+def render_derived_fields(project_path, app_model):
+    custom_code_path = os.path.join(project_path, DJANGO_APP_NAME, 'derived_fields.py')
+    if not os.path.exists(custom_code_path):
+        rendered_data = env.get_template('derived_fields').render(model = app_model,datetime=datetime.datetime.now(),
                                                                    guest=getpass.getuser(),app_name=DJANGO_APP_NAME)
     
         with open(custom_code_path, 'w') as file:

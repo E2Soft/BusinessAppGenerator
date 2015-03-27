@@ -16,6 +16,7 @@ import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Association;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Class;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element;
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.EnumerationLiteral;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Operation;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Property;
@@ -79,13 +80,14 @@ public class ModelAnalyzer
 					if(isStereotypeAplied(prop, "Field"))
 					{
 						String label = getStringValue(prop, "Field", "label");
-						String field_type = getStringValue(prop, "Field", "field_type");
+						String field_type = getEnumerationValue(prop, "Field", "field_type");
 						Boolean mandatory = getBooleanValue(prop, "Field", "mandatory");
 						Integer weight = getIntegerValue(prop, "Field", "weight");
 						Integer max_length = getIntegerValue(prop, "Field", "max_length");
 						Boolean custom_validation = getBooleanValue(prop, "Field", "custom_validation");
+						String derived = getEnumerationValue(prop, "Field", "derived");
 						
-						fields.add(new FormField(prop.getName(), label, field_type, mandatory, weight, max_length, custom_validation));
+						fields.add(new FormField(prop.getName(), label, field_type, mandatory, weight, max_length, custom_validation, derived));
 					}
 				}
 				
@@ -166,6 +168,19 @@ public class ModelAnalyzer
 	private static String getStringValue(Element element, String stereotype, String tag)
 	{
 		return (String) getObjectValue(element, stereotype, tag);
+	}
+	
+	private static String getEnumerationValue(Element element, String stereotype, String tag)
+	{
+		EnumerationLiteral enumeration = (EnumerationLiteral)  getObjectValue(element, stereotype, tag);
+		if(enumeration != null)
+		{
+			return enumeration.getName();
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	private static Integer getIntegerValue(Element element, String stereotype, String tag)

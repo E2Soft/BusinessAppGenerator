@@ -12,7 +12,7 @@ test_app_model = AppModel(app_name='My test app',
                                                       Field(name='field2', label='My Field 2', field_type='String',
                                                             mandatory=False, max_length=10),
                                                       Field(name='field3', label='My Field 3', field_type='Integer',
-                                                            mandatory=False),
+                                                            mandatory=False, derived='REAL_TIME'),
                                                      ],
                                               operations=[Operation(name="searchFirstForm",field_type="Search",label="Search"),
                                                           Operation(name="customshit",label="Custom shit",field_type="Custom",param=True)],
@@ -367,6 +367,14 @@ test_app_string = '''
           <mandatory>true</mandatory>
           <weight>1</weight>
           <max_length>20</max_length>
+        </Field>
+        <Field>
+          <name>broj_artikala</name>
+          <label>Broj artikala</label>
+          <field_type>Integer</field_type>
+          <mandatory>false</mandatory>
+          <weight>2</weight>
+          <derived>REAL_TIME</derived>
         </Field>
       </fields>
       <operations>
