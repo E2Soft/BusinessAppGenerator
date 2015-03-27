@@ -13,6 +13,8 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
+from business_app import derived_fields
+
 {{ super() }}
 
 {% for form in model.forms -%}
@@ -146,6 +148,14 @@ class {{form.title}}Detail(DetailView):
 							field_values[name] = self.object.__getattribute__(''.join([name,"_set"])).all()
 						except AttributeError:
 							field_values[name] = "not assigned"
+		
+{% for field in form.fields -%}
+	{%- if field.derived == "REAL_TIME" %}
+		field_names.append('{{field.name}}')
+		field_values['{{field.name}}'] = derived_fields.calculate_{{field.name}}(self.object)
+		field_labels['{{field.name}}'] = {{form.title}}_field_labels['{{field.name}}']
+	{%- endif -%}
+{%- endfor %}
 		
 		field_names.sort(key={{form.title}}Detail.sort_fields_key)
 		
