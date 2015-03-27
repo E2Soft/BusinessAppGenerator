@@ -1,8 +1,9 @@
 
-<project name="${PLUGIN_NAME}" default="deploy">
+<project name="${PLUGIN_NAME}" default="run">
 	
 	<!-- 
 	build.properties example:
+		MAGICDRAW_EXECUTABLE=D:\\Program Files\\MagicDrawStandalone\\bin\\magicdraw.exe
 		MAGICDRAW_HOME=D:\\Program Files\\MagicDrawStandalone
 		PLUGIN_NAME=tim1.generator_spec
 	 -->
@@ -44,5 +45,9 @@
 		<copy todir="${MAGICDRAW_HOME}/plugins/${PLUGIN_NAME}">
 			<fileset dir="lib" includes="*.jar"/>
 		</copy>
+	</target>
+	
+	<target name="run" depends="deploy">
+		<exec executable="${MAGICDRAW_EXECUTABLE}"/>
 	</target>
 </project>
