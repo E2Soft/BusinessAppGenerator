@@ -2,8 +2,10 @@
 {% block content %}
 from django.contrib import auth
 from django.shortcuts import render, redirect
+from business_app.custom import visuals
 
 def home(request):
+	vs = visuals()
 	if request.user.is_authenticated():
 		toolbar_items = [
 		{% for form in model.forms -%}

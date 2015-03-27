@@ -20,4 +20,8 @@ def {{operation.name}}(request):
 {% endif -%}
 {% endfor %}
 {% endfor %}
+#add some special context here, to show it on main page
+def visuals():
+	vs = {"left":[],"right":[],"center":[],"graph":[]}
+	return vs
 {% endblock %}
