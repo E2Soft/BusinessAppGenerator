@@ -22,11 +22,15 @@ def {{operation.name}}(request):
 {% endif -%}
 {% endfor %}
 {% endfor %}
+
+#add some special context here to show it on login page
+def loginvisuals():
+	
+	return "Description"
+
 #add some special context here, to show it on main page
 @login_required(login_url="/")	
 def visual(request):
-	resp_list = {}
-	
 	graph_dict = {
 					"graph":{
 							"canvas1":{

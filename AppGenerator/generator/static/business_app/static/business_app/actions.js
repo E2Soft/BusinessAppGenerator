@@ -6,7 +6,7 @@ $(function () {
 	$("[data-toggle='tooltip']").tooltip(); 
 });
 
-window.onload = function(){
+window.onload = function(){	
 	var placeholder = document.getElementById("placeHolder");
 	if(placeholder != null){
 		$.ajax({

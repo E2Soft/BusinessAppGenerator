@@ -2,28 +2,31 @@
 {% block content %}
 from django.contrib import auth
 from django.shortcuts import render, redirect
+from business_app.custom import loginvisuals
 
 def home(request):
+	descr = loginvisuals()
 	if request.user.is_authenticated():
 		toolbar_items = [
 		{% for form in model.forms -%}
 		MenuItem("{{form.display_name|title}}", "list{{form.title}}", "{{form.tooltip}}"),
 		{% endfor %}
 		]
-		context = {"isadmin":request.user.is_superuser,"user":request.user, "toolbar_items":toolbar_items,"display_name":"{{model.app_name}}"}
+		
+		context = {"isadmin":request.user.is_superuser,"user":request.user, "toolbar_items":toolbar_items,"display_name":"{{model.app_name}}","descr":descr}
 		return render(request,'business_app/main.html',context)
 		
 	username = request.POST.get("username","")
 	password = request.POST.get("password","")
 	
 	user = auth.authenticate(username=username, password=password)
-	context = {"isadmin":request.user.is_superuser,"user":request.user}
+	context = {"isadmin":request.user.is_superuser,"user":request.user,"descr":descr}
 	
 	if user is not None:
 		auth.login(request, user)
 		return redirect('home')
 	else:
-		context = {"display_name":"{{model.app_name}}"}
+		context = {"display_name":"{{model.app_name}}","descr":descr}
 		return render(request,'business_app/login.html',context)
 		
 def logout(request):
