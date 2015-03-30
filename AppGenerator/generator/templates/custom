@@ -4,6 +4,8 @@
 
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from collections import OrderedDict
+import json
 
 {% for form in model.forms -%}
 {% for operation in form.operations %}
@@ -20,4 +22,73 @@ def {{operation.name}}(request):
 {% endif -%}
 {% endfor %}
 {% endfor %}
+
+#add some special context here to show it on login page
+def loginvisuals():
+	
+	return "Description"
+
+#add some special context here, to show it on main page
+@login_required(login_url="/")	
+def visual(request):
+	graph_dict = {
+					"graph":{
+							"canvas1":{
+										"labels" : ["January","February","March","April","May","June","July"],
+										"datasets" : [
+												{
+													"label": "My First dataset",
+													"fillColor" : "rgba(120,120,120,0.2)",
+													"strokeColor" : "rgba(120,120,120,1)",
+													"pointColor" : "rgba(120,120,120,1)",
+													"pointStrokeColor" : "#fff",
+													"pointHighlightFill" : "#fff",
+													"pointHighlightStroke" : "rgba(120,120,120,1)",
+													"data" : [65, 59, 80, 81, 56, 55, 40]
+												}
+											]
+										},
+							"canvas2":{
+										"labels" : ["January2","February2","March2","April2","May2","June2","July2"],
+										"datasets" : [
+												{
+													"label": "My Second dataset",
+													"fillColor" : "rgba(120,120,120,0.2)",
+													"strokeColor" : "rgba(120,120,120,1)",
+													"pointColor" : "rgba(120,120,120,1)",
+													"pointStrokeColor" : "#fff",
+													"pointHighlightFill" : "#fff",
+													"pointHighlightStroke" : "rgba(120,120,120,1)",
+													"data" : [75, 49, 90, 71, 46, 65, 20]
+												}
+											]
+										}
+				 			},
+				 	"left":{
+				 			"elem1":{
+				 						"title":["Naslov","www.google.com"],
+				 						"description":"Bla bla",
+				 					},
+				 			"elem2":{
+				 						"title":["Rat i mir","www.google.com"],
+				 						"description":"Nek ide zivot",
+				 					}
+				 			},
+				 	"centar":{
+				 			"elem1":{
+				 						"title":["Dummy","www.google.com"],
+				 						"description":"Hello world",
+				 					}
+				 			},
+				 	"right":{
+				 			"elem1":{
+				 						"title":["Hello","www.google.com"],
+				 						"description":"world",
+				 					}
+				 			}
+				 			
+					}
+	
+	
+	return HttpResponse(json.dumps(graph_dict), content_type="application/json")
 {% endblock %}

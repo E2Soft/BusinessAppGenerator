@@ -38,6 +38,7 @@ urlpatterns = patterns('',
 {% endfor %}
 	url(r'^udetail/(?P<pk>\d+)/$', DetailUser.as_view(), name='udetail'),
 	url(r'uedit/(?P<pk>\d+)/$', UserUpdate.as_view(), name='uedit'),
-	url(r'register/', UserCreate.as_view(), name='register'),
+	url(r'register/$', UserCreate.as_view(), name='register'),
+	url(r'visuals/$', custom.visual, name='visuals'),
 )
 {% endblock %}
