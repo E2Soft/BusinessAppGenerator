@@ -33,7 +33,7 @@ class {{form.title}}(models.Model):
 	def save(self, *args, **kwargs):
 {%- for field in form.fields -%}
 	{%- if field.derived == "CACHED" %}
-		self.{{field.name}} = derived_fields.calculate_{{field.name}}(self, *args, **kwargs)
+		self.{{field.name}} = derived_fields.calculate_{{form.title}}_{{field.name}}(self, *args, **kwargs)
 	{%- endif -%}
 {%- endfor %}
 		super({{form.title}}, self).save(*args, **kwargs)

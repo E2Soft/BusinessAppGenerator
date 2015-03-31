@@ -152,7 +152,7 @@ class {{form.title}}Detail(DetailView):
 {% for field in form.fields -%}
 	{%- if field.derived == "REAL_TIME" %}
 		field_names.append('{{field.name}}')
-		field_values['{{field.name}}'] = derived_fields.calculate_{{field.name}}(self.object)
+		field_values['{{field.name}}'] = derived_fields.calculate_{{form.title}}_{{field.name}}(self.object)
 		field_labels['{{field.name}}'] = {{form.title}}_field_labels['{{field.name}}']
 	{%- endif -%}
 {%- endfor %}
