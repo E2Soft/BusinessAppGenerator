@@ -8,8 +8,14 @@ def home(request):
 	descr = loginvisuals()
 	if request.user.is_authenticated():
 		toolbar_items = [
-		{% for form in model.forms -%}
-		MenuItem("{{form.display_name|title}}", "list{{form.title}}", "{{form.tooltip}}"),
+		{% for package in model.packages %}
+			Menu(
+				items=[
+			{% for form in package.forms -%}
+						MenuItem("{{form.display_name|title}}", "list{{form.title}}", "{{form.tooltip}}"),
+			{% endfor %}
+				], label="{{package.label}}", weight={{package.weight}}
+			),
 		{% endfor %}
 		]
 		
@@ -39,4 +45,13 @@ class MenuItem:
 		self.name = name
 		self.url = url
 		self.tooltip = tooltip
+		
+class Menu:
+	def __init__(self,items=None,label=None,weight=0):
+		self.label = label
+		self.weight = weight
+		if not items:
+			self.items=[]
+		else:
+			self.items=items
 {% endblock %}

@@ -5,12 +5,17 @@ Created on Mar 17, 2015
 '''
 
 class AppModel():
-    def __init__(self, app_name=None, forms=None):
+    def __init__(self, app_name=None, forms=None, packages=None):
         self.app_name=app_name
         if not forms:
             self.forms=[]
         else:
             self.forms=forms
+        if not packages:
+            self.packages=[]
+        else:
+            self.packages=packages
+    
 class Form:
     def __init__(self, title=None, fields=None, operations=None, main_attribute=None, 
                  display_name=None, tooltip = ""):
@@ -57,3 +62,16 @@ class Field:
         self.weight = weight
         self.custom_validation = custom_validation
         self.derived = derived
+    
+class Package:
+    def __init__(self, weight=0, forms = None, subpackages = None, label = None):
+        self.weight = weight
+        self.label = label
+        if not forms:
+            self.forms=[]
+        else:
+            self.forms=forms
+        if not subpackages:
+            self.subpackages=[]
+        else:
+            self.subpackages=subpackages
