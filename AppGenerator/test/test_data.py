@@ -475,8 +475,7 @@ test_app_string = '''
   <packages>
     <Package>
       <name>Items</name>
-      <label>Items
-</label>
+      <label>Items</label>
       <weight>1</weight>
       <forms>
         <Form reference="../../../../forms/Form[6]"/>
