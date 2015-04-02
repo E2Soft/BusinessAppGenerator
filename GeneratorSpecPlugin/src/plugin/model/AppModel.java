@@ -9,11 +9,12 @@ public class AppModel
 {
 	String app_name;
 	List<Form> forms;
-	public AppModel(String app_name, List<Form> forms)
+	List<Package> packages;
+	public AppModel(String app_name, List<Form> forms, List<Package> packages)
 	{
 		super();
 		this.app_name = app_name;
 		this.forms = forms;
-		
+		this.packages = packages;
 	}
 }

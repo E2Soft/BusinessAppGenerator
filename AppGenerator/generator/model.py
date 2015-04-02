@@ -4,13 +4,30 @@ Created on Mar 17, 2015
 @author: PCX
 '''
 
-class AppModel():
-    def __init__(self, app_name=None, forms=None):
+class AppModel:
+    def __init__(self, app_name=None, forms=None, packages=None):
         self.app_name=app_name
         if not forms:
             self.forms=[]
         else:
             self.forms=forms
+        if not packages:
+            self.packages=[]
+        else:
+            self.packages=packages
+class Package:
+    def __init__(self, name=None, label=None, weight=0, forms=None, packages=None):
+        self.name = name
+        self.label = label
+        self.weight = weight
+        if not forms:
+            self.forms=[]
+        else:
+            self.forms=forms
+        if not packages:
+            self.packages=[]
+        else:
+            self.packages=packages
 class Form:
     def __init__(self, title=None, fields=None, operations=None, main_attribute=None, 
                  display_name=None, tooltip = ""):

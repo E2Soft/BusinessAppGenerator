@@ -15,9 +15,9 @@
 
 
 from django.core.exceptions import ValidationError
-def Drzava_nazivDrzava_validator(value):
+def State_nazivDrzava_validator(value):
 	# if not valid:
 	#	raise ValidationError('message')
 	if 'kosovo' in value.lower():
-		raise ValidationError('Kosovo nije drzava!!')
+		raise ValidationError('Kosovo is not a state!!')
 		

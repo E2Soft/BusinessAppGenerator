@@ -28,43 +28,98 @@ import com.nomagic.uml2.ext.magicdraw.mdprofiles.Stereotype;
  */ 
 public class ModelAnalyzer
 {
-	public static AppModel processPackage(Package pack) throws AnalyzeException
+	static final String PACKAGE_STEREOTYPE = "Package";
+	static final String FORM_STEREOTYPE = "Form";
+	static final String FIELD_STEREOTYPE = "Field";
+	static final String OPERATION_STEREOTYPE = "Operation";
+	static final String LINK_STEREOTYPE = "Link";
+	
+	Map<String, Form> allForms;
+	
+	public ModelAnalyzer()
+	{
+		allForms = new HashMap<String, Form>();
+	}
+	
+	public AppModel processApplication(Package root) throws AnalyzeException
+	{
+		for(Element ownedElementApp : root.getOwnedElement())
+		{
+			if(ownedElementApp instanceof Package && isStereotypeAplied(ownedElementApp, "BusinessApp"))
+			{
+				Package app = (Package)ownedElementApp;
+				
+				String app_name = app.getName();
+				
+				List<plugin.model.Package> allPackages = processSubPackages(app);
+				
+				processLinks(app);
+				
+				return new AppModel(app_name, new ArrayList<Form>(allForms.values()), allPackages);
+			}
+		}
+		
+		throw new AnalyzeException("No package annotated with BusinessApp stereotype.");
+	}
+	
+	private List<plugin.model.Package> processSubPackages(Package pack) throws AnalyzeException
+	{
+		List<plugin.model.Package> packages = new ArrayList<plugin.model.Package>();
+		for(Element ownedElementPackage : pack.getOwnedElement())
+		{
+			if(ownedElementPackage instanceof Package && isStereotypeAplied(ownedElementPackage, PACKAGE_STEREOTYPE))
+			{
+				Package subPack = (Package)ownedElementPackage;
+				plugin.model.Package packageModel = processPackage(subPack);
+				packages.add(packageModel);
+			}
+		}
+		return packages;
+	}
+
+	public plugin.model.Package processPackage(Package pack) throws AnalyzeException
 	{
 		//Recursive procedure that extracts data from package elements and stores it in the intermediate data structure
-
-		if(pack.getName() == null)
+		
+		String name = pack.getName();
+		if(name == null)
 		{
 			throw new AnalyzeException("Packages must have names!");
 		}
 		
-		Map<String, Form> forms = processForms(pack);
-		processLinks(pack, forms);
+		String label = getStringValue(pack, PACKAGE_STEREOTYPE, "label");
+		Integer weight = getIntegerValue(pack, PACKAGE_STEREOTYPE, "weight");
 		
-		return new AppModel(pack.getName(), new ArrayList<Form>(forms.values()));
+		List<Form> forms = processForms(pack);
+		
+		List<plugin.model.Package> packages = processSubPackages(pack);
+		
+		return new plugin.model.Package(name, label, weight, forms, packages);
 	}
 
-	private static Map<String, Form> processForms(Package pack) throws AnalyzeException
+	private List<Form> processForms(Package pack) throws AnalyzeException
 	{
-		Map<String, Form> forms = new HashMap<String, Form>();
+		List<Form> forms = new ArrayList<Form>();
 		
 		for(Element ownedElement : pack.getOwnedElement())
 		{
 			// forme
-			if(ownedElement instanceof Class && isStereotypeAplied(ownedElement, "Form"))
+			if(ownedElement instanceof Class && isStereotypeAplied(ownedElement, FORM_STEREOTYPE))
 			{
 				Class form = (Class)ownedElement;
 				
-				String display_name = form.getName();
+				String display_name = getStringValue(form, FORM_STEREOTYPE, "label");
 				
 				if(display_name == null) 
 				{
 					throw new AnalyzeException("Encountered a class with no name.");
 				}
 				
-				String title = display_name.replace(" ", "_");
+				String title = form.getName().replace(" ", "_");
 				
-				String main_attribute = getStringValue(form, "Form", "main_attribute");
-				Boolean has_search = getBooleanValue(form, "Form", "has_search");
+				String main_attribute = getStringValue(form, FORM_STEREOTYPE, "main_attribute");
+				Boolean has_search = getBooleanValue(form, FORM_STEREOTYPE, "has_search");
+				String tooltip = getStringValue(form, FORM_STEREOTYPE, "tooltip");
 				
 				List<Field> fields = new ArrayList<Field>();
 				
@@ -77,15 +132,15 @@ public class ModelAnalyzer
 				
 				for(Property prop : form.getAttribute())
 				{
-					if(isStereotypeAplied(prop, "Field"))
+					if(isStereotypeAplied(prop, FIELD_STEREOTYPE))
 					{
-						String label = getStringValue(prop, "Field", "label");
-						String field_type = getEnumerationValue(prop, "Field", "field_type");
-						Boolean mandatory = getBooleanValue(prop, "Field", "mandatory");
-						Integer weight = getIntegerValue(prop, "Field", "weight");
-						Integer max_length = getIntegerValue(prop, "Field", "max_length");
-						Boolean custom_validation = getBooleanValue(prop, "Field", "custom_validation");
-						String derived = getEnumerationValue(prop, "Field", "derived");
+						String label = getStringValue(prop, FIELD_STEREOTYPE, "label");
+						String field_type = getEnumerationValue(prop, FIELD_STEREOTYPE, "field_type");
+						Boolean mandatory = getBooleanValue(prop, FIELD_STEREOTYPE, "mandatory");
+						Integer weight = getIntegerValue(prop, FIELD_STEREOTYPE, "weight");
+						Integer max_length = getIntegerValue(prop, FIELD_STEREOTYPE, "max_length");
+						Boolean custom_validation = getBooleanValue(prop, FIELD_STEREOTYPE, "custom_validation");
+						String derived = getEnumerationValue(prop, FIELD_STEREOTYPE, "derived");
 						
 						fields.add(new FormField(prop.getName(), label, field_type, mandatory, weight, max_length, custom_validation, derived));
 					}
@@ -93,84 +148,92 @@ public class ModelAnalyzer
 				
 				for(Operation operation : form.getOwnedOperation())
 				{
-					if(isStereotypeAplied(operation, "Operation"))
+					if(isStereotypeAplied(operation, OPERATION_STEREOTYPE))
 					{
-						String label = getStringValue(operation, "Operation", "label");
-						Boolean param = getBooleanValue(operation, "Operation", "param");
+						String label = getStringValue(operation, OPERATION_STEREOTYPE, "label");
+						Boolean param = getBooleanValue(operation, OPERATION_STEREOTYPE, "param");
 						
 						operations.add(new plugin.model.Operation(operation.getName(), label, "Custom", param));
 					}
 				}
 				
-				Form newForm = new Form(title, main_attribute, display_name, fields, operations);
-				forms.put(form.getName(), newForm);
+				Form newForm = new Form(title, main_attribute, display_name, tooltip, fields, operations);
+				forms.add(newForm);
+				allForms.put(form.getName(), newForm);
 			}
 		}
 		
 		return forms;
 	}
 
-	private static void processLinks(Package pack, Map<String, Form> formMap)
-			throws AnalyzeException {
+	private void processLinks(Package pack) throws AnalyzeException 
+	{
 		for(Element ownedElement : pack.getOwnedElement())
 		{
-			if(ownedElement instanceof Association && isStereotypeAplied(ownedElement, "Link"))
+			if(ownedElement instanceof Association && isStereotypeAplied(ownedElement, LINK_STEREOTYPE))
 			{
-				Association link = (Association)ownedElement;
-				
-				String linkName = link.getName();
-				String label = getStringValue(link, "Link", "label");
-				Integer weight = getIntegerValue(link, "Link", "weight");
-				String foreign_label = getStringValue(link, "Link", "foreign_label");
-				
-				Class firstForm = null;
-				Class secondForm = null;
-				Multiplicity firstMultiplicity = null;
-				Multiplicity secondMultiplicity = null;
-				
-				for(Property linkEnd : link.getMemberEnd())
-				{
-					if(linkEnd.isNavigable())
-					{
-						secondForm = (Class) linkEnd.getType();
-						secondMultiplicity = Multiplicity.get(ModelHelper.getMultiplicity(linkEnd));
-					}
-					else
-					{
-						firstForm = (Class) linkEnd.getType();
-						firstMultiplicity = Multiplicity.get(ModelHelper.getMultiplicity(linkEnd));
-					}
-				}
-				
-				if(firstForm == null)
-				{
-					throw new AnalyzeException("All members of an association <"+linkName+"> are navigable. Exactly one member should be navigable.");
-				}
-				else if(secondForm == null)
-				{
-					throw new AnalyzeException("No members of an association <"+linkName+"> are navigable. Exactly one member should be navigable.");
-				}
-				
-				String link_type = firstMultiplicity.getMax()+"-"+secondMultiplicity.getMax();
-				
-				LinkField newLink = new LinkField(linkName, label, "Link", firstMultiplicity.isMandatory(), weight, firstForm.getName(), link_type, foreign_label);
-				
-				formMap.get(secondForm.getName()).getFields().add(newLink);
+				processLink((Association)ownedElement);
+			}
+			else if(ownedElement instanceof Package && isStereotypeAplied(ownedElement, PACKAGE_STEREOTYPE))
+			{
+				processLinks((Package)ownedElement);
 			}
 		}
 	}
 	
-	private static Boolean getBooleanValue(Element element, String stereotype, String tag)
+	private void processLink(Association link) throws AnalyzeException
+	{
+		String linkName = link.getName();
+		String label = getStringValue(link, LINK_STEREOTYPE, "label");
+		Integer weight = getIntegerValue(link, LINK_STEREOTYPE, "weight");
+		String foreign_label = getStringValue(link, LINK_STEREOTYPE, "foreign_label");
+		
+		Class firstForm = null;
+		Class secondForm = null;
+		Multiplicity firstMultiplicity = null;
+		Multiplicity secondMultiplicity = null;
+		
+		for(Property linkEnd : link.getMemberEnd())
+		{
+			if(linkEnd.isNavigable())
+			{
+				secondForm = (Class) linkEnd.getType();
+				secondMultiplicity = Multiplicity.get(ModelHelper.getMultiplicity(linkEnd));
+			}
+			else
+			{
+				firstForm = (Class) linkEnd.getType();
+				firstMultiplicity = Multiplicity.get(ModelHelper.getMultiplicity(linkEnd));
+			}
+		}
+		
+		if(firstForm == null)
+		{
+			throw new AnalyzeException("All members of an association <"+linkName+"> are navigable. Exactly one member should be navigable.");
+		}
+		else if(secondForm == null)
+		{
+			throw new AnalyzeException("No members of an association <"+linkName+"> are navigable. Exactly one member should be navigable.");
+		}
+		
+		String link_type = firstMultiplicity.getMax()+"-"+secondMultiplicity.getMax();
+		
+		LinkField newLink = new LinkField(linkName, label, LINK_STEREOTYPE, firstMultiplicity.isMandatory(), weight, firstForm.getName(), link_type, foreign_label);
+
+		allForms.get(secondForm.getName()).getFields().add(newLink);
+	}
+	
+	private Boolean getBooleanValue(Element element, String stereotype, String tag)
 	{
 		return (Boolean) getObjectValue(element, stereotype, tag);
 	}
 	
-	private static String getStringValue(Element element, String stereotype, String tag)
+	private String getStringValue(Element element, String stereotype, String tag)
 	{
 		return (String) getObjectValue(element, stereotype, tag);
 	}
 	
-	private static String getEnumerationValue(Element element, String stereotype, String tag)
+	private String getEnumerationValue(Element element, String stereotype, String tag)
 	{
 		EnumerationLiteral enumeration = (EnumerationLiteral)  getObjectValue(element, stereotype, tag);
 		if(enumeration != null)
@@ -183,18 +246,18 @@ public class ModelAnalyzer
 		}
 	}
 	
-	private static Integer getIntegerValue(Element element, String stereotype, String tag)
+	private Integer getIntegerValue(Element element, String stereotype, String tag)
 	{
 		return (Integer) getObjectValue(element, stereotype, tag);
 	}
 	
-	private static Object getObjectValue(Element element, String stereotype, String tag)
+	private Object getObjectValue(Element element, String stereotype, String tag)
 	{
 		Stereotype st = StereotypesHelper.getAppliedStereotypeByString(element, stereotype);
 		return StereotypesHelper.getStereotypePropertyFirst(element, st, tag);
 	}
 	
-	private static boolean isStereotypeAplied(Element element, String stereotype)
+	private boolean isStereotypeAplied(Element element, String stereotype)
 	{
 		return StereotypesHelper.isElementStereotypedBy(element, stereotype);
 	}
