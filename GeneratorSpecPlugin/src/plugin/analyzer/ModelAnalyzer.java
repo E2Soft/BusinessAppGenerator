@@ -55,24 +55,11 @@ public class ModelAnalyzer
 				
 				processLinks(app);
 				
-				List<Form> allFormModels = getAllForms(allPackages);
-				
-				return new AppModel(app_name, allFormModels, allPackages);
+				return new AppModel(app_name, new ArrayList<Form>(allForms.values()), allPackages);
 			}
 		}
 		
 		throw new AnalyzeException("No package annotated with BusinessApp stereotype.");
-	}
-	
-	private List<Form> getAllForms(List<plugin.model.Package> packages)
-	{
-		List<Form> allForms = new ArrayList<Form>();
-		for(plugin.model.Package pack : packages)
-		{
-			allForms.addAll(pack.getForms());
-			allForms.addAll(getAllForms(pack.getPackages()));
-		}
-		return allForms;
 	}
 	
 	private List<plugin.model.Package> processSubPackages(Package pack) throws AnalyzeException
