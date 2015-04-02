@@ -83,8 +83,10 @@ f5 = Form(title='Fifthform', display_name='Fifth form',
 
 test_app_model = AppModel(app_name='My test app', 
                                   forms=[f1,f2,f3,f4,f5],packages=[Package(weight=1,forms=[f1,f2],label="Test1"),
-                                                                   Package(weight=2,forms=[f3,f4],label="Test2"),
-                                                                   Package(weight=3,forms=[f5],label="Test3")])
+                                                                   Package(weight=2,forms=[f3,f4],label="Test2",
+                                                                           subpackages=[Package(weight=3,forms=[f5],label="Test3")]),
+                                                                   ]
+                          )
 
 test_app_string = '''
 <AppModel>

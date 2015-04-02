@@ -64,14 +64,14 @@ class Field:
         self.derived = derived
     
 class Package:
-    def __init__(self, weight=0, forms = None, subpackages = None, label = None):
+    def __init__(self, weight=0, label = None, forms=None, subpackages=None):
         self.weight = weight
         self.label = label
         if not forms:
             self.forms=[]
         else:
-            self.forms=forms
+            self.forms = forms
         if not subpackages:
             self.subpackages=[]
         else:
-            self.subpackages=subpackages
+            self.subpackages = subpackages
