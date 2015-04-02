@@ -37,6 +37,7 @@ def _create_form_model(xml_form):
     form.title = xml_form.title.text
     form.display_name = xml_form.display_name.text
     form.main_attribute = xml_form.main_attribute.text
+    form.tooltip = xml_form.tooltip.text
     
     if hasattr(xml_form.fields, 'Field'):
         for xml_field in xml_form.fields.Field:
