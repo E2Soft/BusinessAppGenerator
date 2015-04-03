@@ -1,4 +1,6 @@
 {% extends "business_app/base.html" %}
+{% load prepare_toolbar from business_app_extras %}
+
 {% block toolbar %}
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 	  <div class="container-fluid">
@@ -8,6 +10,9 @@
 		<div>
 			<ul class="nav navbar-nav">
 				<li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+				
+				{{toolbar_items|prepare_toolbar}}
+				
 				{% for toolbar_item in toolbar_items %}
 				<li class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">

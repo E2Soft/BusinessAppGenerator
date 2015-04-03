@@ -68,11 +68,23 @@ def linked_add_url(linked_forms, field_name):
 
 @register.filter
 def get_attribute(o, key):
-    return o.__getattribute__(key)
-    
+	return o.__getattribute__(key)
+
 @register.filter
 def map_value(dict, key):    
-    return dict[key]
+	return dict[key]
+
+def go_depth(toolbar_items):
+	for menu in toolbar_items:
+		print(menu.label)
+		for form in menu.items:
+			print(form.name)
+		if(menu.subpackages):
+			go_depth(menu.subpackages)
+
+@register.filter
+def prepare_toolbar(toolbar_items):
+	go_depth(toolbar_items)
 
 {% endblock %}
 
