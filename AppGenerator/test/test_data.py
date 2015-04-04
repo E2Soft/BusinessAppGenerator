@@ -3,11 +3,10 @@ Created on Mar 19, 2015
 
 @author: PCX
 '''
-from generator.model import AppModel, Form, Field, Operation, Link
+from generator.model import AppModel, Form, Field, Operation, Link, Package
 
 
-test_app_model = AppModel(app_name='My test app', 
-                                  forms=[Form(title='Firstform', display_name='First form',
+f1 = Form(title='Firstform', display_name='First form',
                                               fields=[Field(name='field1', label='My Field 1', field_type='String',
                                                             mandatory=True,max_length=4, custom_validation=True),
                                                       Field(name='field2', label='My Field 2', field_type='String',
@@ -19,8 +18,9 @@ test_app_model = AppModel(app_name='My test app',
                                                           Operation(name="customshit",label="Custom shit",field_type="Custom",param=True)],
                                               main_attribute='field1',
                                               tooltip = "Firstform is here"
-                                              ),
-                                         Form(title='Secondform', display_name='Second form',
+                                              )
+
+f2 = Form(title='Secondform', display_name='Second form',
                                               fields=[Field(name='field3', label='My Field 3', field_type='String',
                                                             mandatory=True,max_length=4),
                                                       Field(name='field4', label='My Field 4', field_type='String',
@@ -31,8 +31,9 @@ test_app_model = AppModel(app_name='My test app',
                                               operations=[Operation(name="searchSecondForm",field_type="Search",label="Search")],
                                               main_attribute='field3',
                                               tooltip = "Secondform is here"
-                                              ),
-                                         Form(title='Thirdform', display_name='Third form',
+                                              )
+
+f3 = Form(title='Thirdform', display_name='Third form',
                                               fields=[Field(name='field1', label='My Field 1', field_type='String',
                                                             mandatory=True,max_length=4),
                                                       Field(name='field2', label='My Field 2', field_type='String',
@@ -50,8 +51,42 @@ test_app_model = AppModel(app_name='My test app',
                                                           Operation(name="custommethod",label="Custom shit",field_type="Custom")],
                                               main_attribute='field1',
                                               tooltip = "Thirdform is here"
-                                              ),
-                                        ])
+                                              )
+
+f4 = Form(title='Forthform', display_name='Forth form',
+                                              fields=[Field(name='field1', label='My Field 1', field_type='String',
+                                                            mandatory=True,max_length=4, custom_validation=True),
+                                                      Field(name='field2', label='My Field 2', field_type='String',
+                                                            mandatory=False, max_length=10),
+                                                      Field(name='field3', label='My Field 3', field_type='Integer',
+                                                            mandatory=False, derived='REAL_TIME'),
+                                                     ],
+                                              operations=[Operation(name="searchForthForm",field_type="Search",label="Search"),
+                                                          Operation(name="customshit2",label="Custom shit 2",field_type="Custom",param=True)],
+                                              main_attribute='field1',
+                                              tooltip = "Forthform is here"
+                                              )
+
+f5 = Form(title='Fifthform', display_name='Fifth form',
+                                              fields=[Field(name='field1', label='My Field 1', field_type='String',
+                                                            mandatory=True,max_length=4, custom_validation=True),
+                                                      Field(name='field2', label='My Field 2', field_type='String',
+                                                            mandatory=False, max_length=10),
+                                                      Field(name='field3', label='My Field 3', field_type='Integer',
+                                                            mandatory=False, derived='REAL_TIME'),
+                                                     ],
+                                              operations=[Operation(name="searchFifthForm",field_type="Search",label="Search"),
+                                                          Operation(name="customshit3",label="Custom shit 3",field_type="Custom",param=True)],
+                                              main_attribute='field1',
+                                              tooltip = "Fifthform is here"
+                                              )
+
+test_app_model = AppModel(app_name='My test app', 
+                                  forms=[f1,f2,f3,f4,f5],packages=[Package(weight=1,forms=[f1,f2],label="Test1"),
+                                                                   Package(weight=2,forms=[f3,f4],label="Test2",
+                                                                           subpackages=[Package(weight=3,forms=[f5],label="Test3")]),
+                                                                   ]
+                          )
 
 test_app_string = '''
 <AppModel>
@@ -475,8 +510,7 @@ test_app_string = '''
   <packages>
     <Package>
       <name>Items</name>
-      <label>Items
-</label>
+      <label>Items</label>
       <weight>1</weight>
       <forms>
         <Form reference="../../../../forms/Form[6]"/>

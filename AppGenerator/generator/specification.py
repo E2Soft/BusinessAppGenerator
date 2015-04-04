@@ -100,7 +100,7 @@ def _create_package_model(xml_package, all_forms_map):
         form_title = form.xpath(form.get('reference'))[0].title
         package.forms.append(all_forms_map[form_title])
     
-    package.packages += _create_sub_packages(xml_package, all_forms_map)
+    package.subpackages += _create_sub_packages(xml_package, all_forms_map)
     
     return package
 

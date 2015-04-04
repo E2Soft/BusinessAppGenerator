@@ -15,8 +15,9 @@ class AppModel:
             self.packages=[]
         else:
             self.packages=packages
+
 class Package:
-    def __init__(self, name=None, label=None, weight=0, forms=None, packages=None):
+    def __init__(self, name=None, label=None, weight=0, forms=None, subpackages=None):
         self.name = name
         self.label = label
         self.weight = weight
@@ -24,10 +25,11 @@ class Package:
             self.forms=[]
         else:
             self.forms=forms
-        if not packages:
-            self.packages=[]
+        if not subpackages:
+            self.subpackages=[]
         else:
-            self.packages=packages
+            self.subpackages=subpackages
+
 class Form:
     def __init__(self, title=None, fields=None, operations=None, main_attribute=None, 
                  display_name=None, tooltip = ""):
