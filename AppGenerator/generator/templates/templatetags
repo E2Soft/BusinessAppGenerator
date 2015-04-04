@@ -107,7 +107,6 @@ def prepare_toolbar(toolbar_items):
 	string_val = ""
 	
 	ret_string = go_depth(toolbar_items,string_val, False)
-	print(ret_string)
 	
 	return ret_string
 

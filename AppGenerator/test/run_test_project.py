@@ -23,8 +23,8 @@ def generate_test_app(app_model):
     manager.run_server()
 
 if __name__ == "__main__":
-    app_model = test_data.test_app_model # TEST PYTHON MODEL
-    #app_model = specification.from_xml_string(test_data.test_app_string) # TEST XML MODEL
+    #app_model = test_data.test_app_model # TEST PYTHON MODEL
+    app_model = specification.from_xml_string(test_data.test_app_string) # TEST XML MODEL
     
     generate_test_app(app_model)
 

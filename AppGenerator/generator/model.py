@@ -17,7 +17,7 @@ class AppModel:
             self.packages=packages
 
 class Package:
-    def __init__(self, name=None, label=None, weight=0, forms=None, packages=None):
+    def __init__(self, name=None, label=None, weight=0, forms=None, subpackages=None):
         self.name = name
         self.label = label
         self.weight = weight
@@ -25,10 +25,10 @@ class Package:
             self.forms=[]
         else:
             self.forms=forms
-        if not packages:
-            self.packages=[]
+        if not subpackages:
+            self.subpackages=[]
         else:
-            self.packages=packages
+            self.subpackages=subpackages
 
 class Form:
     def __init__(self, title=None, fields=None, operations=None, main_attribute=None, 
@@ -76,16 +76,3 @@ class Field:
         self.weight = weight
         self.custom_validation = custom_validation
         self.derived = derived
-    
-class Package:
-    def __init__(self, weight=0, label = None, forms=None, subpackages=None):
-        self.weight = weight
-        self.label = label
-        if not forms:
-            self.forms=[]
-        else:
-            self.forms = forms
-        if not subpackages:
-            self.subpackages=[]
-        else:
-            self.subpackages = subpackages
