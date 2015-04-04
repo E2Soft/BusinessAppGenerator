@@ -10,27 +10,7 @@
 		<div>
 			<ul class="nav navbar-nav">
 				<li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-				
-				{{toolbar_items|prepare_toolbar}}
-				
-				{% for toolbar_item in toolbar_items %}
-				<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-					<span class="glyphicon glyphicon-tasks"></span> {{toolbar_item.label}}
-					<span class="caret"></span></a>
-					<ul class="dropdown-menu">
-						{% for menu_item in toolbar_item.items %}
-					    	<li>
-					    		<a href="{% url menu_item.url %}" data-toggle="tooltip" 
-					    											 data-placement="bottom" 
-					    											 title="{{menu_item.tooltip}}">
-					    			<span class="glyphicon glyphicon-tasks"></span> {{menu_item.name}}
-					    		</a>
-					    	</li>
-				    	{% endfor %}
-			    	</ul>
-			    </li>
-			    {% endfor %}
+				{{toolbar_items|prepare_toolbar|safe}}
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 		      	<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">

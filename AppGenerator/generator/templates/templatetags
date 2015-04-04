@@ -74,17 +74,44 @@ def get_attribute(o, key):
 def map_value(dict, key):    
 	return dict[key]
 
-def go_depth(toolbar_items):
+def go_depth(toolbar_items, do_val, is_submenu):
+
+	string_val = do_val
+	
 	for menu in toolbar_items:
-		print(menu.label)
+		if(is_submenu):
+			string_val+="<li class='menu-item dropdown dropdown-submenu'>\n"
+			string_val+="<a href='#' class='dropdown-toggle' data-toggle='dropdown'>{}</a>\n".format(menu.label)
+			
+		else:
+			string_val+="<li class='menu-item dropdown'>\n"
+			string_val+="<a href='#' class='dropdown-toggle' data-toggle='dropdown'>{}<b class='caret'></b></a>\n".format(menu.label)
+		
+		is_submenu = False
+		
+		string_val+="<ul class='dropdown-menu'>\n"
+		
 		for form in menu.items:
-			print(form.name)
+			string_val+="<li class='menu-item'><a href='{}'>{}</a></li>\n".format(form.url,form.name)
+		
 		if(menu.subpackages):
-			go_depth(menu.subpackages)
+			return go_depth(menu.subpackages, string_val, True)+"</ul>\n</li>\n"
+		
+		string_val+="</ul>\n"
+		string_val+="</li>\n"
+		
+	return string_val
 
 @register.filter
 def prepare_toolbar(toolbar_items):
-	go_depth(toolbar_items)
+	
+	ret_string = ""
+	
+	ret_string = go_depth(toolbar_items,string_val, False)
+	
+	print(ret_string)
+	
+	return ret_string
 
 {% endblock %}
 
