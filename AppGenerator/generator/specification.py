@@ -6,7 +6,7 @@ Created on Mar 13, 2015
 
 from lxml import objectify
 
-from generator.model import AppModel, Form, Field, Operation, Link
+from generator.model import AppModel, Form, Field, Operation, Link, Package
 
 
 def from_xml_file(file_path):
@@ -21,9 +21,14 @@ def from_xml_string(xml):
 def _create_app_model(xml_model):
     app_model = AppModel()
     app_model.app_name = xml_model.app_name.text
+    all_forms_map = {}
     
     for xml_form in xml_model.forms.Form:
-        app_model.forms.append(_create_form_model(xml_form))
+        form_model = _create_form_model(xml_form)
+        app_model.forms.append(form_model)
+        all_forms_map[form_model.title] = form_model
+
+    app_model.packages += _create_sub_packages(xml_model, all_forms_map)
 
     return app_model
 
@@ -32,6 +37,7 @@ def _create_form_model(xml_form):
     form.title = xml_form.title.text
     form.display_name = xml_form.display_name.text
     form.main_attribute = xml_form.main_attribute.text
+    form.tooltip = xml_form.tooltip.text
     
     if hasattr(xml_form.fields, 'Field'):
         for xml_field in xml_form.fields.Field:
@@ -76,3 +82,25 @@ def _create_form_model(xml_form):
             form.operations.append(operation)
     
     return form
+
+def _create_sub_packages(xml_package, all_forms_map):
+    sub_packages=[]
+    if hasattr(xml_package.packages, 'Package'):
+        for sub_package in xml_package.packages.Package:
+            sub_packages.append(_create_package_model(sub_package, all_forms_map))
+    return sub_packages
+
+def _create_package_model(xml_package, all_forms_map):
+    package = Package()
+    package.name = xml_package.name.text
+    package.label = xml_package.label.text
+    package.weight = int(xml_package.weight.text)
+    
+    for form in xml_package.forms.Form:
+        form_title = form.xpath(form.get('reference'))[0].title
+        package.forms.append(all_forms_map[form_title])
+    
+    package.packages += _create_sub_packages(xml_package, all_forms_map)
+    
+    return package
+

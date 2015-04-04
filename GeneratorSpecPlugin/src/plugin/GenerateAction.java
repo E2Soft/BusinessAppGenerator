@@ -40,7 +40,7 @@ class GenerateAction extends MDAction
 		
 		try
 		{
-			XMLUtil.toXmlFile(ModelAnalyzer.processPackage(root));
+			XMLUtil.toXmlFile(new ModelAnalyzer().processApplication(root));
 			JOptionPane.showMessageDialog(null, "Project generated.");
 		}
 		catch (AnalyzeException e)
