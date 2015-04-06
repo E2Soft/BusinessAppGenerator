@@ -407,6 +407,12 @@ test_app_string = '''
           <field_type>Custom</field_type>
           <param>false</param>
         </Operation>
+        <Operation>
+          <name>Popis</name>
+          <label>Inventory document</label>
+          <field_type>Custom</field_type>
+          <param>false</param>
+        </Operation>
       </operations>
     </Form>
     <Form>
