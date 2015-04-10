@@ -93,54 +93,6 @@ test_app_string = '''
   <app_name>StorageApp</app_name>
   <forms>
     <Form>
-      <title>User</title>
-      <main_attribute>ime</main_attribute>
-      <display_name>User</display_name>
-      <tooltip>Allow viewing and manipulation of all Users</tooltip>
-      <fields>
-        <Field>
-          <name>ime</name>
-          <label>Name</label>
-          <field_type>String</field_type>
-          <mandatory>false</mandatory>
-          <weight>1</weight>
-          <max_length>20</max_length>
-        </Field>
-        <Field>
-          <name>prezime</name>
-          <label>Last name</label>
-          <field_type>String</field_type>
-          <mandatory>false</mandatory>
-          <weight>2</weight>
-          <max_length>20</max_length>
-        </Field>
-        <Field>
-          <name>username</name>
-          <label>Username</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>3</weight>
-          <max_length>20</max_length>
-        </Field>
-        <Field>
-          <name>password</name>
-          <label>Password</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>4</weight>
-          <max_length>10</max_length>
-        </Field>
-      </fields>
-      <operations>
-        <Operation>
-          <name>Search</name>
-          <label>Search</label>
-          <field_type>Search</field_type>
-          <param>false</param>
-        </Operation>
-      </operations>
-    </Form>
-    <Form>
       <title>Category</title>
       <main_attribute>naziv</main_attribute>
       <display_name>Category</display_name>
@@ -273,6 +225,54 @@ test_app_string = '''
           <mandatory>true</mandatory>
           <weight>5</weight>
           <max_length>20</max_length>
+        </Field>
+      </fields>
+      <operations>
+        <Operation>
+          <name>Search</name>
+          <label>Search</label>
+          <field_type>Search</field_type>
+          <param>false</param>
+        </Operation>
+      </operations>
+    </Form>
+    <Form>
+      <title>StorageUser</title>
+      <main_attribute>ime</main_attribute>
+      <display_name>User</display_name>
+      <tooltip>Allow viewing and manipulation of all Users</tooltip>
+      <fields>
+        <Field>
+          <name>ime</name>
+          <label>Name</label>
+          <field_type>String</field_type>
+          <mandatory>false</mandatory>
+          <weight>1</weight>
+          <max_length>20</max_length>
+        </Field>
+        <Field>
+          <name>prezime</name>
+          <label>Last name</label>
+          <field_type>String</field_type>
+          <mandatory>false</mandatory>
+          <weight>2</weight>
+          <max_length>20</max_length>
+        </Field>
+        <Field>
+          <name>username</name>
+          <label>Username</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>3</weight>
+          <max_length>20</max_length>
+        </Field>
+        <Field>
+          <name>password</name>
+          <label>Password</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>4</weight>
+          <max_length>10</max_length>
         </Field>
       </fields>
       <operations>
@@ -521,9 +521,9 @@ test_app_string = '''
       <forms>
         <Form reference="../../../../forms/Form[6]"/>
         <Form reference="../../../../forms/Form[7]"/>
-        <Form reference="../../../../forms/Form[4]"/>
         <Form reference="../../../../forms/Form[3]"/>
         <Form reference="../../../../forms/Form[2]"/>
+        <Form reference="../../../../forms/Form"/>
       </forms>
       <packages/>
     </Package>
@@ -532,7 +532,7 @@ test_app_string = '''
       <label>User</label>
       <weight>2</weight>
       <forms>
-        <Form reference="../../../../forms/Form"/>
+        <Form reference="../../../../forms/Form[4]"/>
         <Form reference="../../../../forms/Form[8]"/>
         <Form reference="../../../../forms/Form[5]"/>
       </forms>

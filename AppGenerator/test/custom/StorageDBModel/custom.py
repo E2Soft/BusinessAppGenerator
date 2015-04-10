@@ -14,10 +14,13 @@
 
 
 
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
 from collections import OrderedDict
 import json
+from time import strftime
+
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import render
 import reportlab
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, inch, landscape
@@ -25,23 +28,17 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.pdfgen import canvas
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.platypus.flowables import Spacer
+
 from business_app.models import Item
-from time import strftime
-
-
-
-
-
-
-
-
-
 
 
 @login_required(login_url="/")
 def Popust(request):
 #TODO:Implement this view
-	return HttpResponse('Unimplemented custom method [Popust], see business_app/custom.py.')
+	for item in Item.objects.all():
+		item.pojedinacnaCena = item.pojedinacnaCena - (item.pojedinacnaCena * 0.1) # -10%
+		item.save()
+	return render(request, 'custom/discount.html')
 
 @login_required(login_url="/")
 def Popis(request):
