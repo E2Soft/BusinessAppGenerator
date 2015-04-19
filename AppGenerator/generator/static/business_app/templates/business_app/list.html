@@ -17,18 +17,18 @@
     				</div>
     				<ul id="myTab" class="nav nav-tabs">
 						<li class="active">
-							<a href="#showList" data-toggle="tab">
-							<span class="glyphicon glyphicon-list-alt" data-toggle="tooltip" title="Show as List"></span>
-							</a>
-						</li>
-						<li>
 							<a href="#showTable" data-toggle="tab">
 							<span class="glyphicon glyphicon-th" data-toggle="tooltip" title="Show as Table"></span>
 							</a>
 						</li>	
+						<li>
+							<a href="#showList" data-toggle="tab">
+							<span class="glyphicon glyphicon-list-alt" data-toggle="tooltip" title="Show as List"></span>
+							</a>
+						</li>
 					</ul>
 					<div id="myTabContent" class="tab-content">
-						<div class="tab-pane fade in active" id="showList">
+						<div class="tab-pane fade" id="showList">
 							<ul class="list-group">
 								{% for obj in object_list %}
 									<div class="bs-callout bs-callout-primary">
@@ -42,7 +42,7 @@
 								{% endfor %}
 							</ul>
 						</div>
-						<div class="tab-pane fade" id="showTable">
+						<div class="tab-pane fade in active" id="showTable">
 							<table class="table table-hover"  style="margin-top:20px;">
 								<thead>
 									<tr>
