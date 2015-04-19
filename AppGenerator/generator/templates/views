@@ -27,19 +27,6 @@ from {{app_name}}.forms import UserForm
 {% for form in model.forms -%}
 #{{form.title}}
 
-{{form.title}}_field_labels = {
-{%- for field in form.fields %}
-			'{{field.name}}':'{{field.label}}',
-{%- endfor -%}
-{%- for other_form in model.forms -%}
-	{%- for field in other_form.fields -%}
-		{%- if field.field_type == 'Link' and field.form == form.title %}
-			'{{other_form.title}}'.lower():'{{field.foreign_label}}',
-		{%- endif -%}
-	{%- endfor -%}
-{%- endfor %}
-}
-
 class {{form.title}}List(ListView):
 	model = {{form.title}}
 	template_name = '{{app_name}}/list.html'
@@ -107,66 +94,17 @@ class {{form.title}}Detail(DetailView):
 	def dispatch(self, *args, **kwargs):
 		return super({{form.title}}Detail, self).dispatch(*args, **kwargs)
 	
-	@staticmethod
-	def sort_fields_key(name):
-		return {
-{%- for field in form.fields %}
-			'{{field.name}}':'{{field.weight}}',
-{%- endfor -%}
-{%- for other_form in model.forms -%}
-	{%- for field in other_form.fields -%}
-		{%- if field.field_type == 'Link' and field.form == form.title %}
-			'{{other_form.title}}'.lower():'{{field.weight}}',
-		{%- endif -%}
-	{%- endfor -%}
-{%- endfor %}
-		}[name]
-			
+	def get_queryset(self):
+		return {{form.title}}.objects.all()
+	
 	def get_context_data(self, **kwargs):
 		context = super({{form.title}}Detail, self).get_context_data(**kwargs)
 		context["display_name"] = "{{form.display_name}}"
-		context["title"] = "{{form.title}}"
-		
-		field_names = []
-		field_values = {}
-		field_labels = {}
-		
-		for name in self.object._meta.get_all_field_names():
-			if 'id' != name and not name.endswith("_id"):
-				
-				field_names.append(name)
-				
-				label = {{form.title}}_field_labels[name]
-				if not label:
-					label = name
-				
-				field_labels[name] = label
-				
-				try:
-					field_values[name] = self.object.__getattribute__(name).all()
-				except AttributeError:
-					try:
-						field_values[name] = self.object.__getattribute__(name)
-					except AttributeError:
-						try:
-							field_values[name] = self.object.__getattribute__(''.join([name,"_set"])).all()
-						except AttributeError:
-							field_values[name] = "not assigned"
-		
-{% for field in form.fields -%}
-	{%- if field.derived == "REAL_TIME" %}
-		field_names.append('{{field.name}}')
-		field_values['{{field.name}}'] = derived_fields.calculate_{{form.title}}_{{field.name}}(self.object)
-		field_labels['{{field.name}}'] = {{form.title}}_field_labels['{{field.name}}']
-	{%- endif -%}
-{%- endfor %}
-		
-		field_names.sort(key={{form.title}}Detail.sort_fields_key)
-		
-		context["field_names"] = field_names
-		context["field_values"] = field_values
-		context["field_labels"] = field_labels
-		
+		context["title"] = "{{form.title}}"	
+		context["field_names"] = {{form.title}}.field_names
+		context["field_values"] = self.object.field_values
+		context["field_labels"] = {{form.title}}.field_labels
+
 		context["linked_forms"] = {
 		{%- for field in form.fields -%}
 			{%- if field.field_type == 'Link' and field.link_type == '*-*' %}
