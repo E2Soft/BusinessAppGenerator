@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'x2i0y6rljb(=zf-vls(-72hv#w)6=db*fa6)ncsq6p3u)@t6yo'
 
-from business_app import custom as _
+from business_app import custom_settings as _
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = _.custom_DEBUG
@@ -51,12 +51,7 @@ WSGI_APPLICATION = '{{app_name}}.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': _.custom_DATABASES_ENGINE,
-        'NAME': os.path.join(BASE_DIR, _.custom_DATABASES_NAME),
-    }
-}
+DATABASES = _.custom_DATABASES
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
