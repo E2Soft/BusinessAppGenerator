@@ -32,10 +32,10 @@ Now goes values that can be customise for your app
 custom_SECRET_KEY = 'x2i0y6rljb(=zf-vls(-72hv#w)6=db*fa6)ncsq6p3u)@t6yo'
 
 #Change this if you wish that you can debug your app
-custom_DEBUG = False
+custom_DEBUG = True
 
 #Change this if you wish that you can debug your template
-custom_TEMPLATE_DEBUG = False
+custom_TEMPLATE_DEBUG = True
 
 #if debug_app is False then this list must not be empty!Represents domains that can access your app
 custom_ALLOWED_HOSTS = ['localhost', '127.0.0.1']

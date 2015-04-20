@@ -93,150 +93,6 @@ test_app_string = '''
   <app_name>StorageApp</app_name>
   <forms>
     <Form>
-      <title>Category</title>
-      <main_attribute>naziv</main_attribute>
-      <display_name>Category</display_name>
-      <tooltip>Allow viewing and manipulation of all Categories</tooltip>
-      <fields>
-        <Field>
-          <name>naziv</name>
-          <label>Name</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>1</weight>
-          <max_length>20</max_length>
-        </Field>
-        <Field>
-          <name>broj_artikala</name>
-          <label>Number of items</label>
-          <field_type>Integer</field_type>
-          <mandatory>false</mandatory>
-          <weight>2</weight>
-          <derived>REAL_TIME</derived>
-        </Field>
-      </fields>
-      <operations>
-        <Operation>
-          <name>Search</name>
-          <label>Search</label>
-          <field_type>Search</field_type>
-          <param>false</param>
-        </Operation>
-      </operations>
-    </Form>
-    <Form>
-      <title>Manufacturer</title>
-      <main_attribute>nazivProizvodjac</main_attribute>
-      <display_name>Manufacturer</display_name>
-      <tooltip>Allow viewing and manipulation of all Manufacturers</tooltip>
-      <fields>
-        <Field>
-          <name>nazivProizvodjac</name>
-          <label>Name</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>1</weight>
-          <max_length>30</max_length>
-        </Field>
-        <Field>
-          <name>ulicaProizvodjac</name>
-          <label>Street</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>2</weight>
-          <max_length>30</max_length>
-        </Field>
-        <Field>
-          <name>brojProizvodjac</name>
-          <label>Number</label>
-          <field_type>Integer</field_type>
-          <mandatory>true</mandatory>
-          <weight>3</weight>
-          <max_length>30</max_length>
-        </Field>
-        <Field>
-          <name>gradProizvodjac</name>
-          <label>City</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>4</weight>
-          <max_length>30</max_length>
-        </Field>
-        <Field>
-          <name>telefonProizvodjac</name>
-          <label>Phone</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>5</weight>
-          <max_length>30</max_length>
-        </Field>
-      </fields>
-      <operations>
-        <Operation>
-          <name>Search</name>
-          <label>Search</label>
-          <field_type>Search</field_type>
-          <param>false</param>
-        </Operation>
-      </operations>
-    </Form>
-    <Form>
-      <title>Importer</title>
-      <main_attribute>nazivUvoznik</main_attribute>
-      <display_name>Importer</display_name>
-      <tooltip>Allow viewing and manipulation of all Importers</tooltip>
-      <fields>
-        <Field>
-          <name>nazivUvoznik</name>
-          <label>Name</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>1</weight>
-          <max_length>30</max_length>
-        </Field>
-        <Field>
-          <name>ulicaUvoznik</name>
-          <label>Street</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>2</weight>
-          <max_length>20</max_length>
-        </Field>
-        <Field>
-          <name>brojUvoznik</name>
-          <label>Number</label>
-          <field_type>Integer</field_type>
-          <mandatory>true</mandatory>
-          <weight>3</weight>
-          <max_length>100</max_length>
-        </Field>
-        <Field>
-          <name>telefonUvoznik</name>
-          <label>Phone</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>4</weight>
-          <max_length>30</max_length>
-        </Field>
-        <Field>
-          <name>gradUvoznik</name>
-          <label>City</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>5</weight>
-          <max_length>20</max_length>
-        </Field>
-      </fields>
-      <operations>
-        <Operation>
-          <name>Search</name>
-          <label>Search</label>
-          <field_type>Search</field_type>
-          <param>false</param>
-        </Operation>
-      </operations>
-    </Form>
-    <Form>
       <title>StorageUser</title>
       <main_attribute>ime</main_attribute>
       <display_name>User</display_name>
@@ -273,47 +129,6 @@ test_app_string = '''
           <mandatory>true</mandatory>
           <weight>4</weight>
           <max_length>10</max_length>
-        </Field>
-      </fields>
-      <operations>
-        <Operation>
-          <name>Search</name>
-          <label>Search</label>
-          <field_type>Search</field_type>
-          <param>false</param>
-        </Operation>
-      </operations>
-    </Form>
-    <Form>
-      <title>State</title>
-      <main_attribute>nazivDrzava</main_attribute>
-      <display_name>State</display_name>
-      <tooltip>Allow viewing and manipulation of all States</tooltip>
-      <fields>
-        <Field>
-          <name>oznaka</name>
-          <label>Code</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>1</weight>
-          <max_length>3</max_length>
-        </Field>
-        <Field>
-          <name>nazivDrzava</name>
-          <label>Name</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>2</weight>
-          <max_length>20</max_length>
-          <custom_validation>true</custom_validation>
-        </Field>
-        <Field>
-          <name>kontinentDrazava</name>
-          <label>Continent</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>3</weight>
-          <max_length>20</max_length>
         </Field>
       </fields>
       <operations>
@@ -416,6 +231,183 @@ test_app_string = '''
       </operations>
     </Form>
     <Form>
+      <title>Shop</title>
+      <main_attribute>nazivRadnja</main_attribute>
+      <display_name>Shop</display_name>
+      <tooltip>Allow viewing and manipulation of all Stores</tooltip>
+      <fields>
+        <Field>
+          <name>ulica</name>
+          <label>Street</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>1</weight>
+          <max_length>20</max_length>
+        </Field>
+        <Field>
+          <name>broj</name>
+          <label>Number</label>
+          <field_type>Integer</field_type>
+          <mandatory>true</mandatory>
+          <weight>2</weight>
+          <max_length>100</max_length>
+        </Field>
+        <Field>
+          <name>grad</name>
+          <label>City</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>3</weight>
+          <max_length>20</max_length>
+        </Field>
+        <Field>
+          <name>nazivRadnja</name>
+          <label>Name</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>3</weight>
+          <max_length>30</max_length>
+        </Field>
+      </fields>
+      <operations>
+        <Operation>
+          <name>Search</name>
+          <label>Search</label>
+          <field_type>Search</field_type>
+          <param>false</param>
+        </Operation>
+      </operations>
+    </Form>
+    <Form>
+      <title>Category</title>
+      <main_attribute>naziv</main_attribute>
+      <display_name>Category</display_name>
+      <tooltip>Allow viewing and manipulation of all Categories</tooltip>
+      <fields>
+        <Field>
+          <name>naziv</name>
+          <label>Name</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>1</weight>
+          <max_length>20</max_length>
+        </Field>
+        <Field>
+          <name>broj_artikala</name>
+          <label>Number of items</label>
+          <field_type>Integer</field_type>
+          <mandatory>false</mandatory>
+          <weight>2</weight>
+          <derived>REAL_TIME</derived>
+        </Field>
+      </fields>
+      <operations>
+        <Operation>
+          <name>Search</name>
+          <label>Search</label>
+          <field_type>Search</field_type>
+          <param>false</param>
+        </Operation>
+      </operations>
+    </Form>
+    <Form>
+      <title>State</title>
+      <main_attribute>nazivDrzava</main_attribute>
+      <display_name>State</display_name>
+      <tooltip>Allow viewing and manipulation of all States</tooltip>
+      <fields>
+        <Field>
+          <name>oznaka</name>
+          <label>Code</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>1</weight>
+          <max_length>3</max_length>
+        </Field>
+        <Field>
+          <name>nazivDrzava</name>
+          <label>Name</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>2</weight>
+          <max_length>20</max_length>
+          <custom_validation>true</custom_validation>
+        </Field>
+        <Field>
+          <name>kontinentDrazava</name>
+          <label>Continent</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>3</weight>
+          <max_length>20</max_length>
+        </Field>
+      </fields>
+      <operations>
+        <Operation>
+          <name>Search</name>
+          <label>Search</label>
+          <field_type>Search</field_type>
+          <param>false</param>
+        </Operation>
+      </operations>
+    </Form>
+    <Form>
+      <title>Manufacturer</title>
+      <main_attribute>nazivProizvodjac</main_attribute>
+      <display_name>Manufacturer</display_name>
+      <tooltip>Allow viewing and manipulation of all Manufacturers</tooltip>
+      <fields>
+        <Field>
+          <name>nazivProizvodjac</name>
+          <label>Name</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>1</weight>
+          <max_length>30</max_length>
+        </Field>
+        <Field>
+          <name>ulicaProizvodjac</name>
+          <label>Street</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>2</weight>
+          <max_length>30</max_length>
+        </Field>
+        <Field>
+          <name>brojProizvodjac</name>
+          <label>Number</label>
+          <field_type>Integer</field_type>
+          <mandatory>true</mandatory>
+          <weight>3</weight>
+          <max_length>30</max_length>
+        </Field>
+        <Field>
+          <name>gradProizvodjac</name>
+          <label>City</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>4</weight>
+          <max_length>30</max_length>
+        </Field>
+        <Field>
+          <name>telefonProizvodjac</name>
+          <label>Phone</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>5</weight>
+          <max_length>30</max_length>
+        </Field>
+      </fields>
+      <operations>
+        <Operation>
+          <name>Search</name>
+          <label>Search</label>
+          <field_type>Search</field_type>
+          <param>false</param>
+        </Operation>
+      </operations>
+    </Form>
+    <Form>
       <title>Declaration</title>
       <main_attribute>nazivDeklaracija</main_attribute>
       <display_name>Declaration</display_name>
@@ -465,42 +457,50 @@ test_app_string = '''
       </operations>
     </Form>
     <Form>
-      <title>Shop</title>
-      <main_attribute>nazivRadnja</main_attribute>
-      <display_name>Shop</display_name>
-      <tooltip>Allow viewing and manipulation of all Stores</tooltip>
+      <title>Importer</title>
+      <main_attribute>nazivUvoznik</main_attribute>
+      <display_name>Importer</display_name>
+      <tooltip>Allow viewing and manipulation of all Importers</tooltip>
       <fields>
         <Field>
-          <name>ulica</name>
-          <label>Street</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>1</weight>
-          <max_length>20</max_length>
-        </Field>
-        <Field>
-          <name>broj</name>
-          <label>Number</label>
-          <field_type>Integer</field_type>
-          <mandatory>true</mandatory>
-          <weight>2</weight>
-          <max_length>100</max_length>
-        </Field>
-        <Field>
-          <name>grad</name>
-          <label>City</label>
-          <field_type>String</field_type>
-          <mandatory>true</mandatory>
-          <weight>3</weight>
-          <max_length>20</max_length>
-        </Field>
-        <Field>
-          <name>nazivRadnja</name>
+          <name>nazivUvoznik</name>
           <label>Name</label>
           <field_type>String</field_type>
           <mandatory>true</mandatory>
-          <weight>3</weight>
+          <weight>1</weight>
           <max_length>30</max_length>
+        </Field>
+        <Field>
+          <name>ulicaUvoznik</name>
+          <label>Street</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>2</weight>
+          <max_length>20</max_length>
+        </Field>
+        <Field>
+          <name>brojUvoznik</name>
+          <label>Number</label>
+          <field_type>Integer</field_type>
+          <mandatory>true</mandatory>
+          <weight>3</weight>
+          <max_length>100</max_length>
+        </Field>
+        <Field>
+          <name>telefonUvoznik</name>
+          <label>Phone</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>4</weight>
+          <max_length>30</max_length>
+        </Field>
+        <Field>
+          <name>gradUvoznik</name>
+          <label>City</label>
+          <field_type>String</field_type>
+          <mandatory>true</mandatory>
+          <weight>5</weight>
+          <max_length>20</max_length>
         </Field>
       </fields>
       <operations>
@@ -519,11 +519,11 @@ test_app_string = '''
       <label>Items</label>
       <weight>1</weight>
       <forms>
-        <Form reference="../../../../forms/Form[6]"/>
-        <Form reference="../../../../forms/Form[7]"/>
-        <Form reference="../../../../forms/Form[3]"/>
         <Form reference="../../../../forms/Form[2]"/>
-        <Form reference="../../../../forms/Form"/>
+        <Form reference="../../../../forms/Form[7]"/>
+        <Form reference="../../../../forms/Form[8]"/>
+        <Form reference="../../../../forms/Form[6]"/>
+        <Form reference="../../../../forms/Form[4]"/>
       </forms>
       <packages/>
     </Package>
@@ -532,8 +532,8 @@ test_app_string = '''
       <label>User</label>
       <weight>2</weight>
       <forms>
-        <Form reference="../../../../forms/Form[4]"/>
-        <Form reference="../../../../forms/Form[8]"/>
+        <Form reference="../../../../forms/Form"/>
+        <Form reference="../../../../forms/Form[3]"/>
         <Form reference="../../../../forms/Form[5]"/>
       </forms>
       <packages/>
