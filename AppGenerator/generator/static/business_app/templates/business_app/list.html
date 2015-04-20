@@ -1,7 +1,11 @@
 {% extends "business_app/menu.html" %}
 {% block title %}{{ display_name|title }}{% endblock %}
 
+{% load url_for from business_app_extras %}
+{% load map_value from business_app_extras %}
+{% load filternormal from business_app_extras %}
 {% load get_attribute from business_app_extras %}
+{% load is_entity from business_app_extras %}
 
 {% block content %}
 	<div id="page-content-wrapper">
@@ -11,18 +15,67 @@
             		<div class="page-header">
        					<h2><span class="glyphicon glyphicon-flag"></span> {{ display_name|title }}</h2>
     				</div>
-					<ul class="list-group">
-						{% for obj in object_list %}
-							<div class="bs-callout bs-callout-primary">
-								<span class="glyphicon glyphicon-chevron-right"></span>
-								<a href="{% url detail_url obj.pk %}" data-toggle="tooltip" 
-																	  data-placement="right" 
-																	  title="Click to see details about {{obj}} ">
-									{{obj|get_attribute:main_attribute}}
-								</a>
-							</div>
-						{% endfor %}
+    				<ul id="myTab" class="nav nav-tabs">
+						<li class="active">
+							<a href="#showTable" data-toggle="tab">
+							<span class="glyphicon glyphicon-th" data-toggle="tooltip" title="Show as Table"></span>
+							</a>
+						</li>	
+						<li>
+							<a href="#showList" data-toggle="tab">
+							<span class="glyphicon glyphicon-list-alt" data-toggle="tooltip" title="Show as List"></span>
+							</a>
+						</li>
 					</ul>
+					<div id="myTabContent" class="tab-content">
+						<div class="tab-pane fade" id="showList">
+							<ul class="list-group">
+								{% for obj in object_list %}
+									<div class="bs-callout bs-callout-primary">
+										<span class="glyphicon glyphicon-chevron-right"></span>
+										<a href="{% url detail_url obj.pk %}" data-toggle="tooltip" 
+																			  data-placement="right" 
+																			  title="Click to see details about {{obj}} ">
+											{{obj|get_attribute:main_attribute}}
+										</a>
+									</div>
+								{% endfor %}
+							</ul>
+						</div>
+						<div class="tab-pane fade in active" id="showTable">
+							<table class="table table-hover"  style="margin-top:20px;">
+								<thead>
+									<tr>
+										{% for obj in object_list %}
+											{% if forloop.first %}
+												{% for field in field_names|filternormal:obj.field_values %}
+													<th>{{field_labels|map_value:field}}</th>
+												{% endfor %}
+											{% endif %}
+										{% endfor %}
+							   		</tr>					
+								</thead>
+								<tbody>
+									{% for obj in object_list %}
+										<tr>
+											{% for field in obj.field_names|filternormal:obj.field_values %}
+												<td>{% if obj.field_values|map_value:field == obj|get_attribute:main_attribute %}
+														<a href="{% url detail_url obj.pk %}" data-toggle="tooltip" 
+																				  data-placement="right" 
+																				  title="Click to see details about {{obj}} ">
+															{{obj.field_values|map_value:field}}
+														</a>											
+													{% else %}
+														{{obj.field_values|map_value:field}}
+													{% endif %}
+												</td>
+											{% endfor %}
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
