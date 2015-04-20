@@ -12,11 +12,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'x2i0y6rljb(=zf-vls(-72hv#w)6=db*fa6)ncsq6p3u)@t6yo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = {{debug}}
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+	{%- for host in hosts -%}
+	'{{host}}',
+	{%- endfor -%}
+]
 
 
 # Application definition
