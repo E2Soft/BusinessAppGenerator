@@ -1,0 +1,113 @@
+{% extends 'base' %}
+
+{% block content %}
+from django.contrib.auth.models import User
+from django.db import models
+from business_app import derived_fields
+
+{% for form in model.forms %}
+class {{form.title}}(models.Model):
+{%- for field in form.fields -%}
+	{%- if not field.derived == "REAL_TIME" -%}
+		{%- if field.field_type == "String" %} 
+	{{field.name}} = models.CharField(max_length={{field.max_length}}, null={{not field.mandatory}}, blank={{not field.mandatory}})
+		{%- elif field.field_type == "Float" %}
+	{{field.name}} = models.FloatField(null={{not field.mandatory}}, blank={{not field.mandatory}})
+		{%- elif field.field_type == "DateTime" %}
+	{{field.name}} = models.DateTimeField(null={{not field.mandatory}}, blank={{not field.mandatory}})
+		{%- elif field.field_type == "Integer" %}
+	{{field.name}} = models.IntegerField(null={{not field.mandatory}}, blank={{not field.mandatory}})
+		{%- else -%}
+			{%- if field.link_type == '1-*' %}
+	{{field.name}} = models.ForeignKey('{{field.form}}', blank={{not field.mandatory}}, null={{not field.mandatory}})
+			{%- elif field.link_type == '*-*' %}
+	{{field.name}} = models.ManyToManyField('{{field.form}}', blank={{not field.mandatory}}, null={{not field.mandatory}})
+			{%- else %}
+	{{field.name}} = models.OneToOneField('{{field.form}}', blank={{not field.mandatory}}, null={{not field.mandatory}})
+			{%- endif -%}
+		{%- endif -%}
+	{%- endif -%}
+{%- endfor %}
+
+	field_labels = {
+{%- for field in form.fields %}
+			'{{field.name}}':'{{field.label}}',
+{%- endfor -%}
+{%- for other_form in model.forms -%}
+	{%- for field in other_form.fields -%}
+		{%- if field.field_type == 'Link' and field.form == form.title %}
+			'{{other_form.title}}'.lower():'{{field.foreign_label}}',
+		{%- endif -%}
+	{%- endfor -%}
+{%- endfor %}
+}
+	
+	@staticmethod
+	def sort_fields_key(name):
+		return {
+{%- for field in form.fields %}
+			'{{field.name}}':'{{field.weight}}',
+{%- endfor -%}
+{%- for other_form in model.forms -%}
+	{%- for field in other_form.fields -%}
+		{%- if field.field_type == 'Link' and field.form == form.title %}
+			'{{other_form.title}}'.lower():'{{field.weight}}',
+		{%- endif -%}
+	{%- endfor -%}
+{%- endfor %}
+		}[name]
+
+	def save(self, *args, **kwargs):
+{%- for field in form.fields -%}
+	{%- if field.derived == "CACHED" %}
+		self.{{field.name}} = derived_fields.calculate_{{form.title}}_{{field.name}}(self, *args, **kwargs)
+	{%- endif -%}
+{%- endfor %}
+		super({{form.title}}, self).save(*args, **kwargs)
+
+	def __str__(self):
+		return str(self.__getattribute__('{{form.main_attribute}}'))
+
+	@classmethod	
+	def field_names(model):	
+		field_names = []
+		for name in model._meta.get_all_field_names():			
+			if 'id' != name and not name.endswith("_id"):
+				field_names.append(name)
+
+{% for field in form.fields -%}
+	{%- if field.derived == "REAL_TIME" %}
+		field_names.append('{{field.name}}')
+	{%- endif -%}
+{%- endfor %}		
+			
+		field_names.sort(key={{form.title}}.sort_fields_key)
+		return field_names		
+
+	def field_values(self):	
+		field_values={}
+		
+		for name in self.field_names():
+			if 'id' != name and not name.endswith("_id"):
+				
+				try:
+					field_values[name] = self.__getattribute__(name).all()
+				except AttributeError:
+					try:
+						field_values[name] = self.__getattribute__(name)
+					except AttributeError:
+						try:
+							field_values[name] = self.__getattribute__(''.join([name,"_set"])).all()
+						except AttributeError:
+							field_values[name] = "not assigned"
+		
+{% for field in form.fields -%}
+	{%- if field.derived == "REAL_TIME" %}
+		field_values['{{field.name}}'] = derived_fields.calculate_{{form.title}}_{{field.name}}(self)
+	{%- endif -%}
+{%- endfor %}
+
+		return field_values	
+
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'model' %}
+
+{% block content %}
+from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django.utils import timezone
+
+from business_app import custom_validators
+
+{{ super() }}
+
+{% for form in model.forms -%}
+#{{form.title}}
+
+class Search{{form.title}}Form(forms.Form):
+{% for field in form.fields|sort(attribute='weight') -%}
+{%- if not field.derived -%}
+{%- if field.field_type == "String" %}
+	{{field.name}} = forms.CharField(required=False)
+{%- elif field.field_type == "Float" %}
+	{{field.name}} = forms.FloatField(required=False)
+{%- elif field.field_type == "DateTime" %}
+	{{field.name}} = forms.DateTimeField(required=False)
+{%- elif field.field_type == "Integer" %}
+	{{field.name}} = forms.IntegerField(required=False)
+{%- elif field.field_type == "Link" and field.link_type == '*-*' %}
+	{{field.name}} = forms.MultipleChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required=False)
+{%- else %}
+	{{field.name}} = forms.ChoiceField(choices=[ (o.id, str(o)) for o in {{field.form}}.objects.all()], required=False)
+{%- endif -%}
+{%- endif -%}
+{%- endfor %}
+
+	def __init__(self, *args, **kwargs):
+		super(Search{{form.title}}Form, self).__init__(*args, **kwargs)
+		
+{%- for field in form.fields -%}
+{%- if not field.derived %}
+		self.fields['{{field.name}}'].label="{{field.label}}"
+{%- if field.field_type == "Link" -%}
+	{%- if field.link_type == "*-*" %}
+		self.fields['{{field.name}}'].choices=[('__not_assigned__', 'Not assigned')] + [ (o.id, str(o)) for o in {{field.form}}.objects.all()]
+	{%- else %}
+		self.fields['{{field.name}}'].choices=[(None, 'Skip this field'), ('__not_assigned__', 'Not assigned')] + [ (o.id, str(o)) for o in {{field.form}}.objects.all()]
+	{%- endif %}
+{%- endif -%}
+{%- endif -%}
+{%- endfor %}
+		for field in self.fields.values():
+			field.widget.attrs['class']='form-control'
+			if(field.__class__.__name__ == "DateTimeField"):
+				field.widget.attrs['id']='datepicker'
+				field.widget.attrs['type'] = "text"
+
+
+class {{form.title}}Form(forms.ModelForm):
+	class Meta:
+		model = {{form.title}}
+		fields = [{% for field in form.fields|sort(attribute='weight') %}{% if not field.derived %}'{{field.name}}',{% endif %}{% endfor %}]
+		
+	def __init__(self, *args, **kwargs):
+		super({{form.title}}Form, self).__init__(*args, **kwargs)
+	{%- for field in form.fields %}
+		{% if not field.derived -%}
+		self.fields['{{field.name}}'].label="{{field.label}}"
+		{%- if field.custom_validation %}
+		self.fields['{{field.name}}'].validators.append(custom_validators.{{form.title}}_{{field.name}}_validator)
+		{%- endif -%}
+	{%- endif -%}
+	{%- endfor %}
+		for field in self.fields.values():
+			field.widget.attrs['class']='form-control'
+			if(field.__class__.__name__ == "DateTimeField"):
+				field.widget.attrs['id']='datepicker'
+				field.widget.attrs['type'] = "text"
+
+{% endfor -%}
+
+class UserForm(UserCreationForm):
+	email = forms.EmailField(required=True)
+	first_name = forms.CharField(required = False)
+	last_name = forms.CharField(required = False)
+	
+	class Meta:
+		model = User
+		fields = ['first_name','last_name', 'username', 'email', 'password1', 'password2']
+		
+	def __init__(self, *args, **kwargs):
+		super(UserForm, self).__init__(*args, **kwargs)
+		for field in self.fields.values():
+			field.widget.attrs['class']='form-control'
+			
+	def save(self, commit=True):
+		user = super(UserForm, self).save(commit = False)
+		user.email = self.cleaned_data['email']
+		user.first_name = self.cleaned_data['first_name']
+		user.last_name = self.cleaned_data['last_name']
+		
+		if commit:
+			user.save()
+			
+{% endblock%}

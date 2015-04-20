@@ -1,0 +1,9 @@
+{% extends "base" %}
+{% block content %}
+from django.contrib import admin
+from . import models
+
+{% for form in model.forms -%}
+admin.site.register(models.{{form.title}})
+{% endfor -%}
+{% endblock %}

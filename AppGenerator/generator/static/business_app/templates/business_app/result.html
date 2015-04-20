@@ -1,0 +1,23 @@
+{% extends "business_app/menu.html" %}
+{% block title %}{{display_name|title}} result page{% endblock %}
+
+{% block content %}
+	<div id="page-content-wrapper">
+    	<div class="container-fluid">
+        	<div class="row">
+            	<div class="col-lg-12">	
+            		<div class="page-header">
+       					<h2><span class="glyphicon glyphicon-flag"></span> Search results</h2>
+    				</div>
+					<ul class="list-group">
+						{% for k,v in results.items %}
+							<div class="bs-callout bs-callout-info">
+								<a href="{{k}}">{{v}}</a>
+							</div>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

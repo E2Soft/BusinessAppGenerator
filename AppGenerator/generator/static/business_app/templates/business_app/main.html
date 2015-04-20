@@ -1,0 +1,22 @@
+{% extends "business_app/toolbar.html" %}
+
+{% block title %}Main Page{% endblock %}
+
+{% block content %}
+	{{block.super}}
+	<div class="page-header">
+	</div>
+{% endblock%}
+
+{% block visuals %}
+	<div class="placeholder" id="placeHolder">
+		<div class="cellContainer" id="leftPanel">
+		</div>
+		<div class="cellContainer" id="centarPanel">
+		</div>
+		<div class="cellContainer" id="rightPanel">
+		</div>
+		<div class="graph" id="graph">
+		</div>
+	</div>
+{% endblock %}

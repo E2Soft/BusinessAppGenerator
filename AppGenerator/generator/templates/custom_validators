@@ -1,0 +1,17 @@
+{%- extends 'custombase' -%}
+{%- block content %}
+
+from django.core.exceptions import ValidationError
+
+{%- for form in model.forms -%}
+	{%- for field in form.fields -%}
+		{%- if field.custom_validation  %}
+def {{form.title}}_{{field.name}}_validator(value):
+	# if not valid:
+	#	raise ValidationError('message')
+	pass
+		{% endif -%}
+	{%- endfor -%}
+{%- endfor -%}
+
+{%- endblock -%}

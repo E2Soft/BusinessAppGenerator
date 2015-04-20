@@ -1,0 +1,16 @@
+{% block header%}
+
+"""
+	Created: {{datetime}}
+	
+	@author: {{guest}}
+	
+	EDIT THESE FUNCTIONS TO IMPLEMENT CUSTOM OPERATIONS
+	FOR YOUR APPLICATION.
+	
+"""
+
+{% endblock %}
+
+{% block content %}
+{% endblock %}

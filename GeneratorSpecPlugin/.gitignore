@@ -1,0 +1,10 @@
+/build.properties
+/.project
+/.settings
+/.classpath
+/lib/*
+!/lib/dependencies.txt
+/dist/
+/bin/
+/bin-ant/
+/bin/

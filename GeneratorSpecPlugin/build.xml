@@ -1,0 +1,53 @@
+
+<project name="${PLUGIN_NAME}" default="run">
+	
+	<!-- 
+	build.properties example:
+		MAGICDRAW_EXECUTABLE=D:\\Program Files\\MagicDrawStandalone\\bin\\magicdraw.exe
+		MAGICDRAW_HOME=D:\\Program Files\\MagicDrawStandalone
+		PLUGIN_NAME=tim1.generator_spec
+	 -->
+	<property file="build.properties"/>
+	
+	<path id="mylibs">
+		<fileset dir="lib" includes="*.jar"/>
+	</path>
+	
+	<path id="magicdraw-libs">
+		<fileset dir="${MAGICDRAW_HOME}/lib" includes="**/*.jar"/>
+	</path>
+	
+	<path id="all-libs">
+		<path refid="mylibs"/>
+		<path refid="magicdraw-libs"/>
+	</path>
+	
+	<target name="clean">
+		<delete dir="bin-ant"/>
+	</target>
+	
+	<target name="compile">
+		<mkdir dir="bin-ant"/>
+		<javac target="1.7" source="1.7" destdir="bin-ant" srcdir="src" classpathref="all-libs"/>
+	</target>
+	
+	<target name="build" depends="compile">
+		<mkdir dir="dist"/>
+		<jar destfile="dist/plugin.jar" basedir="bin-ant">
+			<zipfileset dir="bin-ant" excludes="test/**"/>
+		</jar>
+	</target>
+		
+	<target name="deploy" depends="build">
+		<mkdir dir="${MAGICDRAW_HOME}/plugins/${PLUGIN_NAME}"/>
+		<copy file="dist/plugin.jar" todir="${MAGICDRAW_HOME}/plugins/${PLUGIN_NAME}"/>
+		<copy file="resources/plugin.xml" todir="${MAGICDRAW_HOME}/plugins/${PLUGIN_NAME}"/>
+		<copy todir="${MAGICDRAW_HOME}/plugins/${PLUGIN_NAME}">
+			<fileset dir="lib" includes="*.jar"/>
+		</copy>
+	</target>
+	
+	<target name="run" depends="deploy">
+		<exec executable="${MAGICDRAW_EXECUTABLE}"/>
+	</target>
+</project>

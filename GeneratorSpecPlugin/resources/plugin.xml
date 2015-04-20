@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+        id="team1.generator.spec"
+        name="App generator specification serialization plugin"
+        version="1.0"
+        provider-name="FTN Team 1"
+        class="plugin.GeneratorPlugin">
+        <requires>
+           <api version="1.0"/>
+        </requires>
+        <runtime>
+           <library name="plugin.jar"/>
+           <library name="xstream-1.4.8.jar"/>
+        </runtime>
+</plugin>

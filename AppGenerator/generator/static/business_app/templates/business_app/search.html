@@ -1,0 +1,20 @@
+{% extends "business_app/menu.html" %}
+{% block title %}Search {{ display_name|title }}{% endblock %}
+
+{% block content %}
+	<div class="jumbotron">
+    	<h2>Search {{ display_name|title }}</h2>
+    </div>
+    
+    <div class="bs-callout bs-callout-info">
+	    <form method="POST" class="post-form" role="form">{% csrf_token %}
+	    	<table class="table table-hover">
+	        {{ form.as_table }}
+	        </table>
+	        <button type="submit" class="btn btn-info">
+	        <span class="glyphicon glyphicon-search"></span>
+	        Search
+	        </button>
+	    </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base' %}
+{% block content %}
+from django.conf.urls import patterns, url
+from {{app_name}} import views
+from . import custom
+
+{% for form in model.forms -%}
+from {{app_name}}.views import {{form.title}}List
+from {{app_name}}.views import {{form.title}}Detail
+from {{app_name}}.views import {{form.title}}Update
+from {{app_name}}.views import {{form.title}}Delete
+from {{app_name}}.views import {{form.title}}Create
+{% endfor %}
+
+from {{app_name}}.views import DetailUser,UserUpdate,UserCreate
+
+urlpatterns = patterns('',
+	
+{% for form in model.forms %}
+	url(r'^list{{form.title}}/$', {{form.title}}List.as_view(), name='list{{form.title}}'),
+	url(r'^add{{form.title}}/$', {{form.title}}Create.as_view(), name='add{{form.title}}'),
+	url(r'^update{{form.title}}/(?P<pk>\d+)/$', {{form.title}}Update.as_view(), name='update{{form.title}}'),
+	url(r'^detail{{form.title}}/(?P<pk>\d+)/$', {{form.title}}Detail.as_view(), name='detail{{form.title}}'),
+	url(r'^delete{{form.title}}/(?P<pk>\d+)/$', {{form.title}}Delete.as_view(), name='delete{{form.title}}'),
+	{% for operation in form.operations %}
+	{% if operation.field_type == "Search" -%}
+	url(r'^search{{form.title}}/$', views.search{{form.title}}, name='search{{form.title}}'),
+	{% else -%}
+	{% if not operation.param -%}
+	#add method with this header {{operation.name}}(request) in custom.py
+	url(r'^{{operation.name}}/$', custom.{{operation.name}}, name='{{operation.name}}'),
+	{% else -%}
+	#add method with this header {{operation.name}}(request,pk) in custom.py
+	url(r'^{{operation.name}}/(?P<pk>\d+)/$', custom.{{operation.name}}, name='{{operation.name}}'),
+	{% endif -%}
+	{% endif -%}
+	{% endfor %}
+{% endfor %}
+	url(r'^udetail/(?P<pk>\d+)/$', DetailUser.as_view(), name='udetail'),
+	url(r'uedit/(?P<pk>\d+)/$', UserUpdate.as_view(), name='uedit'),
+	url(r'register/$', UserCreate.as_view(), name='register'),
+	url(r'visuals/$', custom.visual, name='visuals'),
+)
+{% endblock %}
