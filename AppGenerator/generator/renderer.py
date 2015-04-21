@@ -99,7 +99,7 @@ def render_tests(project_path, app_model):
 
 def render_settings(project_path, app_model, project_app_name):
     renderedsettings = env.get_template('settings').render(model = app_model,datetime=datetime.datetime.now(),
-                                                           guest=getpass.getuser(),app_name=project_app_name)
+                                                           guest=getpass.getuser(),app_name=project_app_name,)
     with open(os.path.join(project_path, project_app_name, 'settings.py'), "w") as file:
         file.write(renderedsettings)    
        
