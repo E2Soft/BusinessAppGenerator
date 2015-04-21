@@ -2,7 +2,7 @@
 {% block content %}
 from django.test import TestCase
 from django.utils import timezone
-
+ 
 {% for form in model.forms -%}
 from business_app.models import {{form.title}}
 {% endfor %}
@@ -10,6 +10,67 @@ from business_app.models import {{form.title}}
 
 {% for form in model.forms %}
 class {{form.title}}Test(TestCase):
+
+    {%- for field in form.fields %}
+        {%- if field.field_type == "Link" and field.link_type == "1-*" -%}
+            {%- for other_form in model.forms -%}
+                {%- if other_form.title == field.form -%}
+                    {%- for other_field in other_form.fields -%}
+                        {%- if other_field.field_type == "Link" and field.link_type == "1-*" -%}
+                            {%- if field.form == other_form.title %}
+    {{other_field.form}}_obj = {{other_field.form}}.objects.create(
+                                {%- for frm in model.forms -%}
+                                    {%- if frm.title == other_field.form %}
+                                        {%- for fld in frm.fields %}
+                                        {%- if not fld.derived == "REAL_TIME" and field.link_type != "*-*"-%}
+                                            {{fld.name}} = 
+                                            {%- if fld.field_type == "String" -%}
+                                                    "str"
+                                            {%- elif fld.field_type == "Integer" -%}
+                                                    1
+                                            {%- elif fld.field_type == "Float" -%}
+                                                    10.0
+                                            {%- elif fld.field_type == "DateTime" -%}
+                                                    timezone.now()
+                                            {%- endif %},
+                                        {%- endif %}                                            
+                                        {%- endfor -%}
+                                    {%- endif -%}
+                                {%- endfor -%})
+                            {%- endif %}                           
+                        {%- endif -%}
+                    {%- endfor %}
+                {%- endif %}
+            {%- endfor %}
+    {{field.form}}_obj = {{field.form}}.objects.create(
+        {%- for frm in model.forms -%}
+            {%- if frm.title == field.form %}
+                {%- for fld in frm.fields %}
+            {%- if not fld.derived == "REAL_TIME" and field.link_type != "*-*"-%}                   
+                    {{fld.name}} = 
+                {%- if fld.field_type == "String" -%}
+                    "str"
+                {%- elif fld.field_type == "Integer" -%}
+                    1
+                {%- elif fld.field_type == "Float" -%}
+                    10.0
+                {%- elif fld.field_type == "DateTime" -%}
+                    timezone.now()
+                {%- elif fld.field_type == "Link" -%}
+                    {%- for other in model.forms %}
+                        {%- if fld.form == other.title -%}
+                            {{other.title}}_obj
+                        {%- endif -%}
+                    {%- endfor %}
+                {%- endif -%}
+                ,
+            {%- endif %}                                            
+            {%- endfor %}
+            {%- endif %}
+        {%- endfor %})
+        {%- endif -%}
+    {%- endfor %}
+
     def create_{{form.title}}(self, 
 {%- for field in form.fields %}
 {%- if not field.derived == "REAL_TIME" and field.link_type != "*-*"-%}
@@ -25,10 +86,10 @@ class {{form.title}}Test(TestCase):
     {%- elif field.field_type == "Link" -%}
         {%- for other in model.forms %}
                {%- if field.form == other.title -%}
-                        {{other.title}}.objects.get(pk=1)
+                        {{other.title}}_obj
                {%- endif -%}
        {%- endfor%}
-    {% endif -%}
+    {%- endif -%}
         ,
 {%- endif %}
 {%- endfor %}):
@@ -42,6 +103,6 @@ class {{form.title}}Test(TestCase):
     def test_{{form.title}}_creation(self):
         w = self.create_{{form.title}}()
         self.assertTrue(isinstance(w, {{form.title}}))
-                
+                    
 {% endfor %}
 {% endblock %}
