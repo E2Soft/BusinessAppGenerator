@@ -1,6 +1,47 @@
 {% extends 'base' %}
 {% block content %}
 from django.test import TestCase
+from django.utils import timezone
 
+{% for form in model.forms -%}
+from business_app.models import {{form.title}}
+{% endfor %}
 # Create your tests here.
+
+{% for form in model.forms %}
+class {{form.title}}Test(TestCase):
+    def create_{{form.title}}(self, 
+{%- for field in form.fields %}
+{%- if not field.derived == "REAL_TIME" and field.link_type != "*-*"-%}
+        {{field.name}}=  
+    {%- if field.field_type == "String" -%}
+            "str"
+    {%- elif field.field_type == "Integer" -%}
+            1
+    {%- elif field.field_type == "Float" -%}
+            10.0
+    {%- elif field.field_type == "DateTime" -%}
+            timezone.now()
+    {%- elif field.field_type == "Link" -%}
+        {%- for other in model.forms %}
+               {%- if field.form == other.title -%}
+                        {{other.title}}.objects.get(pk=1)
+               {%- endif -%}
+       {%- endfor%}
+    {% endif -%}
+        ,
+{%- endif %}
+{%- endfor %}):
+        return {{form.title}}.objects.create(
+            {%- for field in form.fields -%}
+                {%- if not field.derived == "REAL_TIME" and field.link_type != "*-*" -%}
+                    {{field.name}}={{field.name}},
+                {%- endif %}
+            {%- endfor %})
+
+    def test_{{form.title}}_creation(self):
+        w = self.create_{{form.title}}()
+        self.assertTrue(isinstance(w, {{form.title}}))
+                
+{% endfor %}
 {% endblock %}
