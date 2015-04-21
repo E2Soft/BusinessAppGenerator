@@ -51,6 +51,7 @@ def copy_static_files(project_path, project_app_name, **kwargs):
         backup_manager.backup(app_path, 'custom.py')
         backup_manager.backup(app_path, 'custom_validators.py')
         backup_manager.backup(app_path, 'derived_fields.py')
+        backup_manager.backup(app_path, 'custom_settings.py')
         backup_manager.backup(templates_path, 'custom')
         if not rewrite_db:
             backup_manager.backup(project_path, 'db.sqlite3')

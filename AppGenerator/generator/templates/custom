@@ -23,6 +23,7 @@ def {{operation.name}}(request):
 {% endfor %}
 {% endfor %}
 
+
 #add some special context here to show it on login page
 def loginvisuals():
 	
